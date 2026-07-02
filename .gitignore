@@ -1,1 +1,18 @@
+# Visual Studio Code
+.vscode/
 
+# JetBrains IDEs
+.idea/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
