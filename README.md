@@ -29,3 +29,6 @@ The **Student Attendance Management System** is a web-based application designed
 - **Version Control:** Git & GitHub
 - **Development Environment:** XAMPP (Apache, PHP, MySQL)
 - **Code Editor:** Visual Studio Code
+
+## Test
+Testing branch protection.
