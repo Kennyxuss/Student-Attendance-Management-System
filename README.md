@@ -22,6 +22,29 @@ The **Student Attendance Management System** is a web-based application designed
 - **Classes** – Class ID, subject, schedule, instructor.
 - **Attendance** Records – Attendance ID, student, class, date, status (Present, Late, Absent).
 
+```
+Student-Attendance-Management-System/
+│
+├── README.md
+├── .gitignore
+├── docs/
+      ├── backlog.md 
+      ├── ai-notes
+      │    └── deliverables-1.md
+      │
+      └── wireframes
+          ├── login.png
+          ├── dashboard.png
+          ├── students.png
+          ├── attendance.png
+          ├── reports.png
+          ├── create-student.png
+          ├── edit-student.png
+          ├── delete-confirmation.png
+          ├── empty-state.png
+          └── error-state.png
+```
+
   ## Technology Stack
 - **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
 - **Backend:** PHP 8
