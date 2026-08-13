@@ -47,10 +47,10 @@ Student-Attendance-Management-System/
 
   ## Technology Stack
 - **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
-- **Backend:** PHP 8
+- **Backend:** Python
 - **Database:** MySQL
 - **Version Control:** Git & GitHub
-- **Development Environment:** XAMPP (Apache, PHP, MySQL)
+- **Development Environment:** MySQL
 - **Code Editor:** Visual Studio Code
 
 ## Test
