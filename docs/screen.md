@@ -10,8 +10,8 @@ This document contains the list and description of the screens included in the S
 | 2 | Dashboard | `dashboard.png` | Displays an overview of the attendance system and key information. |
 | 3 | Students | `students.png` | Displays the list of registered students and available management actions. |
 | 4 | Create Student | `create-student.png` | Allows users to add a new student. |
-| 5 | Edit Student | `edit-student.png.png` | Allows users to modify existing student information. |
-| 6 | Delete Confirmation | `delete-confirmation.png.png` | Confirms before deleting a student record. |
+| 5 | Edit Student | `edit-student.png.` | Allows users to modify existing student information. |
+| 6 | Delete Confirmation | `delete-confirmation.png.` | Confirms before deleting a student record. |
 | 7 | Attendance | `attendance.png` | Allows users to record and manage student attendance. |
 | 8 | Reports | `reports.png` | Displays attendance information and reports. |
 | 9 | Empty State | `empty-state.png` | Displays when there are no records available. |
