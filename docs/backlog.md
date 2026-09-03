@@ -1,314 +1,114 @@
-# Attendance Management System
-## Feature Backlog
+# Feature Backlog
 
-**Project:** Attendance Management System
-**Version:** Deliverable 1
-**Total User Stories:** 25
+# Student Attendance Management System
 
----
+## Product Goal
 
-# Student Management
-
-## US-001 - Add Student
-**User Story**
-As an admin, I want to add a new student so that they can access the attendance system.
-
-**Acceptance Criteria**
-- Student ID is unique.
-- Required fields are completed.
-- Student record is saved successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
+Develop a centralized attendance management system that allows administrators, instructors, and students to manage and monitor attendance records digitally.
 
 ---
 
-## US-002 - View Student List
-**User Story**
-As an admin, I want to view all students so that I can manage their records.
+## User Stories
 
-**Acceptance Criteria**
-- Student list loads successfully.
-- Search function works.
-- Pagination is available.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-003 - View Student Details
-**User Story**
-As an admin, I want to view a student's profile so that I can see complete information.
-
-**Acceptance Criteria**
-- Student profile displays correctly.
-- Attendance summary is shown.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-004 - Edit Student
-**User Story**
-As an admin, I want to edit student information so that records remain accurate.
-
-**Acceptance Criteria**
-- Existing information is displayed.
-- Changes are saved successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-005 - Delete Student
-**User Story**
-As an admin, I want to delete a student record so that inactive records are removed.
-
-**Acceptance Criteria**
-- Confirmation dialog appears.
-- Record is permanently removed after confirmation.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
+| ID | User Story | Priority | Role | Status |
+|---|---|---|---|---|
+| US-01 | As a user, I want to log in securely so that I can access authorized features. | High | All | Backlog |
+| US-02 | As a user, I want to log out so that my account remains secure. | Medium | All | Backlog |
+| US-03 | As an admin, I want to view a dashboard so that I can monitor the overall system. | High | Admin | Backlog |
+| US-04 | As an admin, I want to add students so that student records can be maintained. | High | Admin | Backlog |
+| US-05 | As an admin, I want to view student records so that I can manage student information. | High | Admin | Backlog |
+| US-06 | As an admin, I want to edit student information so that incorrect information can be corrected. | High | Admin | Backlog |
+| US-07 | As an admin, I want to delete or deactivate student records so that outdated accounts can be managed. | Medium | Admin | Backlog |
+| US-08 | As an admin, I want to manage student user accounts so that students can access the system. | High | Admin | Backlog |
+| US-09 | As an admin, I want to manage instructor records so that teaching personnel are organized. | High | Admin | Backlog |
+| US-10 | As an admin, I want to manage courses so that academic programs are organized. | Medium | Admin | Backlog |
+| US-11 | As an admin, I want to manage departments so that academic units are organized. | Medium | Admin | Backlog |
+| US-12 | As an admin, I want to manage subjects so that classes can use the correct subjects. | High | Admin | Backlog |
+| US-13 | As an admin, I want to create and manage classes so that schedules and assignments are maintained. | High | Admin | Backlog |
+| US-14 | As an admin, I want to enroll students in classes so that class membership is accurate. | High | Admin | Backlog |
+| US-15 | As an admin, I want to review pending student registrations so that accounts can be approved or rejected. | Medium | Admin | Backlog |
+| US-16 | As an admin, I want to view student attendance reports so that attendance performance can be monitored. | High | Admin | Backlog |
+| US-17 | As an admin, I want to view system activity logs so that important actions can be audited. | Medium | Admin | Backlog |
+| US-18 | As an admin, I want to receive absence notifications so that important absences can be monitored. | Medium | Admin | Backlog |
+| US-19 | As an instructor, I want to view my dashboard so that I can quickly access teaching information. | High | Instructor | Backlog |
+| US-20 | As an instructor, I want to view my assigned classes so that I can manage the classes I teach. | High | Instructor | Backlog |
+| US-21 | As an instructor, I want to view class schedules so that I know when attendance should be recorded. | Medium | Instructor | Backlog |
+| US-22 | As an instructor, I want to view the student list so that I can identify enrolled students. | High | Instructor | Backlog |
+| US-23 | As an instructor, I want to take attendance so that student presence can be recorded digitally. | High | Instructor | Backlog |
+| US-24 | As an instructor, I want to review student check-ins so that I can verify attendance submissions. | High | Instructor | Backlog |
+| US-25 | As an instructor, I want to view attendance history so that I can review previous attendance records. | High | Instructor | Backlog |
+| US-26 | As an instructor, I want to generate class attendance reports so that attendance performance can be monitored. | High | Instructor | Backlog |
+| US-27 | As an instructor, I want to update my profile settings so that my account information remains current. | Low | Instructor | Backlog |
+| US-28 | As a student, I want to view my dashboard so that I can see attendance and class summaries. | High | Student | Backlog |
+| US-29 | As a student, I want to view my enrolled classes so that I know my assigned classes. | High | Student | Backlog |
+| US-30 | As a student, I want to check in for attendance when enabled so that my attendance can be recorded. | High | Student | Backlog |
+| US-31 | As a student, I want to view my attendance history so that I can monitor my attendance record. | High | Student | Backlog |
+| US-32 | As a student, I want to view my attendance report so that I can understand my attendance performance. | Medium | Student | Backlog |
+| US-33 | As a student, I want to update my profile settings so that my information remains current. | Low | Student | Backlog |
+| US-34 | As the system, I want to prevent duplicate attendance entries so that attendance data remains accurate. | High | System | Backlog |
+| US-35 | As the system, I want role-based access control so that users only access authorized features. | High | System | Backlog |
 
 ---
 
-# Teacher Management
+# MVP Scope
 
-## US-006 - Add Teacher
-**User Story**
-As an admin, I want to register a teacher so that they can manage attendance.
+The Minimum Viable Product will prioritize:
 
-**Acceptance Criteria**
-- Teacher information is saved.
-- Employee ID is unique.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-007 - View Teacher List
-**User Story**
-As an admin, I want to view all teachers so that I can manage them.
-
-**Acceptance Criteria**
-- Teacher list is displayed.
-- Search is available.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
+- Secure login
+- Role-based access
+- Student management
+- Instructor management
+- Course management
+- Department management
+- Subject management
+- Class management
+- Class enrollment
+- Attendance recording
+- Student self check-in
+- Attendance history
+- Attendance reports
+- Dashboard summaries
 
 ---
 
-## US-008 - View Teacher Details
-**User Story**
-As an admin, I want to view teacher details so that I can verify their information.
+# Attendance Acceptance Criteria
 
-**Acceptance Criteria**
-- Teacher profile loads successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-009 - Edit Teacher
-**User Story**
-As an admin, I want to edit teacher information so that records stay updated.
-
-**Acceptance Criteria**
-- Changes are saved successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
+- Attendance must belong to a specific class.
+- Attendance must have a date and time.
+- Attendance must identify the student.
+- Attendance status must support:
+  - Present
+  - Late
+  - Absent
+- Duplicate attendance records should be prevented.
+- Authorized users can review attendance.
+- Students can view their own attendance.
+- Reports must reflect saved attendance records.
 
 ---
 
-## US-010 - Delete Teacher
-**User Story**
-As an admin, I want to remove teacher accounts so that inactive teachers are deleted.
+# Priority Definitions
 
-**Acceptance Criteria**
-- Confirmation message appears.
-- Teacher account is deleted.
+### High
+Required for the core system.
 
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
+### Medium
+Important supporting functionality.
 
----
-
-# Subject Management
-
-## US-011 - Add Subject
-**User Story**
-As an admin, I want to create a subject so that teachers can assign attendance.
-
-**Acceptance Criteria**
-- Subject code is unique.
-- Subject is saved.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
+### Low
+Enhancement that can be implemented after the core system.
 
 ---
 
-## US-012 - View Subject List
-**User Story**
-As an admin, I want to view all subjects so that I can manage them.
+# Board Workflow
 
-**Acceptance Criteria**
-- Subject list loads correctly.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-013 - View Subject Details
-**User Story**
-As an admin, I want to view subject information so that I can verify details.
-
-**Acceptance Criteria**
-- Subject details are displayed.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-014 - Edit Subject
-**User Story**
-As an admin, I want to edit subject information so that records remain accurate.
-
-**Acceptance Criteria**
-- Changes are saved successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-015 - Delete Subject
-**User Story**
-As an admin, I want to delete a subject so that unused subjects are removed.
-
-**Acceptance Criteria**
-- Confirmation is required.
-- Subject is deleted.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-# Attendance Management
-
-## US-016 - Record Attendance
-**User Story**
-As a teacher, I want to record attendance so that student attendance is saved.
-
-**Acceptance Criteria**
-- Attendance status is selectable.
-- Attendance is saved successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-017 - View Attendance List
-**User Story**
-As a teacher, I want to view attendance records so that I can monitor attendance.
-
-**Acceptance Criteria**
-- Attendance list is displayed.
-- Date filter works.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-018 - View Attendance Details
-**User Story**
-As a teacher, I want to view attendance details so that I can verify attendance.
-
-**Acceptance Criteria**
-- Student attendance history is displayed.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-019 - Edit Attendance
-**User Story**
-As a teacher, I want to edit attendance records so that mistakes can be corrected.
-
-**Acceptance Criteria**
-- Attendance updates successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-020 - Delete Attendance
-**User Story**
-As a teacher, I want to remove incorrect attendance records so that data remains accurate.
-
-**Acceptance Criteria**
-- Confirmation dialog appears.
-- Record is deleted successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-# Reports
-
-## US-021 - Generate Attendance Report
-**User Story**
-As an admin, I want to generate attendance reports so that I can monitor attendance performance.
-
-**Acceptance Criteria**
-- Report is generated correctly.
-- Report includes selected filters.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-022 - Export Report
-**User Story**
-As an admin, I want to export reports as PDF or Excel so that I can print or share them.
-
-**Acceptance Criteria**
-- PDF export works.
-- Excel export works.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-# Authentication
-
-## US-023 - Login
-**User Story**
-As a user, I want to log in securely so that I can access the system.
-
-**Acceptance Criteria**
-- Valid credentials allow login.
-- Invalid credentials show an error.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-024 - Logout
-**User Story**
-As a user, I want to log out so that my account remains secure.
-
-**Acceptance Criteria**
-- User session ends.
-- Login page is displayed.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
-
----
-
-## US-025 - Change Password
-**User Story**
-As a user, I want to change my password so that my account remains secure.
-
-**Acceptance Criteria**
-- Old password is verified.
-- New password meets security requirements.
-- Password is updated successfully.
-
-**Owner:** Admin Neil, Demelyn, Jamaica, Angelo D., Angelo M.
+```text
+Backlog
+   ↓
+To Do
+   ↓
+In Progress
+   ↓
+In Review
+   ↓
+Done
