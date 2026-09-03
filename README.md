@@ -109,42 +109,35 @@ The system has two main user roles:
 ## Repository Structure
 
 ```text
+Student-Attendance-Management-System/
+│
+├── README.md
+├── .gitignore
+│
+├── docs/
+   │
+   ├── backlog.md
+   │
+   ├── ai-notes/
+   │   └── deliverables-1.md
+   │
+   └── wireframes/
+       │
+       ├── login.png
        │
        ├── admin/
-       │   ├── absence-notifications.png
-       │   ├── attendance-history.png
-       │   ├── class-enrollment.png
-       │   ├── class-management.png
-       │   ├── courses.png
        │   ├── dashboard.png
-       │   ├── department.png
-       │   ├── instructor-management
-       │   ├── pending-student-registrations.png
-       │   ├── profile-settings.png
-       │   ├── student-attendance-report.png
        │   ├── student-management.png
-       │   ├── student-user-management.png
-       │   ├── subjects.png
-       │   ├── system-activity-logs.png
-       │   └── system-configuration.png
+       │   ├── instructor-management.png
+       │   ├── class-management.png
+       │   └── attendance-report.png
        │
        ├── instructor/
-       │   ├── attendance-history.png
-       │   ├── class-attendance-report.png
+       │   ├── dashboard.png
        │   ├── classes.png
-       │   ├── dashboard.png
-       │   ├── profile-settings.png
-       │   ├── schedule.png
-       │   ├── students-check-in.png
-       │   └── students-list.png
-       │
-       ├── student/
+       │   ├── take-attendance.png
        │   ├── attendance-history.png
-       │   ├── attendance-report.png
-       │   ├── dashboard.png
-       │   ├── enrolled-class.png
-       │   ├── profile-settings.png
-       │   └── self-attendance-check-in.png
+       │   └── profile-settings.png
        │
        └── states/
            ├── empty-state.png
