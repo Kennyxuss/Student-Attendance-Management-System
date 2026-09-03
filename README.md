@@ -12,8 +12,6 @@
   A centralized web-based platform for managing student attendance.
 </p>
 
-# Student-Attendance-Management-System
-
 ## Project Description
 
 The **Student Attendance Management System** is a web-based application designed to modernize and simplify student attendance recording, monitoring, and reporting. The system provides a centralized platform where administrators can manage academic records, instructors can record and monitor attendance, and students can view their classes and personal attendance records.
