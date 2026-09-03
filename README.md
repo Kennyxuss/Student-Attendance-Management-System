@@ -1,16 +1,4 @@
-<p align="center">
-  <img 
-    src="assets/Student-Attendance.png" 
-    alt="Student Attendance Management System"
-    width="100%"
-  >
-</p>
-
-<h1 align="center">Student Attendance Management System</h1>
-
-<p align="center">
-  A centralized web-based platform for managing student attendance.
-</p>
+## STUDENT-ATTENDANCE-MANAGEMENT-SYSTEM ##
 
 ## Project Description
 
