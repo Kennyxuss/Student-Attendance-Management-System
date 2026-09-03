@@ -27,10 +27,10 @@ The system has three main user roles:
 ## Team Members
 
 - **Repo Lead** — Neil Herbert U. Betacura
-- **Board Lead** — Alondra Makala
-- **Scribe** — Jannie Galido
-- **Builder** — Angelica Coron
+- **Board Lead** — Demelyn Concepcion
+- **Scribe** — Jamaica Ganolon
 - **Builder** — Angelo Dairo
+- **Builder** — Angelo Madolaria
 
 ---
 
