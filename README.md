@@ -14,13 +14,16 @@
 
 ## Project Description
 
-The **Student Attendance Management System** is a web-based application designed to modernize and simplify student attendance recording, monitoring, and reporting. The system provides a centralized platform where administrators can manage academic records, instructors can record and monitor attendance, and students can view their classes and personal attendance records.
+Traditional attendance recording at small tutoring centers often relies on paper sign-in sheets, making it difficult for instructors to review attendance history or for the center to identify students who are frequently absent. The **Student Attendance Management System** is a web-based application that gives instructors a simple digital way to record daily attendance per class, and gives the center admin a way to manage students, classes, and view attendance summaries — replacing the paper process with a centralized, searchable system.
 
-The system has three main user roles:
+*(Replace "small tutoring center" above with the team's actual target organization.)*
 
-- **Admin** – manages students, instructors, courses, departments, subjects, classes, enrollment, attendance reports, notifications, and system activity.
-- **Instructor** – manages assigned classes, student lists, attendance, check-ins, schedules, and attendance reports.
-- **Student** – views enrolled classes, attendance history, attendance reports, and performs self-attendance check-in when enabled.
+The system has two main user roles:
+
+- **Admin** – manages students, instructors, classes, and views attendance reports across the center.
+- **Instructor** – manages assigned classes, takes attendance per session, and reviews attendance history for their classes.
+
+> **Note:** A student self-service portal (login, self-check-in, personal dashboard) was considered but cut from the current scope to keep the project achievable within 12 weeks. It may be revisited as a stretch goal in later weeks if time allows.
 
 ---
 
@@ -36,10 +39,10 @@ The system has three main user roles:
 
 ## CRUD Operations
 
-- **Create** — Add students, instructors, classes, subjects, users, enrollment, and attendance records.
-- **Read** — View student information, instructor information, classes, schedules, attendance history, and reports.
-- **Update** — Edit student, instructor, class, schedule, and attendance information.
-- **Delete** — Remove or deactivate outdated or incorrect records when authorized.
+- **Create** — Add students, instructors, classes, and attendance records.
+- **Read** — View student information, instructor information, classes, schedules, and attendance history.
+- **Update** — Edit student, instructor, class, and attendance information.
+- **Delete** — Remove or deactivate outdated or incorrect records when authorized (controlled delete for attendance records).
 
 ---
 
@@ -48,31 +51,38 @@ The system has three main user roles:
 1. **Students**
    - Student ID
    - Student Name
-   - Course
-   - Year Level
+   - Class(es) Enrolled
    - Account Status
 
 2. **Instructors**
    - Instructor ID
    - Instructor Name
-   - Department
-   - Assigned Subjects
+   - Assigned Classes
    - Account Status
 
 3. **Classes**
    - Class ID
-   - Subject
+   - Class Name
    - Instructor
    - Schedule
-   - Enrolled Students
 
 4. **Attendance Records**
    - Attendance ID
    - Student
-   - Class/Subject
+   - Class
    - Date
-   - Time
-   - Attendance Status
+   - Status (Present / Late / Absent)
+
+---
+
+## CRUD Requirements
+
+| Record | Create | Read | Update | Delete |
+|---|---|---|---|---|
+| Students | ✓ | ✓ | ✓ | ✓ |
+| Instructors | ✓ | ✓ | ✓ | ✓ |
+| Classes | ✓ | ✓ | ✓ | ✓ |
+| Attendance | ✓ | ✓ | ✓ | Controlled |
 
 ---
 
@@ -81,39 +91,17 @@ The system has three main user roles:
 ### Admin
 
 - Admin Dashboard
-- Absence Notifications
 - Student Management
-- Student User Management
 - Instructor Management
-- Course Management
-- Department Management
-- Subject Management
 - Class Management
-- Class Enrollment
-- Pending Student Registrations
-- Student Attendance Reports
-- Take Attendance
-- System Activity Logs
+- Attendance Reports
 
 ### Instructor
 
 - Instructor Dashboard
-- Instructor Classes
-- Class Schedule
-- Student List
-- Student Check-ins
+- My Classes
 - Take Attendance
 - Attendance History
-- Class Attendance Reports
-- Profile Settings
-
-### Student
-
-- Student Dashboard
-- Enrolled Classes
-- Self Attendance Check-In
-- Attendance History
-- Attendance Reports
 - Profile Settings
 
 ---
@@ -121,21 +109,6 @@ The system has three main user roles:
 ## Repository Structure
 
 ```text
-Student-Attendance-Management-System/
-│
-├── README.md
-├── .gitignore
-│
-├── docs/
-   │
-   ├── backlog.md
-   │
-   ├── ai-notes/
-   │   └── deliverables-1.md
-   │
-   └── wireframes/
-       │
-       ├── login.png
        │
        ├── admin/
        │   ├── absence-notifications.png
@@ -179,11 +152,11 @@ Student-Attendance-Management-System/
            ├── loading-state.png
            ├── success-state.png
            └── delete-confirmation.png
+```
 
-  ## Technology Stack
+## Technology Stack
 - **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
 - **Backend:** Python
 - **Database:** MySQL
 - **Version Control:** Git & GitHub
-- **Development Environment:** MySQL
 - **Code Editor:** Visual Studio Code
