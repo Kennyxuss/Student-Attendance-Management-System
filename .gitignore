@@ -1,18 +1,122 @@
-# Visual Studio Code
-.vscode/
+# ==========================================
+# PYTHON
+# ==========================================
 
-# JetBrains IDEs
+__pycache__/
+*.py[cod]
+*.pyo
+
+.venv/
+venv/
+env/
+ENV/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ==========================================
+# ENVIRONMENT VARIABLES / SECRETS
+# ==========================================
+
+.env
+.env.*
+!.env.example
+
+credentials/
+secrets/
+
+*.pem
+*.key
+
+# ==========================================
+# FRONTEND / NODE
+# ==========================================
+
+node_modules/
+
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+dist/
+build/
+coverage/
+
+# ==========================================
+# IDE
+# ==========================================
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
 .idea/
 
-# Environment variables
-.env
+*.swp
+*.swo
 
-# Logs
-*.log
+# ==========================================
+# OPERATING SYSTEM
+# ==========================================
 
-# Temporary files
-*.tmp
-
-# OS files
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ==========================================
+# LOGS
+# ==========================================
+
+*.log
+logs/
+
+# ==========================================
+# TEMPORARY FILES
+# ==========================================
+
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# ==========================================
+# DATABASE
+# ==========================================
+
+*.sqlite
+*.sqlite3
+*.db
+
+# MySQL dumps
+*.sql
+
+# Allow important database scripts
+!database/schema.sql
+!database/seed.sql
+
+# ==========================================
+# GENERATED FILES
+# ==========================================
+
+*.pdf
+*.docx
+*.zip
+
+# ==========================================
+# TEST OUTPUT
+# ==========================================
+
+htmlcov/
+.pytest_cache/
+.coverage
+.coverage.*
+
+# ==========================================
+# LOCAL CONFIGURATION
+# ==========================================
+
+config.local.*
+settings.local.*
