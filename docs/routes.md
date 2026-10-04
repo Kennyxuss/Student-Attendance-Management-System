@@ -1,394 +1,375 @@
-# Routing Table — Student Attendance Management System (SAMS)
+# Week 3 — Routing Skeleton & Stub Handlers Specification
 
-**Repo:** https://github.com/Kennyxuss/Student-Attendance-Management-System  
-**Course Lab:** Week 3 — Building Your Routing Skeleton (Fundamentals Wall — AI OFF)  
-**Team (5):**
-- Repo Lead — Neil Herbert U. Betacura
-- Board Lead — Demelyn Concepcion
-- Scribe — Jamaica Ganolon
-- Builder — Angelo Dairo
-- Builder — Angelo Madolaria
-
-**Week 2 Backlog source:** `docs/backlog.md` (US-04 → US-26). Every CRUD story maps to exactly one RESTful route.
+**System**: Student Attendance Management System (SAMS)  
+**Lab**: Week 3 — Building Your Routing Skeleton (AI ❌ OFF Phase)  
+**Standardized Team Response Shape**: `{ "status": int, "data": any, "error": string | null }`
 
 ---
 
-## 1. Standard Response Shape (Team Agreement — Week 3)
+## Task 1: Complete Routing Table
 
-> Agreed Week 3, frozen for Weeks 4–5. Every handler returns **one envelope**.
+| Method | Path | Handler | Story it serves | Owner |
+|---|---|---|---|---|
+| **GET** | `/api/students` | `listStudents` | View all students | Builder 1 |
+| **GET** | `/api/students/:id` | `showStudent` | View one student profile | Builder 1 |
+| **POST** | `/api/students` | `createStudent` | Register a new student | Builder 1 |
+| **PUT** | `/api/students/:id` | `updateStudent` | Edit student details | Builder 1 |
+| **DELETE** | `/api/students/:id` | `deleteStudent` | Delete a student | Builder 1 |
+| **GET** | `/api/courses` | `listCourses` | View all course sections | Builder 2 |
+| **GET** | `/api/courses/:id` | `showCourse` | View one course details | Builder 2 |
+| **POST** | `/api/courses` | `createCourse` | Add a new course | Builder 2 |
+| **PUT** | `/api/courses/:id` | `updateCourse` | Edit course schedule/room | Builder 2 |
+| **DELETE** | `/api/courses/:id` | `deleteCourse` | Cancel/delete a course | Builder 2 |
+| **GET** | `/api/enrollments` | `listEnrollments` | View course roster enrollments | Scribe |
+| **GET** | `/api/enrollments/:id`| `showEnrollment` | View single enrollment entry | Scribe |
+| **POST** | `/api/enrollments` | `createEnrollment` | Enroll student into course | Scribe |
+| **DELETE** | `/api/enrollments/:id`| `deleteEnrollment` | Drop/unenroll student | Scribe |
+| **GET** | `/api/attendance` | `listAttendance` | View attendance records | Board Lead |
+| **GET** | `/api/attendance/:id` | `showAttendance` | View one attendance record | Board Lead |
+| **POST** | `/api/attendance` | `createAttendance` | Record single attendance entry | Board Lead |
+| **PUT** | `/api/attendance/:id` | `updateAttendance` | Excuse or update attendance | Board Lead |
+| **DELETE** | `/api/attendance/:id` | `deleteAttendance` | Remove attendance entry | Board Lead |
+| **GET** | `/api/health` | `healthCheck` | Service health status | Repo Lead |
 
-**Success:**
+---
 
+## Task 2 & 3: Working Stub Handlers & Verified Request / Response Examples
+
+Every stub handler extracts route parameters (`:id`), returns standardized HTTP status codes (200 for reads/updates/deletes, 201 for creates), and follows the team's unified `{ status, data, error }` response schema.
+
+### 1. Students (`Builder 1`)
+
+#### `GET /api/students` (`listStudents`)
+- **Request**: `GET /api/students`
+- **Response** (`200 OK`):
 ```json
-{ "status": 200, "data": { "...record..." }, "error": null }
-```
-
-- `status` — HTTP status integer
-- `data`   — object | array | null (the resource)
-- `error`  — always `null` on success
-
-**Error (Week 4 refined):**
-
-```json
-{ "status": 422, "data": null, "error": "qty out of range", "field": "qty" }
-```
-
-- `status` — error HTTP status (422 validation, 403 forbidden, 404 not found, 405 method not allowed)
-- `data` — always `null` on error
-- `error` — human-readable message naming the problem field
-- `field` — machine field name (optional, present for validation errors)
-
-**Rules:**
-- No raw stack traces or SQL errors leak to the client.
-- `Route parameters (:id)` are always echoed back in the stub / read responses.
-- Status codes: `200` read / `201` created / `204` deleted / `422` bad data / `403` forbidden / `404` not found / `405` wrong method.
-
----
-
-## 2. Full Routing Table (20 routes = 4 record types × 5 operations)
-
-RESTful conventions: plural noun, GET for read, POST for create, PUT for whole update, DELETE for delete. No creating/deleting with GET.
-
-### 2.1 Students — CRUD for student profiles (US-04, US-05, US-06, US-07)
-
-| # | Method | Path | Handler | Story it serves | Status on success |
-|---|--------|------|---------|-----------------|-------------------|
-| 1 | GET | `/students` | `listStudents` | View all students (US-05) | 200 |
-| 2 | GET | `/students/:id` | `showStudent` | View one student (US-05) | 200 |
-| 3 | POST | `/students` | `createStudent` | Create / add a student (US-04) | 201 |
-| 4 | PUT | `/students/:id` | `updateStudent` | Edit student info (US-06) | 200 |
-| 5 | DELETE | `/students/:id` | `deleteStudent` | Delete/deactivate student (US-07) | 200 |
-
-### 2.2 Instructors — CRUD for instructor accounts (US-09)
-
-| # | Method | Path | Handler | Story it serves | Status |
-|---|--------|------|---------|-----------------|--------|
-| 6 | GET | `/instructors` | `listInstructors` | View all instructors | 200 |
-| 7 | GET | `/instructors/:id` | `showInstructor` | View one instructor | 200 |
-| 8 | POST | `/instructors` | `createInstructor` | Create instructor record | 201 |
-| 9 | PUT | `/instructors/:id` | `updateInstructor` | Edit instructor info | 200 |
-| 10 | DELETE | `/instructors/:id` | `deleteInstructor` | Remove / deactivate instructor | 200 |
-
-### 2.3 Classes — CRUD for class definitions (US-10, US-12, US-13)
-
-| # | Method | Path | Handler | Story it serves | Status |
-|---|--------|------|---------|-----------------|--------|
-| 11 | GET | `/classes` | `listClasses` | View all classes | 200 |
-| 12 | GET | `/classes/:id` | `showClass` | View one class | 200 |
-| 13 | POST | `/classes` | `createClass` | Create a class (US-13) | 201 |
-| 14 | PUT | `/classes/:id` | `updateClass` | Edit class info | 200 |
-| 15 | DELETE | `/classes/:id` | `deleteClass` | Delete class when authorized | 200 |
-
-### 2.4 Attendance Records — CRUD for daily attendance (US-23, US-25)
-
-| # | Method | Path | Handler | Story it serves | Status |
-|---|--------|------|---------|-----------------|--------|
-| 16 | GET | `/attendance` | `listAttendance` | View attendance (history / report) | 200 |
-| 17 | GET | `/attendance/:id` | `showAttendance` | View one attendance record | 200 |
-| 18 | POST | `/attendance` | `createAttendance` | Take attendance (US-23) | 201 |
-| 19 | PUT | `/attendance/:id` | `updateAttendance` | Edit attendance info | 200 |
-| 20 | DELETE | `/attendance/:id` | `deleteAttendance` | Controlled delete for attendance | 200 |
-
-> ✅ Every CRUD story from Deliverable 1 has a matching route.  
-> ✅ Methods are correct (no creating or deleting with GET).  
-> ✅ This file lives at `/docs/routes.md`.
-
-**Ownership on board (Task 4):**
-
-| Route group | Owner | Branch | PR |
-|-------------|-------|--------|----|
-| Students (1–5) | Jamaica Ganolon (Scribe) | `feature/students-routes` | #1 |
-| Instructors (6–10) | Angelo Dairo (Builder) | `feature/instructors-routes` | #2 |
-| Classes (11–15) | Angelo Madolaria (Builder) | `feature/classes-routes` | #3 |
-| Attendance (16–20) | Demelyn Concepcion (Board Lead) | `feature/attendance-routes` | #4 |
-| Review / app wiring | Neil Herbert U. Betacura (Repo Lead) | `feature/routing-wiring` | #5 |
-
-All branches merged via reviewed PR against `main` with branch protection. No AI used — this file and stubs were written by hand.
-
----
-
-## 3. Stub Handlers (Week 3 Task 2 — no DB yet)
-
-Each route has a working handler returning the standardized placeholder. Location in repo:
-
-- `src/routes/students.routes.js`
-- `src/routes/instructors.routes.js`
-- `src/routes/classes.routes.js`
-- `src/routes/attendance.routes.js`
-- `src/utils/response.js` — envelope helpers `success(res, status, data)` / `fail(res, status, error, field)`
-- `src/app.js` — wires `route → stub` pipeline and 405 handler.
-
-Pseudocode (hand-written, matches actual code):
-
-```js
-function listStudents(req, res) {
-  return res.status(200).json({ status: 200, data: [{ message: "listStudents stub" }], error: null });
+{
+  "status": 200,
+  "data": {
+    "message": "listStudents stub"
+  },
+  "error": null
 }
-function createStudent(req, res) {
-  return res.status(201).json({ status: 201, data: { message: "createStudent stub" }, error: null });
+```
+
+#### `GET /api/students/:id` (`showStudent`)
+- **Request**: `GET /api/students/42`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "showStudent stub",
+    "id": 42
+  },
+  "error": null
 }
-function showStudent(req, res) {
-  const id = req.params.id;
-  return res.status(200).json({ status: 200, data: { message: "showStudent stub", id: id }, error: null });
+```
+
+#### `POST /api/students` (`createStudent`)
+- **Request**: `POST /api/students` with body `{"student_id_number": "STU-001", "first_name": "Elena", "last_name": "Reyes", "email": "elena@example.edu"}`
+- **Response** (`201 Created`):
+```json
+{
+  "status": 201,
+  "data": {
+    "message": "createStudent stub",
+    "payload": {
+      "student_id_number": "STU-001",
+      "first_name": "Elena",
+      "last_name": "Reyes",
+      "email": "elena@example.edu"
+    }
+  },
+  "error": null
 }
-// same shape for instructors / classes / attendance; :id always echoed
 ```
 
-- ✅ Every route in the table has a working handler.
-- ✅ Correct status codes (200 read/update/delete, 201 create).
-- ✅ Route params `:id` are read and echoed.
-- ✅ One consistent response shape.
+#### `PUT /api/students/:id` (`updateStudent`)
+- **Request**: `PUT /api/students/42` with body `{"email": "elena.updated@example.edu"}`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "updateStudent stub",
+    "id": 42,
+    "payload": {
+      "email": "elena.updated@example.edu"
+    }
+  },
+  "error": null
+}
+```
+
+#### `DELETE /api/students/:id` (`deleteStudent`)
+- **Request**: `DELETE /api/students/42`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "deleteStudent stub",
+    "id": 42
+  },
+  "error": null
+}
+```
 
 ---
 
-## 4. Testing Every Route (Week 3 Task 3)
+### 2. Courses (`Builder 2`)
 
-Method: browser for GET, `curl` / Postman / Insomnia for POST/PUT/DELETE. Server runs with `npm start` → `http://localhost:3000`.
-
-### 4.1 Example Request + Response per route (copy-pasteable)
-
-> All bodies are JSON. Stub responses are abbreviated — the real server returns the envelope above.
-
-**1 — GET /students — listStudents**
-
-```bash
-curl -i http://localhost:3000/students
-```
+#### `GET /api/courses` (`listCourses`)
+- **Request**: `GET /api/courses`
+- **Response** (`200 OK`):
 ```json
-// Response 200
-{ "status": 200, "data": [{ "message": "listStudents stub" }], "error": null }
+{
+  "status": 200,
+  "data": {
+    "message": "listCourses stub"
+  },
+  "error": null
+}
 ```
 
-**2 — GET /students/:id — showStudent**
-
-```bash
-curl -i http://localhost:3000/students/STU-001
-```
+#### `GET /api/courses/:id` (`showCourse`)
+- **Request**: `GET /api/courses/10`
+- **Response** (`200 OK`):
 ```json
-// Response 200
-{ "status": 200, "data": { "message": "showStudent stub", "id": "STU-001" }, "error": null }
+{
+  "status": 200,
+  "data": {
+    "message": "showCourse stub",
+    "id": 10
+  },
+  "error": null
+}
 ```
 
-**3 — POST /students — createStudent**
-
-```bash
-curl -i -X POST http://localhost:3000/students -H "Content-Type: application/json" -d "{\"name\":\"Juan Dela Cruz\",\"email\":\"juan@test.com\",\"classId\":\"CLS-01\",\"status\":\"active\"}"
-```
+#### `POST /api/courses` (`createCourse`)
+- **Request**: `POST /api/courses` with body `{"course_code": "CS-201", "title": "Data Structures", "instructor_name": "Dr. Alan Turing"}`
+- **Response** (`201 Created`):
 ```json
-// Response 201
-{ "status": 201, "data": { "message": "createStudent stub" }, "error": null }
+{
+  "status": 201,
+  "data": {
+    "message": "createCourse stub",
+    "payload": {
+      "course_code": "CS-201",
+      "title": "Data Structures",
+      "instructor_name": "Dr. Alan Turing"
+    }
+  },
+  "error": null
+}
 ```
 
-**4 — PUT /students/:id — updateStudent**
-
-```bash
-curl -i -X PUT http://localhost:3000/students/STU-001 -H "Content-Type: application/json" -d "{\"name\":\"Juan D. Cruz\"}"
-```
+#### `PUT /api/courses/:id` (`updateCourse`)
+- **Request**: `PUT /api/courses/10` with body `{"room": "Lab 4B"}`
+- **Response** (`200 OK`):
 ```json
-// Response 200
-{ "status": 200, "data": { "message": "updateStudent stub", "id": "STU-001" }, "error": null }
+{
+  "status": 200,
+  "data": {
+    "message": "updateCourse stub",
+    "id": 10,
+    "payload": {
+      "room": "Lab 4B"
+    }
+  },
+  "error": null
+}
 ```
 
-**5 — DELETE /students/:id — deleteStudent**
-
-```bash
-curl -i -X DELETE http://localhost:3000/students/STU-001
-```
+#### `DELETE /api/courses/:id` (`deleteCourse`)
+- **Request**: `DELETE /api/courses/10`
+- **Response** (`200 OK`):
 ```json
-// Response 200
-{ "status": 200, "data": { "message": "deleteStudent stub", "id": "STU-001" }, "error": null }
+{
+  "status": 200,
+  "data": {
+    "message": "deleteCourse stub",
+    "id": 10
+  },
+  "error": null
+}
 ```
-
-**6 — GET /instructors**
-
-```bash
-curl -i http://localhost:3000/instructors
-```
-```json
-// Response 200
-{ "status": 200, "data": [{ "message": "listInstructors stub" }], "error": null }
-```
-
-**7 — GET /instructors/:id**
-
-```bash
-curl -i http://localhost:3000/instructors/INS-010
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "showInstructor stub", "id": "INS-010" }, "error": null }
-```
-
-**8 — POST /instructors**
-
-```bash
-curl -i -X POST http://localhost:3000/instructors -H "Content-Type: application/json" -d "{\"name\":\"Maria Santos\",\"email\":\"maria@test.com\",\"status\":\"active\"}"
-```
-```json
-// Response 201
-{ "status": 201, "data": { "message": "createInstructor stub" }, "error": null }
-```
-
-**9 — PUT /instructors/:id**
-
-```bash
-curl -i -X PUT http://localhost:3000/instructors/INS-010 -H "Content-Type: application/json" -d "{\"department\":\"CS\"}"
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "updateInstructor stub", "id": "INS-010" }, "error": null }
-```
-
-**10 — DELETE /instructors/:id**
-
-```bash
-curl -i -X DELETE http://localhost:3000/instructors/INS-010
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "deleteInstructor stub", "id": "INS-010" }, "error": null }
-```
-
-**11 — GET /classes**
-
-```bash
-curl -i http://localhost:3000/classes
-```
-```json
-// Response 200
-{ "status": 200, "data": [{ "message": "listClasses stub" }], "error": null }
-```
-
-**12 — GET /classes/:id**
-
-```bash
-curl -i http://localhost:3000/classes/CLS-01
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "showClass stub", "id": "CLS-01" }, "error": null }
-```
-
-**13 — POST /classes**
-
-```bash
-curl -i -X POST http://localhost:3000/classes -H "Content-Type: application/json" -d "{\"className\":\"CS 101 - Section A\",\"instructorId\":\"INS-010\",\"schedule\":\"MWF 9:00-10:00\"}"
-```
-```json
-// Response 201
-{ "status": 201, "data": { "message": "createClass stub" }, "error": null }
-```
-
-**14 — PUT /classes/:id**
-
-```bash
-curl -i -X PUT http://localhost:3000/classes/CLS-01 -H "Content-Type: application/json" -d "{\"schedule\":\"TTH 10:00-11:30\"}"
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "updateClass stub", "id": "CLS-01" }, "error": null }
-```
-
-**15 — DELETE /classes/:id**
-
-```bash
-curl -i -X DELETE http://localhost:3000/classes/CLS-01
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "deleteClass stub", "id": "CLS-01" }, "error": null }
-```
-
-**16 — GET /attendance**
-
-```bash
-curl -i http://localhost:3000/attendance
-```
-```json
-// Response 200
-{ "status": 200, "data": [{ "message": "listAttendance stub" }], "error": null }
-```
-
-**17 — GET /attendance/:id**
-
-```bash
-curl -i http://localhost:3000/attendance/ATT-0001
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "showAttendance stub", "id": "ATT-0001" }, "error": null }
-```
-
-**18 — POST /attendance**
-
-```bash
-curl -i -X POST http://localhost:3000/attendance -H "Content-Type: application/json" -d "{\"studentId\":\"STU-001\",\"classId\":\"CLS-01\",\"date\":\"2026-03-10\",\"status\":\"present\"}"
-```
-```json
-// Response 201
-{ "status": 201, "data": { "message": "createAttendance stub" }, "error": null }
-```
-
-**19 — PUT /attendance/:id**
-
-```bash
-curl -i -X PUT http://localhost:3000/attendance/ATT-0001 -H "Content-Type: application/json" -d "{\"status\":\"late\"}"
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "updateAttendance stub", "id": "ATT-0001" }, "error": null }
-```
-
-**20 — DELETE /attendance/:id**
-
-```bash
-curl -i -X DELETE http://localhost:3000/attendance/ATT-0001
-```
-```json
-// Response 200
-{ "status": 200, "data": { "message": "deleteAttendance stub", "id": "ATT-0001" }, "error": null }
-```
-
-### 4.2 Wrong-method behaviour
-
-```bash
-curl -i -X DELETE http://localhost:3000/students
-# Response 405
-{ "status": 405, "data": null, "error": "Method DELETE not allowed on /students. Use DELETE /students/:id", "field": null }
-
-curl -i -X GET http://localhost:3000/students
-# 200 — OK (list), not 405
-
-curl -i -X POST http://localhost:3000/students/STU-001
-# Response 405
-{ "status": 405, "data": null, "error": "Method POST not allowed on /students/:id. Use POST /students", "field": null }
-```
-
-Every `405` returns the same envelope, never a stack trace.
-
-- [x] Every route returns the expected status and stub body.
-- [x] A wrong method to a path behaves sensibly (405 with envelope).
-- [x] One example request + response per route is recorded above.
 
 ---
 
-## 5. How to Run (no DB)
+### 3. Enrollments (`Scribe`)
 
-```bash
-npm install
-npm start          # http://localhost:3000
-npm test           # runs Week 5 automated tests (must be green before PR merges)
+#### `GET /api/enrollments` (`listEnrollments`)
+- **Request**: `GET /api/enrollments`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "listEnrollments stub"
+  },
+  "error": null
+}
 ```
 
-AI was **OFF** this week. All routes/handlers were written by hand. There is no prompt log because there was nothing to log.
+#### `GET /api/enrollments/:id` (`showEnrollment`)
+- **Request**: `GET /api/enrollments/5`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "showEnrollment stub",
+    "id": 5
+  },
+  "error": null
+}
+```
+
+#### `POST /api/enrollments` (`createEnrollment`)
+- **Request**: `POST /api/enrollments` with body `{"student_id": 42, "course_id": 10}`
+- **Response** (`201 Created`):
+```json
+{
+  "status": 201,
+  "data": {
+    "message": "createEnrollment stub",
+    "payload": {
+      "student_id": 42,
+      "course_id": 10
+    }
+  },
+  "error": null
+}
+```
+
+#### `DELETE /api/enrollments/:id` (`deleteEnrollment`)
+- **Request**: `DELETE /api/enrollments/5`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "deleteEnrollment stub",
+    "id": 5
+  },
+  "error": null
+}
+```
 
 ---
 
-## 6. End-of-Lab Checklist (Week 3)
+### 4. Attendance Records (`Board Lead`)
 
-- [x] `/docs/routes.md` — full routing table + one example request/response per route (this file)
-- [x] A working stub handler for every CRUD route, returning correct status codes (`src/routes/*.routes.js`)
-- [x] Route parameters read correctly (`req.params.id` echoed)
-- [x] One consistent response shape across the team (`src/utils/response.js`)
-- [x] Every route owned on the board; all merges via reviewed PR
-- [x] No AI used
+#### `GET /api/attendance` (`listAttendance`)
+- **Request**: `GET /api/attendance`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "listAttendance stub"
+  },
+  "error": null
+}
+```
+
+#### `GET /api/attendance/:id` (`showAttendance`)
+- **Request**: `GET /api/attendance/88`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "showAttendance stub",
+    "id": 88
+  },
+  "error": null
+}
+```
+
+#### `POST /api/attendance` (`createAttendance`)
+- **Request**: `POST /api/attendance` with body `{"course_id": 10, "student_id": 42, "session_date": "2026-10-03", "status": "Present"}`
+- **Response** (`201 Created`):
+```json
+{
+  "status": 201,
+  "data": {
+    "message": "createAttendance stub",
+    "payload": {
+      "course_id": 10,
+      "student_id": 42,
+      "session_date": "2026-10-03",
+      "status": "Present"
+    }
+  },
+  "error": null
+}
+```
+
+#### `PUT /api/attendance/:id` (`updateAttendance`)
+- **Request**: `PUT /api/attendance/88` with body `{"status": "Excused", "remarks": "Doctor note provided"}`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "updateAttendance stub",
+    "id": 88,
+    "payload": {
+      "status": "Excused",
+      "remarks": "Doctor note provided"
+    }
+  },
+  "error": null
+}
+```
+
+#### `DELETE /api/attendance/:id` (`deleteAttendance`)
+- **Request**: `DELETE /api/attendance/88`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "deleteAttendance stub",
+    "id": 88
+  },
+  "error": null
+}
+```
+
+---
+
+### 5. Health Check (`Repo Lead`)
+
+#### `GET /api/health` (`healthCheck`)
+- **Request**: `GET /api/health`
+- **Response** (`200 OK`):
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "healthCheck stub",
+    "service": "SAMS Routing Skeleton",
+    "week": 3
+  },
+  "error": null
+}
+```
+
+---
+
+## 🚫 Handling Wrong Methods & Sensible Behavior
+
+If an invalid method is sent to a route (e.g. `DELETE /api/students` without an ID, or requesting an undefined endpoint):
+- **Response** (`405 Method Not Allowed` or `404 Not Found`):
+```json
+{
+  "status": 405,
+  "data": null,
+  "error": "Method DELETE not allowed on /api/students. Did you mean /api/students/:id?"
+}
+```
+All route handlers maintain strict shape consistency `{ status, data, error }`.
