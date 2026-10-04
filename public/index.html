@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Attendance Management System (SAMS)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-icon">📊</div>
+        <div>
+          <h2>SAMS Portal</h2>
+          <span class="badge">Week 6 Views</span>
+        </div>
+      </div>
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard">
+          <span class="nav-icon">🏠</span> Dashboard
+        </button>
+        <button class="nav-item" data-tab="students">
+          <span class="nav-icon">🎓</span> Students
+        </button>
+        <button class="nav-item" data-tab="courses">
+          <span class="nav-icon">📚</span> Courses
+        </button>
+        <button class="nav-item" data-tab="rollcall">
+          <span class="nav-icon">📝</span> Take Attendance
+        </button>
+        <button class="nav-item" data-tab="records">
+          <span class="nav-icon">📋</span> Attendance Logs
+        </button>
+        <button class="nav-item" data-tab="ui-states">
+          <span class="nav-icon">✨</span> UI States Demo
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="team-tag">Team: 5 Builders</div>
+        <small>Sprint: Week 6 of 12</small>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1 id="page-title">Dashboard Overview</h1>
+          <p class="subtitle" id="page-subtitle">Welcome to the Student Attendance Management System baseline.</p>
+        </div>
+        <div class="actions">
+          <button class="btn btn-secondary" id="btn-reset-data">Reset Seed Data</button>
+          <button class="btn btn-primary" id="btn-quick-attendance">Take Roll Call</button>
+        </div>
+      </header>
+
+      <!-- TAB: Dashboard -->
+      <section id="tab-dashboard" class="tab-pane active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Total Enrolled Students</span>
+            <span class="stat-value" id="stat-total-students">0</span>
+            <span class="stat-meta">Active across all cohorts</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Active Courses</span>
+            <span class="stat-value" id="stat-total-courses">0</span>
+            <span class="stat-meta">Scheduled this term</span>
+          </div>
+          <div class="stat-card highlight">
+            <span class="stat-label">Overall Attendance Rate</span>
+            <span class="stat-value" id="stat-rate">0%</span>
+            <span class="stat-meta">Present / Excused share</span>
+          </div>
+        </div>
+
+        <div class="grid-2-col">
+          <div class="card">
+            <h3>Recent Attendance Sessions</h3>
+            <div class="table-responsive">
+              <table class="data-table" id="table-recent-attendance">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Course</th>
+                    <th>Student</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <!-- Dynamic State Containers injected via JS -->
+            <div id="dashboard-recent-state-container"></div>
+          </div>
+
+          <div class="card">
+            <h3>Course Overview & Rosters</h3>
+            <div id="course-cards-container" class="course-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: Students CRUD -->
+      <section id="tab-students" class="tab-pane">
+        <div class="section-header">
+          <div>
+            <h2>Student Directory</h2>
+            <p>Manage student profiles, cohorts, and contact information.</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <select id="student-filter" class="form-control" style="width: 150px;">
+              <option value="All">All Statuses</option>
+              <option value="Active">Active Only</option>
+              <option value="Inactive">Inactive Only</option>
+            </select>
+            <button class="btn btn-primary" id="btn-open-student-modal">+ Add New Student</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-responsive">
+            <table class="data-table" id="table-students">
+              <thead>
+                <tr>
+                  <th>Student ID</th>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Cohort / Major</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div id="students-state-container"></div>
+        </div>
+      </section>
+
+      <!-- TAB: Courses CRUD -->
+      <section id="tab-courses" class="tab-pane">
+        <div class="section-header">
+          <div>
+            <h2>Course Catalog</h2>
+            <p>Manage courses, assigned instructors, and schedules.</p>
+          </div>
+          <button class="btn btn-primary" id="btn-open-course-modal">+ Add New Course</button>
+        </div>
+        <div class="card">
+          <div class="table-responsive">
+            <table class="data-table" id="table-courses">
+              <thead>
+                <tr>
+                  <th>Course Code</th>
+                  <th>Course Title</th>
+                  <th>Instructor</th>
+                  <th>Term</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div id="courses-state-container"></div>
+        </div>
+      </section>
+
+      <!-- TAB: Take Roll Call -->
+      <section id="tab-rollcall" class="tab-pane">
+        <div class="section-header">
+          <div>
+            <h2>Take Session Attendance</h2>
+            <p>Mark attendance for an entire course session in one quick submission.</p>
+          </div>
+        </div>
+        <div class="card filter-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rollcall-course-select">Select Course</label>
+              <select id="rollcall-course-select" class="form-control"></select>
+            </div>
+            <div class="form-group">
+              <label for="rollcall-date">Session Date</label>
+              <input type="date" id="rollcall-date" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <form id="form-rollcall">
+            <div class="table-responsive">
+              <table class="data-table" id="table-rollcall">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Attendance Status</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-rollcall"></tbody>
+              </table>
+            </div>
+            <div id="rollcall-state-container"></div>
+            <div class="form-actions" style="margin-top: 1.5rem;">
+              <button type="submit" class="btn btn-primary">Save Session Attendance</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB: Records -->
+      <section id="tab-records" class="tab-pane">
+        <div class="section-header">
+          <div>
+            <h2>Historical Attendance Records</h2>
+            <p>Full audit trail of all recorded attendance entries across all courses.</p>
+          </div>
+          <div class="search-filter">
+            <input type="text" id="records-search" class="form-control" placeholder="Search student or course...">
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-responsive">
+            <table class="data-table" id="table-all-records">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Course</th>
+                  <th>Student</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div id="records-state-container"></div>
+        </div>
+      </section>
+
+      <!-- TAB: UI States Demo (Week 6 Focus) -->
+      <section id="tab-ui-states" class="tab-pane">
+        <div class="card">
+          <h2>Week 6: Empty, Loading, and Error States</h2>
+          <p style="margin-bottom: 2rem;">These states are dynamically shown when fetching data (Week 7 binding prep).</p>
+          
+          <div class="grid-2-col">
+            <!-- Loading State Demo -->
+            <div class="state-container state-loading">
+              <div class="spinner"></div>
+              <p>Fetching records from server...</p>
+            </div>
+
+            <!-- Empty State Demo -->
+            <div class="state-container state-empty">
+              <div class="state-icon">📭</div>
+              <h3>No Records Found</h3>
+              <p>There is no data to display here yet.</p>
+            </div>
+            
+            <!-- Error State Demo -->
+            <div class="state-container state-error" style="grid-column: 1 / -1;">
+              <div class="state-icon">⚠️</div>
+              <h3>Connection Failed</h3>
+              <p>Unable to load the requested data. Please try again later. (Error: 500)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: Add/Edit Student (AI Modified with Accessibility Roles) -->
+  <div class="modal" id="modal-student" role="dialog" aria-modal="true" aria-labelledby="modal-student-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-student-title">Add New Student</h3>
+        <button class="modal-close" data-close="modal-student" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="form-student">
+        <input type="hidden" id="student-id">
+        <div class="form-group">
+          <label for="student-id-number">Student ID Number *</label>
+          <input type="text" id="student-id-number" class="form-control" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="student-first-name">First Name *</label>
+            <input type="text" id="student-first-name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="student-last-name">Last Name *</label>
+            <input type="text" id="student-last-name" class="form-control" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="student-email">Email Address *</label>
+          <input type="email" id="student-email" class="form-control" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="student-status">Status</label>
+            <select id="student-status" class="form-control">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close="modal-student">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Add/Edit Course -->
+  <div class="modal" id="modal-course" role="dialog" aria-modal="true" aria-labelledby="modal-course-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-course-title">Add New Course</h3>
+        <button class="modal-close" data-close="modal-course" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="form-course">
+        <input type="hidden" id="course-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="course-code">Course Code *</label>
+            <input type="text" id="course-code" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="course-title">Course Title *</label>
+            <input type="text" id="course-title" class="form-control" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="course-instructor">Instructor Name *</label>
+          <input type="text" id="course-instructor" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close="modal-course">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+  <script src="app.js"></script>
+</body>
+</html>
