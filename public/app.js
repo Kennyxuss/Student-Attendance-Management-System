@@ -948,23 +948,6 @@ function loadStoredUsers() {
         });
       }
     }
-  } catch (e) {}
-
-  // Sync custom saved admin profile onto primary administrator
-  try {
-    const savedAdmin = localStorage.getItem('sams_admin_profile');
-    if (savedAdmin) {
-      const p = JSON.parse(savedAdmin);
-      const adminUser = USERS_DATA.find(u => u.role === 'Administrator' || u.id === 1) || USERS_DATA[0];
-      if (adminUser) {
-        if (p.name) adminUser.name = p.name;
-        if (p.avatar) adminUser.avatar = p.avatar;
-        if (p.email) adminUser.email = p.email;
-        if (p.role) adminUser.role = p.role;
-        if (p.department) adminUser.department = p.department;
-      }
-    }
-  } catch (e) {}
 }
 
 function persistUsersData() {
@@ -3117,50 +3100,7 @@ function loadSystemSettings() {
     console.warn('LocalStorage not available, using in-memory settings.');
   }
 
-  // Load custom admin profile if saved
-  try {
-    const savedAdmin = localStorage.getItem('sams_admin_profile');
-    if (savedAdmin) {
-      const p = JSON.parse(savedAdmin);
-      if (p.avatar) {
-        const topbarAvatar = document.getElementById('topbar-user-avatar');
-        if (topbarAvatar) topbarAvatar.src = p.avatar;
-        const dropAvatar = document.getElementById('dropdown-user-avatar');
-        if (dropAvatar) dropAvatar.src = p.avatar;
-        const settingsAvatar = document.getElementById('settings-admin-avatar');
-        if (settingsAvatar) settingsAvatar.src = p.avatar;
-        if (USERS_DATA[0]) USERS_DATA[0].avatar = p.avatar;
-      }
-      if (p.name) {
-        const topbarName = document.getElementById('topbar-user-name');
-        if (topbarName) topbarName.textContent = p.name;
-        const dropName = document.getElementById('dropdown-user-name');
-        if (dropName) dropName.textContent = p.name;
-        const settingsName = document.getElementById('settings-admin-name');
-        if (settingsName) settingsName.textContent = p.name;
-        if (USERS_DATA[0]) USERS_DATA[0].name = p.name;
-      }
-      if (p.role) {
-        const topbarRole = document.getElementById('topbar-user-role');
-        if (topbarRole) topbarRole.textContent = p.role;
-        const dropBadge = document.getElementById('dropdown-user-role-badge');
-        if (dropBadge) dropBadge.textContent = p.role;
-        const settingsBadge = document.getElementById('settings-admin-role-badge');
-        if (settingsBadge) settingsBadge.textContent = p.role;
-        if (USERS_DATA[0]) USERS_DATA[0].role = p.role;
-      }
-      if (p.email) {
-        const dropEmail = document.getElementById('dropdown-user-email');
-        if (dropEmail) dropEmail.textContent = p.email;
-        const settingsEmail = document.getElementById('settings-admin-email-sub');
-        if (settingsEmail) settingsEmail.textContent = `${p.email} • Click avatar to change photo or launch quick settings`;
-        if (USERS_DATA[0]) USERS_DATA[0].email = p.email;
-      }
-      if (p.department && USERS_DATA[0]) {
-        USERS_DATA[0].department = p.department;
-      }
-    }
-  } catch (err) {}
+
 
   // Populate DOM elements
   const setVal = (id, val) => {
@@ -3399,15 +3339,6 @@ function handleSaveAdminProfile(event) {
     persistUsersData();
     renderUsersTable();
     renderCredentialsDirectory();
-  }
-
-  // Persist to localStorage
-  try {
-    const adminProfile = { avatar: newAvatar, name: newName, role: newRole, email: newEmail, department: newDept };
-    localStorage.setItem('sams_admin_profile', JSON.stringify(adminProfile));
-    localStorage.setItem('sams_current_user', JSON.stringify(CURRENT_USER));
-  } catch (err) {
-    console.warn('Could not save admin profile to localStorage');
   }
 
   closeAvatarSettingsActionsModal();
