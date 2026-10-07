@@ -1,3 +1,18 @@
+
+// =========================================================================
+// FIREBASE INITIALIZATION
+// =========================================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBOeb1_fcCzLpRNutQQQdi_dSSXgtnE_7k",
+  authDomain: "sams-database-99d3b.firebaseapp.com",
+  projectId: "sams-database-99d3b",
+  storageBucket: "sams-database-99d3b.firebasestorage.app",
+  messagingSenderId: "309740513089",
+  appId: "1:309740513089:web:16194a1d43157a1761e3c0"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 /**
  * ATTENDANCE MANAGEMENT SYSTEM - FRONTEND CONTROLLER
  * High-fidelity implementation matching all 10 UI designs
@@ -932,58 +947,65 @@ function applyCurrentUser(user) {
   }
 }
 
-function loadStoredUsers() {
+async function loadStoredUsers() {
   try {
-    const stored = localStorage.getItem('sams_users_data');
-    if (stored) {
-      const parsed = JSON.parse(stored);
+    const doc = await db.collection('sams_db').doc('users').get();
+    if (doc.exists) {
+      const parsed = doc.data().data;
       if (Array.isArray(parsed) && parsed.length > 0) {
-        parsed.forEach(storedUser => {
-          const idx = USERS_DATA.findIndex(u => u.id === storedUser.id);
-          if (idx !== -1) {
-            USERS_DATA[idx] = Object.assign({}, USERS_DATA[idx], storedUser);
-          } else {
-            USERS_DATA.push(storedUser);
-          }
-        });
+        USERS_DATA = parsed;
+      }
+    } else {
+      // Fallback to local storage migration
+      const stored = localStorage.getItem('sams_users_data');
+      if (stored) {
+        USERS_DATA = JSON.parse(stored);
+        persistUsersData();
       }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error("Firebase error loadStoredUsers:", e);
+  }
 }
 
 
 function persistUsersData() {
   try {
     localStorage.setItem('sams_users_data', JSON.stringify(USERS_DATA));
+    db.collection('sams_db').doc('users').set({ data: USERS_DATA });
   } catch (e) {}
 }
 
-function loadStoredStudents() {
+async function loadStoredStudents() {
   try {
-    const stored = localStorage.getItem('sams_students_data');
-    if (stored) {
-      const parsed = JSON.parse(stored);
+    const doc = await db.collection('sams_db').doc('students').get();
+    if (doc.exists) {
+      const parsed = doc.data().data;
       if (Array.isArray(parsed) && parsed.length > 0) {
         STUDENTS_DATA = parsed;
       }
+    } else {
+      const stored = localStorage.getItem('sams_students_data');
+      if (stored) { STUDENTS_DATA = JSON.parse(stored); persistStudentsData(); }
     }
-  } catch (e) {}
+  } catch (e) { console.error(e); }
 }
 
 function persistStudentsData() {
   try {
     localStorage.setItem('sams_students_data', JSON.stringify(STUDENTS_DATA));
+    db.collection('sams_db').doc('students').set({ data: STUDENTS_DATA });
   } catch (e) {}
 }
 
-function loadStoredClasses() {
+async function loadStoredClasses() {
   try {
-    const stored = localStorage.getItem('sams_classes_data');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        CLASSES_DATA = parsed;
-      }
+    const doc = await db.collection('sams_db').doc('classes').get();
+    if (doc.exists) {
+      CLASSES_DATA = doc.data().data;
+    } else {
+      const stored = localStorage.getItem('sams_classes_data');
+      if (stored) { CLASSES_DATA = JSON.parse(stored); persistClassesData(); }
     }
   } catch (e) {}
 }
@@ -991,17 +1013,18 @@ function loadStoredClasses() {
 function persistClassesData() {
   try {
     localStorage.setItem('sams_classes_data', JSON.stringify(CLASSES_DATA));
+    db.collection('sams_db').doc('classes').set({ data: CLASSES_DATA });
   } catch (e) {}
 }
 
-function loadStoredCalendarEvents() {
+async function loadStoredCalendarEvents() {
   try {
-    const stored = localStorage.getItem('sams_calendar_events');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        CALENDAR_EVENTS = parsed;
-      }
+    const doc = await db.collection('sams_db').doc('calendar').get();
+    if (doc.exists) {
+      CALENDAR_EVENTS = doc.data().data;
+    } else {
+      const stored = localStorage.getItem('sams_calendar_events');
+      if (stored) { CALENDAR_EVENTS = JSON.parse(stored); persistCalendarEvents(); }
     }
   } catch (e) {}
 }
@@ -1009,6 +1032,7 @@ function loadStoredCalendarEvents() {
 function persistCalendarEvents() {
   try {
     localStorage.setItem('sams_calendar_events', JSON.stringify(CALENDAR_EVENTS));
+    db.collection('sams_db').doc('calendar').set({ data: CALENDAR_EVENTS });
   } catch (e) {}
 }
 
@@ -1066,37 +1090,36 @@ function navigateCalendarToRollcall(dateStr) {
   showToast(`Switched roll call date to ${dateStr}`, 'info');
 }
 
-function loadStoredAttendance() {
+async function loadStoredAttendance() {
   try {
-    const storedDaily = localStorage.getItem('sams_daily_attendance');
-    if (storedDaily) {
-      const parsed = JSON.parse(storedDaily);
-      if (parsed && typeof parsed === 'object') {
-        DAILY_ATTENDANCE = Object.assign({}, DAILY_ATTENDANCE, parsed);
-      }
-    }
-    const curDate = getSelectedRollcallDate();
-    ATTENDANCE_MAP = getAttendanceForDate(curDate);
-
-    const storedHist = localStorage.getItem('sams_attendance_history');
-    if (storedHist) {
-      const parsed = JSON.parse(storedHist);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        ATTENDANCE_HISTORY = parsed;
-      }
+    const doc = await db.collection('sams_db').doc('attendance').get();
+    if (doc.exists) {
+      const d = doc.data();
+      if (d.history) ATTENDANCE_HISTORY = d.history;
+      if (d.map) ATTENDANCE_MAP = d.map;
+      if (d.daily) DAILY_ATTENDANCE = d.daily;
+    } else {
+      const stored1 = localStorage.getItem('sams_attendance_history');
+      if (stored1) ATTENDANCE_HISTORY = JSON.parse(stored1);
+      const stored2 = localStorage.getItem('sams_attendance_map');
+      if (stored2) ATTENDANCE_MAP = JSON.parse(stored2);
+      const stored3 = localStorage.getItem('sams_daily_attendance');
+      if (stored3) DAILY_ATTENDANCE = JSON.parse(stored3);
+      persistAttendanceData();
     }
   } catch (e) {}
 }
 
 function persistAttendanceData() {
   try {
-    const curDate = getSelectedRollcallDate();
-    if (ATTENDANCE_MAP) {
-      DAILY_ATTENDANCE[curDate] = Object.assign({}, ATTENDANCE_MAP);
-    }
-    localStorage.setItem('sams_daily_attendance', JSON.stringify(DAILY_ATTENDANCE));
-    localStorage.setItem('sams_attendance_map', JSON.stringify(ATTENDANCE_MAP));
     localStorage.setItem('sams_attendance_history', JSON.stringify(ATTENDANCE_HISTORY));
+    localStorage.setItem('sams_attendance_map', JSON.stringify(ATTENDANCE_MAP));
+    localStorage.setItem('sams_daily_attendance', JSON.stringify(DAILY_ATTENDANCE));
+    db.collection('sams_db').doc('attendance').set({
+      history: ATTENDANCE_HISTORY,
+      map: ATTENDANCE_MAP,
+      daily: DAILY_ATTENDANCE
+    });
   } catch (e) {}
 }
 
@@ -1276,14 +1299,14 @@ function handleSaveCredentials(event) {
 // =========================================================================
 // INITIALIZATION
 // =========================================================================
-document.addEventListener('DOMContentLoaded', () => {
-  loadStoredUsers();
-  loadStoredStudents();
-  loadStoredClasses();
-  loadStoredCalendarEvents();
-  loadStoredAttendance();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadStoredUsers();
+  await loadStoredStudents();
+  await loadStoredClasses();
+  await loadStoredCalendarEvents();
+  await loadStoredAttendance();
   initNavigation();
-  loadSystemSettings();
+  await loadSystemSettings();
 
   // Load saved active user or default to Neil (Admin)
   try {
@@ -1372,9 +1395,7 @@ function switchTab(tabName) {
     renderCalendar();
   } else if (tabName === 'users') {
     renderUsersTable();
-  } else if (tabName === 'settings') {
-    loadSystemSettings();
-  }
+  } else if (tabName === 'settings') { loadSystemSettings(); }
 }
 
 // Switch between Login View and App View
@@ -3092,55 +3113,16 @@ function goToSettingsSection(sectionName) {
   showToast(`Navigated to ${sectionName.toUpperCase()} settings`, 'info');
 }
 
-function loadSystemSettings() {
+async function loadSystemSettings() {
   try {
-    const saved = localStorage.getItem('sams_system_settings');
-    if (saved) {
-      SYSTEM_SETTINGS = Object.assign(SYSTEM_SETTINGS, JSON.parse(saved));
+    const doc = await db.collection('sams_db').doc('settings').get();
+    if (doc.exists) {
+      SYSTEM_SETTINGS = Object.assign(SYSTEM_SETTINGS, doc.data().data);
+    } else {
+      const saved = localStorage.getItem('sams_system_settings');
+      if (saved) { SYSTEM_SETTINGS = Object.assign(SYSTEM_SETTINGS, JSON.parse(saved)); }
     }
-  } catch (err) {
-    console.warn('LocalStorage not available, using in-memory settings.');
-  }
-
-
-
-  // Populate DOM elements
-  const setVal = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) el.value = val;
-  };
-  const setChecked = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) el.checked = Boolean(val);
-  };
-
-  setVal('setting-cutoff-time', SYSTEM_SETTINGS.cutoff_time);
-  setVal('setting-grace-period', SYSTEM_SETTINGS.grace_period);
-  setVal('setting-consecutive-threshold', SYSTEM_SETTINGS.consecutive_threshold);
-  setChecked('setting-allow-retro', SYSTEM_SETTINGS.allow_retro);
-  setChecked('setting-auto-lock', SYSTEM_SETTINGS.auto_lock);
-  setChecked('setting-require-remarks', SYSTEM_SETTINGS.require_remarks);
-  setChecked('setting-notify-guardian', SYSTEM_SETTINGS.notify_guardian);
-  setChecked('setting-weekly-digest', SYSTEM_SETTINGS.weekly_digest);
-  setVal('setting-warning-pct', SYSTEM_SETTINGS.warning_pct);
-  setVal('setting-org-name', SYSTEM_SETTINGS.org_name);
-  setVal('setting-academic-term', SYSTEM_SETTINGS.academic_term);
-  setVal('setting-org-email', SYSTEM_SETTINGS.org_email);
-  setVal('setting-org-phone', SYSTEM_SETTINGS.org_phone);
-  setVal('setting-org-address', SYSTEM_SETTINGS.org_address);
-
-  // Update profile banner preview
-  const nameDisp = document.getElementById('profile-display-name');
-  if (nameDisp) nameDisp.textContent = SYSTEM_SETTINGS.org_name;
-  const subDisp = document.getElementById('profile-display-sub');
-  if (subDisp) subDisp.textContent = `Accredited Institution • ${SYSTEM_SETTINGS.academic_term}`;
-
-  if (SYSTEM_SETTINGS.badge_icon) {
-    const iconEl = document.getElementById('center-badge-icon');
-    if (iconEl) {
-      iconEl.className = `fa-solid ${SYSTEM_SETTINGS.badge_icon}`;
-    }
-  }
+  } catch (err) {}
 }
 
 function saveSystemSettings() {
@@ -3173,7 +3155,7 @@ function saveSystemSettings() {
     SYSTEM_SETTINGS.org_address = getVal('setting-org-address', 'Poblacion, Kadingilan, Bukidnon, Philippines');
 
     try {
-      localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS));
+      localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS)); db.collection('sams_db').doc('settings').set({ data: SYSTEM_SETTINGS });
     } catch (e) {}
 
     // Update profile banner
@@ -3218,7 +3200,7 @@ function selectBadgeIcon(iconClass) {
   }
   SYSTEM_SETTINGS.badge_icon = iconClass;
   try {
-    localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS));
+    localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS)); db.collection('sams_db').doc('settings').set({ data: SYSTEM_SETTINGS });
   } catch (e) {}
   closeCenterBadgePicker();
   showToast(`Center emblem updated to ${iconClass.replace('fa-', '')}`, 'success');
@@ -3398,8 +3380,7 @@ function handleImportDatabaseFile(event) {
       if (parsed.system_users) USERS_DATA = parsed.system_users;
       if (parsed.classes) CLASSES_DATA = parsed.classes;
       if (parsed.settings) {
-        SYSTEM_SETTINGS = Object.assign(SYSTEM_SETTINGS, parsed.settings);
-        loadSystemSettings();
+        SYSTEM_SETTINGS = Object.assign(SYSTEM_SETTINGS, parsed.settings); loadSystemSettings();
       }
 
       renderStudentsTable();
