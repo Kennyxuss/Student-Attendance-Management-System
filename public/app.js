@@ -949,6 +949,22 @@ function loadStoredUsers() {
       }
     }
   } catch (e) {}
+
+  // Sync custom saved admin profile onto primary administrator
+  try {
+    const savedAdmin = localStorage.getItem('sams_admin_profile');
+    if (savedAdmin) {
+      const p = JSON.parse(savedAdmin);
+      const adminUser = USERS_DATA.find(u => u.role === 'Administrator' || u.id === 1) || USERS_DATA[0];
+      if (adminUser) {
+        if (p.name) adminUser.name = p.name;
+        if (p.avatar) adminUser.avatar = p.avatar;
+        if (p.email) adminUser.email = p.email;
+        if (p.role) adminUser.role = p.role;
+        if (p.department) adminUser.department = p.department;
+      }
+    }
+  } catch (e) {}
 }
 
 function persistUsersData() {
@@ -972,6 +988,42 @@ function loadStoredStudents() {
 function persistStudentsData() {
   try {
     localStorage.setItem('sams_students_data', JSON.stringify(STUDENTS_DATA));
+  } catch (e) {}
+}
+
+function loadStoredClasses() {
+  try {
+    const stored = localStorage.getItem('sams_classes_data');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        CLASSES_DATA = parsed;
+      }
+    }
+  } catch (e) {}
+}
+
+function persistClassesData() {
+  try {
+    localStorage.setItem('sams_classes_data', JSON.stringify(CLASSES_DATA));
+  } catch (e) {}
+}
+
+function loadStoredCalendarEvents() {
+  try {
+    const stored = localStorage.getItem('sams_calendar_events');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        CALENDAR_EVENTS = parsed;
+      }
+    }
+  } catch (e) {}
+}
+
+function persistCalendarEvents() {
+  try {
+    localStorage.setItem('sams_calendar_events', JSON.stringify(CALENDAR_EVENTS));
   } catch (e) {}
 }
 
@@ -1242,6 +1294,8 @@ function handleSaveCredentials(event) {
 document.addEventListener('DOMContentLoaded', () => {
   loadStoredUsers();
   loadStoredStudents();
+  loadStoredClasses();
+  loadStoredCalendarEvents();
   loadStoredAttendance();
   initNavigation();
   loadSystemSettings();
@@ -1251,8 +1305,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedUser = localStorage.getItem('sams_current_user');
     if (savedUser) {
       const parsed = JSON.parse(savedUser);
-      const matched = USERS_DATA.find(u => u.id === parsed.id || u.email === parsed.email);
-      CURRENT_USER = matched || parsed;
+      const matched = USERS_DATA.find(u => u.id === parsed.id || u.username === parsed.username || u.email === parsed.email);
+      CURRENT_USER = matched ? Object.assign(matched, parsed) : parsed;
     }
   } catch (e) {}
 
@@ -1280,6 +1334,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderStudentsTable();
   loadRosterForAttendance();
   renderClassesGrid();
+  renderCalendar();
+  renderUsersTable();
   renderCredentialsDirectory();
 });
 
@@ -1688,8 +1744,44 @@ function showCreateStudentForm() {
   document.getElementById('pane-create-student').classList.remove('d-none');
 }
 
+function handleCreateStudentPhotoUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('create-photo-preview');
+    const placeholder = document.getElementById('create-upload-icon-placeholder');
+    if (preview) {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    }
+    if (placeholder) placeholder.style.display = 'none';
+    showToast('Student photo selected!', 'info');
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleCreateStudentPhotoPrompt() {
+  const url = prompt('Enter student photo URL (https://...):');
+  if (url && url.trim().startsWith('http')) {
+    const preview = document.getElementById('create-photo-preview');
+    const placeholder = document.getElementById('create-upload-icon-placeholder');
+    if (preview) {
+      preview.src = url.trim();
+      preview.style.display = 'block';
+    }
+    if (placeholder) placeholder.style.display = 'none';
+    showToast('Student photo URL set!', 'info');
+  }
+}
+
 function triggerPhotoPick() {
-  showToast('Photo uploaded: juan_santos.jpg (Preview updated)', 'success');
+  const fileInput = document.getElementById('create-photo-file-input');
+  if (fileInput) {
+    fileInput.click();
+  } else {
+    handleCreateStudentPhotoPrompt();
+  }
 }
 
 function handleCreateStudentSubmit(event) {
@@ -1700,6 +1792,7 @@ function handleCreateStudentSubmit(event) {
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
   setTimeout(() => {
+    const customAvatar = document.getElementById('create-photo-preview')?.src;
     const newStudent = {
       id: Date.now(),
       student_id_number: form.student_id_number.value,
@@ -1720,15 +1813,19 @@ function handleCreateStudentSubmit(event) {
       guardian_contact: form.guardian_contact.value,
       relationship: form.relationship.value,
       notes: form.notes.value,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'
+      avatar: (customAvatar && customAvatar.length > 10) ? customAvatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'
     };
 
     STUDENTS_DATA.unshift(newStudent);
     persistStudentsData();
     form.reset();
+    const createPreview = document.getElementById('create-photo-preview');
+    if (createPreview) createPreview.style.display = 'none';
+    const createPlaceholder = document.getElementById('create-upload-icon-placeholder');
+    if (createPlaceholder) createPlaceholder.style.display = 'flex';
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Student';
-    showToast('New student created successfully!', 'success');
+    showToast(`New student "${newStudent.first_name} ${newStudent.last_name}" created successfully!`, 'success');
     switchTab('students');
   }, 600);
 }
@@ -1736,21 +1833,55 @@ function handleCreateStudentSubmit(event) {
 // =========================================================================
 // EDIT STUDENT (IMAGE 2)
 // =========================================================================
+function handleEditStudentPhotoUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('edit-photo-preview');
+    if (preview) preview.src = e.target.result;
+    showToast('Student photo updated in preview. Click "Update Student" to save.', 'info');
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleEditStudentPhotoPrompt() {
+  const url = prompt('Enter student photo URL (https://...):');
+  if (url && url.trim().startsWith('http')) {
+    const preview = document.getElementById('edit-photo-preview');
+    if (preview) preview.src = url.trim();
+    showToast('Student photo URL set in preview. Click "Update Student" to save.', 'info');
+  }
+}
+
+function removeEditStudentPhoto() {
+  const preview = document.getElementById('edit-photo-preview');
+  if (preview) preview.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200';
+  showToast('Photo reset to default placeholder. Click "Update Student" to save.', 'info');
+}
+
 function showEditStudentForm(id) {
   const student = STUDENTS_DATA.find(s => s.id === id) || STUDENTS_DATA[0];
   document.getElementById('edit-student-id').value = student.id;
-  document.getElementById('edit-first-name').value = student.first_name;
-  document.getElementById('edit-middle-name').value = student.middle_name || 'Dela';
-  document.getElementById('edit-last-name').value = student.last_name;
-  document.getElementById('edit-id-number').value = student.student_id_number;
-  document.getElementById('edit-dob').value = student.dob;
-  document.getElementById('edit-gender').value = student.gender;
-  document.getElementById('edit-email').value = student.email;
-  document.getElementById('edit-contact').value = student.contact;
-  document.getElementById('edit-address').value = student.address;
-  document.getElementById('edit-guardian-name').value = student.guardian_name || 'Mario Santos';
-  document.getElementById('edit-guardian-contact').value = student.guardian_contact || '0917 765 4321';
-  document.getElementById('edit-photo-preview').src = student.avatar;
+  document.getElementById('edit-first-name').value = student.first_name || '';
+  document.getElementById('edit-middle-name').value = student.middle_name || '';
+  document.getElementById('edit-last-name').value = student.last_name || '';
+  document.getElementById('edit-id-number').value = student.student_id_number || '';
+  document.getElementById('edit-dob').value = student.dob || '';
+  document.getElementById('edit-gender').value = student.gender || 'Male';
+  document.getElementById('edit-email').value = student.email || '';
+  document.getElementById('edit-contact').value = student.contact || '';
+  document.getElementById('edit-address').value = student.address || '';
+  document.getElementById('edit-guardian-name').value = student.guardian_name || '';
+  document.getElementById('edit-guardian-contact').value = student.guardian_contact || '';
+  if (document.getElementById('edit-relationship')) {
+    document.getElementById('edit-relationship').value = student.relationship || 'Father';
+  }
+  if (document.getElementById('edit-notes')) {
+    document.getElementById('edit-notes').value = student.notes || '';
+  }
+  const preview = document.getElementById('edit-photo-preview');
+  if (preview) preview.src = student.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200';
 
   document.querySelectorAll('.tab-pane-content').forEach(pane => pane.classList.add('d-none'));
   document.getElementById('pane-edit-student').classList.remove('d-none');
@@ -1766,15 +1897,32 @@ function handleEditStudentSubmit(event) {
     const id = Number(document.getElementById('edit-student-id').value);
     const student = STUDENTS_DATA.find(s => s.id === id);
     if (student) {
-      student.first_name = document.getElementById('edit-first-name').value;
-      student.last_name = document.getElementById('edit-last-name').value;
-      student.email = document.getElementById('edit-email').value;
-      student.contact = document.getElementById('edit-contact').value;
+      student.first_name = document.getElementById('edit-first-name')?.value || student.first_name;
+      student.middle_name = document.getElementById('edit-middle-name')?.value || '';
+      student.last_name = document.getElementById('edit-last-name')?.value || student.last_name;
+      student.student_id_number = document.getElementById('edit-id-number')?.value || student.student_id_number;
+      student.dob = document.getElementById('edit-dob')?.value || student.dob;
+      student.gender = document.getElementById('edit-gender')?.value || student.gender;
+      student.email = document.getElementById('edit-email')?.value || student.email;
+      student.contact = document.getElementById('edit-contact')?.value || student.contact;
+      student.address = document.getElementById('edit-address')?.value || student.address;
+      student.guardian_name = document.getElementById('edit-guardian-name')?.value || student.guardian_name;
+      student.guardian_contact = document.getElementById('edit-guardian-contact')?.value || student.guardian_contact;
+      if (document.getElementById('edit-relationship')) {
+        student.relationship = document.getElementById('edit-relationship').value;
+      }
+      if (document.getElementById('edit-notes')) {
+        student.notes = document.getElementById('edit-notes').value;
+      }
+      const preview = document.getElementById('edit-photo-preview');
+      if (preview && preview.src) {
+        student.avatar = preview.src;
+      }
       persistStudentsData();
     }
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Update Student';
-    showToast('Student information updated successfully!', 'success');
+    showToast(`Student information updated successfully!`, 'success');
     switchTab('students');
   }, 600);
 }
@@ -2201,6 +2349,7 @@ function handleAddClassSubmit(e) {
   };
 
   CLASSES_DATA.push(newClass);
+  persistClassesData();
 
   // Add to Attendance class dropdown if not existing
   const select = document.getElementById('rollcall-class-select');
@@ -2536,6 +2685,7 @@ function handleAddEventSubmit(e) {
   };
 
   CALENDAR_EVENTS.push(newEvent);
+  persistCalendarEvents();
   closeAddEventModal();
   renderCalendar();
   showToast(`Event "${title}" added to academic calendar!`, 'success');
@@ -2547,6 +2697,7 @@ function handleAddEventSubmit(e) {
 
 function deleteCalendarEvent(id) {
   CALENDAR_EVENTS = CALENDAR_EVENTS.filter(e => e.id !== id);
+  persistCalendarEvents();
   renderCalendar();
   showToast('Calendar event removed.', 'info');
 }
@@ -2638,11 +2789,27 @@ function filterUsersTable() {
   renderUsersTable();
 }
 
+function handleUserModalPhotoUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('user-avatar-preview');
+    const urlInput = document.getElementById('user-avatar-url');
+    if (preview) preview.src = e.target.result;
+    if (urlInput) urlInput.value = e.target.result;
+    showToast('User photo updated!', 'info');
+  };
+  reader.readAsDataURL(file);
+}
+
 function openUserModal(userId = null) {
   const modal = document.getElementById('modal-user-form');
   const title = document.getElementById('user-modal-title');
   const idInput = document.getElementById('manage-user-id');
   const pwdGroup = document.getElementById('user-password-group');
+  const avatarPreview = document.getElementById('user-avatar-preview');
+  const avatarUrlInput = document.getElementById('user-avatar-url');
 
   if (userId) {
     const user = USERS_DATA.find(u => u.id === userId);
@@ -2654,6 +2821,8 @@ function openUserModal(userId = null) {
     document.getElementById('user-role').value = user.role;
     document.getElementById('user-status').value = user.status;
     document.getElementById('user-dept').value = user.department;
+    if (avatarPreview) avatarPreview.src = user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150';
+    if (avatarUrlInput) avatarUrlInput.value = (user.avatar && !user.avatar.startsWith('data:')) ? user.avatar : '';
     pwdGroup.style.display = 'none'; // Don't show password field on edit
   } else {
     idInput.value = '';
@@ -2663,6 +2832,8 @@ function openUserModal(userId = null) {
     document.getElementById('user-role').value = 'Instructor';
     document.getElementById('user-status').value = 'Active';
     document.getElementById('user-dept').value = '';
+    if (avatarPreview) avatarPreview.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150';
+    if (avatarUrlInput) avatarUrlInput.value = '';
     pwdGroup.style.display = 'block';
   }
 
@@ -2681,6 +2852,7 @@ function handleUserSubmit(e) {
   const role = document.getElementById('user-role').value;
   const status = document.getElementById('user-status').value;
   const department = document.getElementById('user-dept').value.trim() || 'General Academics';
+  const avatar = document.getElementById('user-avatar-preview')?.src || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150';
 
   if (!name || !email) {
     showToast('Name and email are required.', 'error');
@@ -2696,8 +2868,12 @@ function handleUserSubmit(e) {
       user.role = role;
       user.status = status;
       user.department = department;
+      user.avatar = avatar;
       if (!user.username) {
         user.username = email.split('@')[0].toLowerCase();
+      }
+      if (CURRENT_USER && CURRENT_USER.id === user.id) {
+        applyCurrentUser(user);
       }
       showToast(`User ${name} updated successfully!`, 'success');
     }
@@ -2716,7 +2892,7 @@ function handleUserSubmit(e) {
       department,
       status,
       last_active: 'Just now',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150'
+      avatar
     };
     USERS_DATA.unshift(newUser);
     showToast(`New ${role} user "${name}" created with username "${newUser.username}"!`, 'success');
@@ -3016,6 +3192,13 @@ function loadSystemSettings() {
   if (nameDisp) nameDisp.textContent = SYSTEM_SETTINGS.org_name;
   const subDisp = document.getElementById('profile-display-sub');
   if (subDisp) subDisp.textContent = `Accredited Institution • ${SYSTEM_SETTINGS.academic_term}`;
+
+  if (SYSTEM_SETTINGS.badge_icon) {
+    const iconEl = document.getElementById('center-badge-icon');
+    if (iconEl) {
+      iconEl.className = `fa-solid ${SYSTEM_SETTINGS.badge_icon}`;
+    }
+  }
 }
 
 function saveSystemSettings() {
@@ -3091,6 +3274,10 @@ function selectBadgeIcon(iconClass) {
   if (iconEl) {
     iconEl.className = `fa-solid ${iconClass}`;
   }
+  SYSTEM_SETTINGS.badge_icon = iconClass;
+  try {
+    localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS));
+  } catch (e) {}
   closeCenterBadgePicker();
   showToast(`Center emblem updated to ${iconClass.replace('fa-', '')}`, 'success');
 }
@@ -3209,13 +3396,16 @@ function handleSaveAdminProfile(event) {
     userToUpdate.department = newDept;
     userToUpdate.avatar = newAvatar;
     applyCurrentUser(userToUpdate);
+    persistUsersData();
     renderUsersTable();
+    renderCredentialsDirectory();
   }
 
   // Persist to localStorage
   try {
     const adminProfile = { avatar: newAvatar, name: newName, role: newRole, email: newEmail, department: newDept };
     localStorage.setItem('sams_admin_profile', JSON.stringify(adminProfile));
+    localStorage.setItem('sams_current_user', JSON.stringify(CURRENT_USER));
   } catch (err) {
     console.warn('Could not save admin profile to localStorage');
   }
@@ -3288,6 +3478,8 @@ function handleImportDatabaseFile(event) {
       persistStudentsData();
       persistAttendanceData();
       persistUsersData();
+      persistClassesData();
+      persistCalendarEvents();
 
       showToast(`Database backup "${file.name}" imported successfully! Loaded ${STUDENTS_DATA.length} students.`, 'success');
     } catch (err) {
@@ -3329,6 +3521,8 @@ function confirmResetDefaults() {
       localStorage.removeItem('sams_attendance_map');
       localStorage.removeItem('sams_attendance_history');
       localStorage.removeItem('sams_users_data');
+      localStorage.removeItem('sams_classes_data');
+      localStorage.removeItem('sams_calendar_events');
       localStorage.removeItem('sams_admin_profile');
       localStorage.removeItem('sams_current_user');
       localStorage.removeItem('sams_active_tab');
