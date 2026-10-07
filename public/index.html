@@ -1025,12 +1025,21 @@
                 <div>
                   <label class="form-label" style="margin-bottom:8px; display:block;">Student Photo</label>
                   <div class="photo-uploader-box">
-                    <div class="upload-icon-circle">
+                    <img id="create-photo-preview" src="" style="width:72px; height:72px; border-radius:50%; object-fit:cover; margin-bottom:8px; border:2px solid var(--primary-blue); display:none;">
+                    <div class="upload-icon-circle" id="create-upload-icon-placeholder">
                       <i class="fa-solid fa-camera"></i>
                     </div>
                     <h5>Upload Photo</h5>
                     <p>JPG, PNG or GIF. Max size 2MB.</p>
-                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="triggerPhotoPick()">Choose File</button>
+                    <input type="file" id="create-photo-file-input" accept="image/*" style="display:none;" onchange="handleCreateStudentPhotoUpload(event)">
+                    <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                      <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('create-photo-file-input').click()">
+                        <i class="fa-solid fa-folder-open"></i> Choose File
+                      </button>
+                      <button type="button" class="btn btn-outline btn-sm" onclick="handleCreateStudentPhotoPrompt()">
+                        <i class="fa-solid fa-link"></i> URL
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1192,9 +1201,17 @@
                   <label class="form-label" style="margin-bottom:8px; display:block;">Student Photo</label>
                   <div style="text-align:center;">
                     <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=300" id="edit-photo-preview" class="photo-preview-image">
-                    <div style="display:flex; justify-content:center; gap:8px;">
-                      <button type="button" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-camera"></i> Change Photo</button>
-                      <button type="button" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-trash-can"></i> Remove</button>
+                    <input type="file" id="edit-photo-file-input" accept="image/*" style="display:none;" onchange="handleEditStudentPhotoUpload(event)">
+                    <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:6px;">
+                      <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('edit-photo-file-input').click()">
+                        <i class="fa-solid fa-camera"></i> Upload Photo
+                      </button>
+                      <button type="button" class="btn btn-outline btn-sm" onclick="handleEditStudentPhotoPrompt()">
+                        <i class="fa-solid fa-link"></i> URL
+                      </button>
+                      <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeEditStudentPhoto()">
+                        <i class="fa-regular fa-trash-can"></i> Remove
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -2535,6 +2552,18 @@
         <div class="form-group">
           <label class="form-label">Assigned Department / Classes</label>
           <input type="text" class="form-control" id="user-dept" placeholder="e.g. Grade 11 - STEM, Mathematics" value="Grade 11 - STEM">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Profile Photo (URL or Upload)</label>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img id="user-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--primary-blue);">
+            <input type="text" class="form-control" id="user-avatar-url" placeholder="Paste image URL (https://...)" onchange="document.getElementById('user-avatar-preview').src = this.value">
+            <input type="file" id="user-avatar-file-input" accept="image/*" style="display:none;" onchange="handleUserModalPhotoUpload(event)">
+            <button type="button" class="btn btn-outline btn-xs" style="white-space:nowrap; padding:6px 10px;" onclick="document.getElementById('user-avatar-file-input').click()">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
         </div>
 
         <div class="form-group" id="user-password-group">
