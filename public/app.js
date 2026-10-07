@@ -704,28 +704,583 @@ let STUDENTS_DATA = [
   }
 ];
 
-// Attendance State for all 30 students across the cohorts
-let ATTENDANCE_MAP = {
-  1: 'Present', 2: 'Present', 3: 'Present', 4: 'Present', 5: 'Late',
-  6: 'Present', 7: 'Present', 8: 'Present', 9: 'Present', 10: 'Present',
-  11: 'Present', 12: 'Present', 13: 'Absent', 14: 'Present', 15: 'Present',
-  16: 'Present', 17: 'Late', 18: 'Present', 19: 'Present', 20: 'Present',
-  21: 'Present', 22: 'Present', 23: 'Absent', 24: 'Present', 25: 'Present',
-  26: 'Present', 27: 'Present', 28: 'Present', 29: 'Present', 30: 'Present'
+// Master Daily Attendance Database (Per-Date records keyed by YYYY-MM-DD)
+let DAILY_ATTENDANCE = {
+  '2026-05-20': {
+    1: 'Present', 2: 'Present', 3: 'Present', 4: 'Present', 5: 'Late',
+    6: 'Present', 7: 'Present', 8: 'Present', 9: 'Present', 10: 'Present',
+    11: 'Present', 12: 'Present', 13: 'Absent', 14: 'Present', 15: 'Present',
+    16: 'Present', 17: 'Late', 18: 'Present', 19: 'Present', 20: 'Present',
+    21: 'Present', 22: 'Present', 23: 'Absent', 24: 'Present', 25: 'Present',
+    26: 'Present', 27: 'Present', 28: 'Present', 29: 'Present', 30: 'Present'
+  },
+  '2026-05-19': {
+    1: 'Present', 2: 'Absent', 3: 'Present', 4: 'Present', 5: 'Present',
+    6: 'Present', 7: 'Present', 8: 'Late', 9: 'Present', 10: 'Present',
+    11: 'Present', 12: 'Present', 13: 'Present', 14: 'Absent', 15: 'Present',
+    16: 'Present', 17: 'Present', 18: 'Present', 19: 'Late', 20: 'Present',
+    21: 'Present', 22: 'Present', 23: 'Present', 24: 'Present', 25: 'Late',
+    26: 'Absent', 27: 'Present', 28: 'Present', 29: 'Present', 30: 'Present'
+  },
+  '2026-05-18': {
+    1: 'Absent', 2: 'Present', 3: 'Present', 4: 'Late', 5: 'Present',
+    6: 'Present', 7: 'Absent', 8: 'Present', 9: 'Present', 10: 'Present',
+    11: 'Late', 12: 'Present', 13: 'Present', 14: 'Present', 15: 'Present',
+    16: 'Present', 17: 'Present', 18: 'Present', 19: 'Present', 20: 'Present',
+    21: 'Absent', 22: 'Present', 23: 'Present', 24: 'Present', 25: 'Present',
+    26: 'Present', 27: 'Late', 28: 'Present', 29: 'Present', 30: 'Present'
+  },
+  '2026-05-17': {
+    1: 'Present', 2: 'Present', 3: 'Late', 4: 'Present', 5: 'Present',
+    6: 'Present', 7: 'Present', 8: 'Present', 9: 'Present', 10: 'Absent',
+    11: 'Present', 12: 'Present', 13: 'Present', 14: 'Present', 15: 'Present',
+    16: 'Absent', 17: 'Present', 18: 'Present', 19: 'Present', 20: 'Present',
+    21: 'Present', 22: 'Late', 23: 'Present', 24: 'Present', 25: 'Present',
+    26: 'Present', 27: 'Present', 28: 'Absent', 29: 'Present', 30: 'Present'
+  },
+  '2026-05-16': {
+    1: 'Present', 2: 'Present', 3: 'Present', 4: 'Present', 5: 'Present',
+    6: 'Late', 7: 'Present', 8: 'Present', 9: 'Absent', 10: 'Present',
+    11: 'Present', 12: 'Absent', 13: 'Present', 14: 'Present', 15: 'Present',
+    16: 'Present', 17: 'Present', 18: 'Present', 19: 'Present', 20: 'Late',
+    21: 'Present', 22: 'Present', 23: 'Present', 24: 'Absent', 25: 'Present',
+    26: 'Present', 27: 'Present', 28: 'Present', 29: 'Late', 30: 'Present'
+  },
+  '2026-05-15': {
+    1: 'Present', 2: 'Present', 3: 'Present', 4: 'Present', 5: 'Present',
+    6: 'Present', 7: 'Present', 8: 'Present', 9: 'Present', 10: 'Present',
+    11: 'Present', 12: 'Present', 13: 'Late', 14: 'Present', 15: 'Present',
+    16: 'Present', 17: 'Present', 18: 'Absent', 19: 'Present', 20: 'Present',
+    21: 'Present', 22: 'Present', 23: 'Present', 24: 'Present', 25: 'Present',
+    26: 'Late', 27: 'Present', 28: 'Present', 29: 'Present', 30: 'Absent'
+  }
 };
 
+let ATTENDANCE_MAP = DAILY_ATTENDANCE['2026-05-20'];
+
 let studentToDeleteId = null;
+
+// =========================================================================
+// SYSTEM USERS & MULTI-ACCOUNT ACTIVE SESSION STATE
+// =========================================================================
+let USERS_DATA = [
+  {
+    id: 1,
+    name: 'Neil Herbert U. Betacura',
+    email: 'neil.betacura@sams.edu.ph',
+    username: 'neil',
+    aliases: ['admin', 'neil.betacura'],
+    password: 'admin123',
+    role: 'Administrator',
+    department: 'Repository Lead & IT Architecture',
+    status: 'Active',
+    last_active: 'Today, 8:15 AM',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'
+  },
+  {
+    id: 2,
+    name: 'Demelyn Concepcion',
+    email: 'demelyn.concepcion@sams.edu.ph',
+    username: 'demelyn',
+    aliases: ['board', 'demelyn.concepcion'],
+    password: 'board2026',
+    role: 'Administrator',
+    department: 'Board Lead & Academic Oversight',
+    status: 'Active',
+    last_active: 'Today, 9:20 AM',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200'
+  },
+  {
+    id: 3,
+    name: 'Jamaica Ganolon',
+    email: 'jamaica.ganolon@sams.edu.ph',
+    username: 'jamaica',
+    aliases: ['scribe', 'staff', 'jamaica.ganolon'],
+    password: 'scribe123',
+    role: 'Staff',
+    department: 'Scribe & Records Registry',
+    status: 'Active',
+    last_active: 'Today, 8:45 AM',
+    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200'
+  },
+  {
+    id: 4,
+    name: 'Angelo Dairo',
+    email: 'angelo.dairo@sams.edu.ph',
+    username: 'dairo',
+    aliases: ['angelo.dairo', 'stem'],
+    password: 'stem2026',
+    role: 'Instructor',
+    department: 'Builder & Grade 11 - STEM (Math)',
+    status: 'Active',
+    last_active: 'Today, 7:55 AM',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200'
+  },
+  {
+    id: 5,
+    name: 'Angelo Madolaria',
+    email: 'angelo.madolaria@sams.edu.ph',
+    username: 'madolaria',
+    aliases: ['angelo.madolaria', 'abm'],
+    password: 'abm2026',
+    role: 'Instructor',
+    department: 'Builder & Grade 10 - ABM (ICT)',
+    status: 'Active',
+    last_active: 'Today, 8:05 AM',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200'
+  },
+  {
+    id: 6,
+    name: 'Prof. Alan Turing',
+    email: 'alan.turing@sams.edu.ph',
+    username: 'turing',
+    aliases: ['alan.turing'],
+    password: 'turing123',
+    role: 'Instructor',
+    department: 'Senior Science & Logic Studies',
+    status: 'Active',
+    last_active: 'Yesterday, 4:20 PM',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200'
+  },
+  {
+    id: 7,
+    name: 'Dr. Ada Lovelace',
+    email: 'ada.lovelace@sams.edu.ph',
+    username: 'lovelace',
+    aliases: ['ada.lovelace'],
+    password: 'ada123',
+    role: 'Instructor',
+    department: 'Business Analytics & Economics',
+    status: 'Active',
+    last_active: 'Yesterday, 3:15 PM',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200'
+  },
+  {
+    id: 8,
+    name: 'Prof. Grace Hopper',
+    email: 'grace.hopper@sams.edu.ph',
+    username: 'hopper',
+    aliases: ['grace', 'grace.hopper', 'humss'],
+    password: 'humss2026',
+    role: 'Instructor',
+    department: 'Grade 12 - HUMSS (English)',
+    status: 'Active',
+    last_active: 'May 18, 2026',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200'
+  }
+];
+
+let CURRENT_USER = USERS_DATA[0];
+
+function applyCurrentUser(user) {
+  if (!user) return;
+  CURRENT_USER = user;
+  try {
+    localStorage.setItem('sams_current_user', JSON.stringify(user));
+  } catch (e) {}
+
+  // Update Topbar
+  const topbarAvatar = document.getElementById('topbar-user-avatar');
+  if (topbarAvatar && user.avatar) topbarAvatar.src = user.avatar;
+  const topbarName = document.getElementById('topbar-user-name');
+  if (topbarName) topbarName.textContent = user.name;
+  const topbarRole = document.getElementById('topbar-user-role');
+  if (topbarRole) topbarRole.textContent = user.department || user.role;
+
+  // Update Dropdown
+  const dropAvatar = document.getElementById('dropdown-user-avatar');
+  if (dropAvatar && user.avatar) dropAvatar.src = user.avatar;
+  const dropName = document.getElementById('dropdown-user-name');
+  if (dropName) dropName.textContent = user.name;
+  const dropEmail = document.getElementById('dropdown-user-email');
+  if (dropEmail) dropEmail.textContent = user.email;
+  const dropRoleBadge = document.getElementById('dropdown-user-role-badge');
+  if (dropRoleBadge) {
+    dropRoleBadge.textContent = user.role;
+    dropRoleBadge.className = 'role-badge ' + (
+      user.role === 'Administrator' ? 'role-admin' :
+      user.role === 'Instructor' ? 'role-instructor' : 'role-staff'
+    );
+  }
+
+  // Update Settings Profile Card
+  const settingsAvatar = document.getElementById('settings-admin-avatar');
+  if (settingsAvatar && user.avatar) settingsAvatar.src = user.avatar;
+  const settingsName = document.getElementById('settings-admin-name');
+  if (settingsName) settingsName.textContent = user.name;
+  const settingsRoleBadge = document.getElementById('settings-admin-role-badge');
+  if (settingsRoleBadge) {
+    settingsRoleBadge.textContent = user.role;
+    settingsRoleBadge.className = 'role-badge ' + (
+      user.role === 'Administrator' ? 'role-admin' :
+      user.role === 'Instructor' ? 'role-instructor' : 'role-staff'
+    );
+  }
+  const settingsEmailSub = document.getElementById('settings-admin-email-sub');
+  if (settingsEmailSub) settingsEmailSub.textContent = `${user.email} • ${user.department || user.role}`;
+
+  // If user is an instructor, auto-select their section in the Roll Call view
+  const classSelect = document.getElementById('rollcall-class-select');
+  if (classSelect) {
+    if (user.name.includes('Dairo')) {
+      classSelect.value = 'Grade 11 - STEM';
+    } else if (user.name.includes('Madolaria')) {
+      classSelect.value = 'Grade 10 - ABM';
+    } else if (user.name.includes('Hopper')) {
+      classSelect.value = 'Grade 12 - HUMSS';
+    }
+  }
+}
+
+function loadStoredUsers() {
+  try {
+    const stored = localStorage.getItem('sams_users_data');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        parsed.forEach(storedUser => {
+          const idx = USERS_DATA.findIndex(u => u.id === storedUser.id);
+          if (idx !== -1) {
+            USERS_DATA[idx] = Object.assign({}, USERS_DATA[idx], storedUser);
+          } else {
+            USERS_DATA.push(storedUser);
+          }
+        });
+      }
+    }
+  } catch (e) {}
+}
+
+function persistUsersData() {
+  try {
+    localStorage.setItem('sams_users_data', JSON.stringify(USERS_DATA));
+  } catch (e) {}
+}
+
+function loadStoredStudents() {
+  try {
+    const stored = localStorage.getItem('sams_students_data');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        STUDENTS_DATA = parsed;
+      }
+    }
+  } catch (e) {}
+}
+
+function persistStudentsData() {
+  try {
+    localStorage.setItem('sams_students_data', JSON.stringify(STUDENTS_DATA));
+  } catch (e) {}
+}
+
+function getSelectedRollcallDate() {
+  const el = document.getElementById('rollcall-date');
+  return (el && el.value) ? el.value : '2026-05-20';
+}
+
+function generateDateAttendance(dateStr) {
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash = (hash << 5) - hash + dateStr.charCodeAt(i);
+    hash |= 0;
+  }
+  hash = Math.abs(hash);
+
+  const res = {};
+  STUDENTS_DATA.forEach(s => {
+    const score = (hash * 37 + s.id * 19 + (s.id % 3) * 11) % 100;
+    if (score < 80) {
+      res[s.id] = 'Present';
+    } else if (score < 92) {
+      res[s.id] = 'Late';
+    } else {
+      res[s.id] = 'Absent';
+    }
+  });
+  return res;
+}
+
+function getAttendanceForDate(dateStr) {
+  if (!DAILY_ATTENDANCE[dateStr]) {
+    DAILY_ATTENDANCE[dateStr] = generateDateAttendance(dateStr);
+    try {
+      localStorage.setItem('sams_daily_attendance', JSON.stringify(DAILY_ATTENDANCE));
+    } catch (e) {}
+  }
+  return DAILY_ATTENDANCE[dateStr];
+}
+
+function handleRollcallDateChange() {
+  const curDate = getSelectedRollcallDate();
+  ATTENDANCE_MAP = getAttendanceForDate(curDate);
+  loadRosterForAttendance();
+}
+
+function navigateCalendarToRollcall(dateStr) {
+  switchTab('attendance');
+  const dateInput = document.getElementById('rollcall-date');
+  if (dateInput) {
+    dateInput.value = dateStr;
+  }
+  ATTENDANCE_MAP = getAttendanceForDate(dateStr);
+  loadRosterForAttendance();
+  showToast(`Switched roll call date to ${dateStr}`, 'info');
+}
+
+function loadStoredAttendance() {
+  try {
+    const storedDaily = localStorage.getItem('sams_daily_attendance');
+    if (storedDaily) {
+      const parsed = JSON.parse(storedDaily);
+      if (parsed && typeof parsed === 'object') {
+        DAILY_ATTENDANCE = Object.assign({}, DAILY_ATTENDANCE, parsed);
+      }
+    }
+    const curDate = getSelectedRollcallDate();
+    ATTENDANCE_MAP = getAttendanceForDate(curDate);
+
+    const storedHist = localStorage.getItem('sams_attendance_history');
+    if (storedHist) {
+      const parsed = JSON.parse(storedHist);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        ATTENDANCE_HISTORY = parsed;
+      }
+    }
+  } catch (e) {}
+}
+
+function persistAttendanceData() {
+  try {
+    const curDate = getSelectedRollcallDate();
+    if (ATTENDANCE_MAP) {
+      DAILY_ATTENDANCE[curDate] = Object.assign({}, ATTENDANCE_MAP);
+    }
+    localStorage.setItem('sams_daily_attendance', JSON.stringify(DAILY_ATTENDANCE));
+    localStorage.setItem('sams_attendance_map', JSON.stringify(ATTENDANCE_MAP));
+    localStorage.setItem('sams_attendance_history', JSON.stringify(ATTENDANCE_HISTORY));
+  } catch (e) {}
+}
+
+function renderCredentialsDirectory() {
+  const tbody = document.getElementById('tbody-credentials-list');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  USERS_DATA.forEach(u => {
+    let roleBadgeClass = 'role-admin';
+    if (u.role === 'Instructor') roleBadgeClass = 'role-instructor';
+    else if (u.role === 'Staff') roleBadgeClass = 'role-staff';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="padding:8px 12px;">
+        <strong>${escapeHTML(u.name)}</strong><br>
+        <span class="role-badge ${roleBadgeClass}" style="font-size:0.65rem;">${escapeHTML(u.role)} (${escapeHTML(u.department || '')})</span>
+      </td>
+      <td style="padding:8px 12px;"><code style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:4px; font-weight:600;">${escapeHTML(u.username)}</code></td>
+      <td style="padding:8px 12px;"><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:600;">${escapeHTML(u.password)}</code></td>
+      <td style="padding:8px 12px; text-align:right;">
+        <button type="button" class="btn btn-outline-primary btn-xs" style="font-size:0.75rem; padding:3px 8px;" onclick="openChangeCredentialsModal(${u.id})">
+          <i class="fa-solid fa-key"></i> Change
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function openCredentialsDirectoryModal() {
+  renderCredentialsDirectory();
+  const modal = document.getElementById('modal-credentials-directory');
+  if (modal) modal.classList.add('active');
+}
+
+function closeCredentialsDirectoryModal() {
+  const modal = document.getElementById('modal-credentials-directory');
+  if (modal) modal.classList.remove('active');
+}
+
+function toggleInputVisibility(inputId) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function openChangeCredentialsModal(userId = null) {
+  const modal = document.getElementById('modal-change-credentials');
+  if (!modal) return;
+
+  const select = document.getElementById('cred-user-select');
+  if (select) {
+    select.innerHTML = '';
+    USERS_DATA.forEach(u => {
+      const opt = document.createElement('option');
+      opt.value = u.id;
+      opt.textContent = `${u.name} (${u.role}) — @${u.username}`;
+      select.appendChild(opt);
+    });
+
+    const targetId = userId || (CURRENT_USER ? CURRENT_USER.id : USERS_DATA[0]?.id);
+    select.value = targetId;
+    onCredUserSelected(targetId);
+  }
+
+  const alertBox = document.getElementById('cred-modal-alert');
+  if (alertBox) {
+    alertBox.className = 'd-none';
+    alertBox.textContent = '';
+  }
+
+  modal.classList.add('active');
+}
+
+function closeChangeCredentialsModal() {
+  const modal = document.getElementById('modal-change-credentials');
+  if (modal) modal.classList.remove('active');
+}
+
+function onCredUserSelected(userId) {
+  const u = USERS_DATA.find(user => user.id === Number(userId));
+  if (!u) return;
+
+  const userField = document.getElementById('cred-new-username');
+  if (userField) userField.value = u.username || '';
+
+  const pwdField = document.getElementById('cred-new-password');
+  if (pwdField) pwdField.value = '';
+
+  const confirmField = document.getElementById('cred-confirm-password');
+  if (confirmField) confirmField.value = '';
+
+  const alertBox = document.getElementById('cred-modal-alert');
+  if (alertBox) alertBox.className = 'd-none';
+}
+
+function showCredModalAlert(msg, type = 'error') {
+  const alertBox = document.getElementById('cred-modal-alert');
+  if (!alertBox) return;
+  alertBox.className = type === 'error' ? 'alert-danger' : 'alert-success';
+  alertBox.style.display = 'flex';
+  alertBox.style.alignItems = 'center';
+  alertBox.style.gap = '8px';
+  alertBox.style.background = type === 'error' ? '#fef2f2' : '#ecfdf5';
+  alertBox.style.color = type === 'error' ? '#dc2626' : '#059669';
+  alertBox.style.border = type === 'error' ? '1px solid #fecaca' : '1px solid #a7f3d0';
+  alertBox.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> <span>${escapeHTML(msg)}</span>`;
+}
+
+function handleSaveCredentials(event) {
+  if (event) event.preventDefault();
+
+  const select = document.getElementById('cred-user-select');
+  const userId = select ? Number(select.value) : (CURRENT_USER ? CURRENT_USER.id : null);
+  const targetUser = USERS_DATA.find(u => u.id === userId);
+  if (!targetUser) {
+    showCredModalAlert('User account not found.', 'error');
+    return;
+  }
+
+  const newUsername = (document.getElementById('cred-new-username')?.value || '').trim().toLowerCase();
+  const newPassword = (document.getElementById('cred-new-password')?.value || '').trim();
+  const confirmPassword = (document.getElementById('cred-confirm-password')?.value || '').trim();
+
+  // Validate username
+  if (!newUsername || newUsername.length < 3) {
+    showCredModalAlert('Username must be at least 3 characters long.', 'error');
+    return;
+  }
+  if (!/^[a-z0-9_.-]+$/.test(newUsername)) {
+    showCredModalAlert('Username may only contain letters, numbers, dots, and underscores.', 'error');
+    return;
+  }
+
+  // Check username uniqueness
+  const conflict = USERS_DATA.find(u => u.id !== targetUser.id && (u.username?.toLowerCase() === newUsername || u.email?.toLowerCase() === newUsername));
+  if (conflict) {
+    showCredModalAlert(`The username "${newUsername}" is already taken by ${conflict.name}.`, 'error');
+    return;
+  }
+
+  // Validate password
+  if (!newPassword || newPassword.length < 4) {
+    showCredModalAlert('New password must be at least 4 characters long.', 'error');
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    showCredModalAlert('New password and confirmation do not match.', 'error');
+    return;
+  }
+
+  // Apply changes
+  const oldUsername = targetUser.username;
+  targetUser.username = newUsername;
+  targetUser.password = newPassword;
+  if (!targetUser.aliases) targetUser.aliases = [];
+  if (!targetUser.aliases.includes(newUsername)) targetUser.aliases.push(newUsername);
+
+  // If currently active user was updated, re-apply
+  if (CURRENT_USER && CURRENT_USER.id === targetUser.id) {
+    applyCurrentUser(targetUser);
+  }
+
+  persistUsersData();
+  renderCredentialsDirectory();
+  renderUsersTable();
+  if (typeof populateSecuritySection === 'function') {
+    populateSecuritySection();
+  }
+
+  closeChangeCredentialsModal();
+  showToast(`Credentials updated for ${targetUser.name}! Username: "${newUsername}", Password: "${newPassword}"`, 'success');
+}
 
 // =========================================================================
 // INITIALIZATION
 // =========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  loadStoredUsers();
+  loadStoredStudents();
+  loadStoredAttendance();
   initNavigation();
   loadSystemSettings();
+
+  // Load saved active user or default to Neil (Admin)
+  try {
+    const savedUser = localStorage.getItem('sams_current_user');
+    if (savedUser) {
+      const parsed = JSON.parse(savedUser);
+      const matched = USERS_DATA.find(u => u.id === parsed.id || u.email === parsed.email);
+      CURRENT_USER = matched || parsed;
+    }
+  } catch (e) {}
+
+  if (!CURRENT_USER) {
+    CURRENT_USER = USERS_DATA[0];
+  }
+  applyCurrentUser(CURRENT_USER);
+
+  // Check persisted login session and last active tab
+  try {
+    const loggedInState = localStorage.getItem('sams_logged_in');
+    if (loggedInState === 'false') {
+      showLoginView();
+    } else {
+      document.getElementById('view-login')?.classList.add('d-none');
+      document.getElementById('view-app')?.classList.remove('d-none');
+      const savedTab = localStorage.getItem('sams_active_tab') || 'dashboard';
+      if (savedTab && document.getElementById(`pane-${savedTab}`)) {
+        switchTab(savedTab);
+      }
+    }
+  } catch (e) {}
+
   updateAllKPIs();
   renderStudentsTable();
   loadRosterForAttendance();
   renderClassesGrid();
+  renderCredentialsDirectory();
 });
 
 // =========================================================================
@@ -742,6 +1297,10 @@ function initNavigation() {
 }
 
 function switchTab(tabName) {
+  try {
+    localStorage.setItem('sams_active_tab', tabName);
+  } catch (e) {}
+
   // Update sidebar active state
   document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.tab === tabName);
@@ -779,15 +1338,83 @@ function switchTab(tabName) {
 
 // Switch between Login View and App View
 function showLoginView() {
+  try {
+    localStorage.setItem('sams_logged_in', 'false');
+  } catch (e) {}
   document.getElementById('view-app').classList.add('d-none');
   document.getElementById('view-login').classList.remove('d-none');
+  const userField = document.getElementById('login-username');
+  if (userField) {
+    userField.value = '';
+    userField.focus();
+  }
+  const pwdField = document.getElementById('login-password');
+  if (pwdField) pwdField.value = '';
+  const errAlert = document.getElementById('login-error-alert');
+  if (errAlert) errAlert.classList.add('d-none');
+}
+
+function showLoginError(msg) {
+  const errAlert = document.getElementById('login-error-alert');
+  const errText = document.getElementById('login-error-text');
+  if (errAlert && errText) {
+    errText.textContent = msg;
+    errAlert.classList.remove('d-none');
+  } else {
+    showToast(msg, 'error');
+  }
 }
 
 function handleLoginSubmit(event) {
   if (event) event.preventDefault();
+
+  const errAlert = document.getElementById('login-error-alert');
+  if (errAlert) errAlert.classList.add('d-none');
+
+  const usernameInput = (document.getElementById('login-username')?.value || '').trim().toLowerCase();
+  const passwordInput = (document.getElementById('login-password')?.value || '').trim();
+
+  if (!usernameInput) {
+    showLoginError('Please enter your username or email address.');
+    return;
+  }
+  if (!passwordInput) {
+    showLoginError('Please enter your password.');
+    return;
+  }
+
+  // Match user strictly by username, email, or registered alias
+  const targetUser = USERS_DATA.find(u => {
+    const uName = (u.username || '').toLowerCase();
+    const uEmail = (u.email || '').toLowerCase();
+    const aliases = (u.aliases || []).map(a => a.toLowerCase());
+    return uName === usernameInput ||
+           uEmail === usernameInput ||
+           aliases.includes(usernameInput);
+  });
+
+  if (!targetUser) {
+    showLoginError('Account not found. Please verify your username or email.');
+    return;
+  }
+
+  // Verify unique password
+  if (targetUser.password !== passwordInput) {
+    showLoginError(`Incorrect password for ${targetUser.name}. Please try again.`);
+    return;
+  }
+
+  // Apply user to session
+  applyCurrentUser(targetUser);
+  try {
+    localStorage.setItem('sams_logged_in', 'true');
+  } catch (e) {}
+
+  // Switch view from login to main application
   document.getElementById('view-login').classList.add('d-none');
   document.getElementById('view-app').classList.remove('d-none');
-  showToast('Welcome back, Neil Herbert Betacura (Repository Lead)!', 'success');
+
+  showToast(`Welcome back, ${targetUser.name} (${targetUser.role})!`, 'success');
   switchTab('dashboard');
 }
 
@@ -1097,6 +1724,8 @@ function handleCreateStudentSubmit(event) {
     };
 
     STUDENTS_DATA.unshift(newStudent);
+    persistStudentsData();
+    form.reset();
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Student';
     showToast('New student created successfully!', 'success');
@@ -1141,6 +1770,7 @@ function handleEditStudentSubmit(event) {
       student.last_name = document.getElementById('edit-last-name').value;
       student.email = document.getElementById('edit-email').value;
       student.contact = document.getElementById('edit-contact').value;
+      persistStudentsData();
     }
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Update Student';
@@ -1183,6 +1813,7 @@ function executeDeleteStudent() {
 
   setTimeout(() => {
     STUDENTS_DATA = STUDENTS_DATA.filter(s => s.id !== studentToDeleteId);
+    persistStudentsData();
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-regular fa-trash-can"></i> Yes, Delete';
     closeDeleteModal();
@@ -1199,6 +1830,9 @@ function loadRosterForAttendance(isManual = false) {
   const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
   const selectedDate = document.getElementById('rollcall-date')?.value || '2026-05-20';
   const selectedSubject = document.getElementById('rollcall-subject')?.value || 'General Mathematics';
+
+  // Synchronize ATTENDANCE_MAP with the active selected date
+  ATTENDANCE_MAP = getAttendanceForDate(selectedDate);
 
   if (btn) {
     btn.disabled = true;
@@ -1270,12 +1904,18 @@ function loadRosterForAttendance(isManual = false) {
       btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Load Students';
     }
 
-    showToast(`Roster loaded: ${selectedClass === 'All' ? 'All Classes' : selectedClass} (${list.length} students)`, 'success');
+    showToast(`Roster loaded for ${selectedDate}: ${selectedClass === 'All' ? 'All Classes' : selectedClass} (${list.length} students)`, 'success');
   }, 250);
 }
 
 function setStudentAttendanceStatus(studentId, newStatus, clickedBtn) {
+  const selectedDate = getSelectedRollcallDate();
+  if (!DAILY_ATTENDANCE[selectedDate]) {
+    DAILY_ATTENDANCE[selectedDate] = {};
+  }
+  DAILY_ATTENDANCE[selectedDate][studentId] = newStatus;
   ATTENDANCE_MAP[studentId] = newStatus;
+  persistAttendanceData();
   
   // Update button active states in row
   const parentGroup = clickedBtn.parentElement;
@@ -1327,23 +1967,35 @@ function updateAttendanceCounters(customList = null) {
 }
 
 function markAllAttendance(status) {
+  const selectedDate = getSelectedRollcallDate();
+  if (!DAILY_ATTENDANCE[selectedDate]) {
+    DAILY_ATTENDANCE[selectedDate] = {};
+  }
   const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
   const list = (selectedClass === 'All') ? STUDENTS_DATA : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
   list.forEach(s => {
+    DAILY_ATTENDANCE[selectedDate][s.id] = status;
     ATTENDANCE_MAP[s.id] = status;
   });
+  persistAttendanceData();
   loadRosterForAttendance();
-  showToast(`Marked all ${list.length} students in roster as ${status}`, 'success');
+  showToast(`Marked all ${list.length} students as ${status} for ${selectedDate}`, 'success');
 }
 
 function clearAllAttendance() {
+  const selectedDate = getSelectedRollcallDate();
+  if (!DAILY_ATTENDANCE[selectedDate]) {
+    DAILY_ATTENDANCE[selectedDate] = {};
+  }
   const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
   const list = (selectedClass === 'All') ? STUDENTS_DATA : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
   list.forEach(s => {
+    DAILY_ATTENDANCE[selectedDate][s.id] = 'Absent';
     ATTENDANCE_MAP[s.id] = 'Absent';
   });
+  persistAttendanceData();
   loadRosterForAttendance();
-  showToast('Attendance marks cleared to Absent', 'info');
+  showToast(`Attendance marks cleared to Absent for ${selectedDate}`, 'info');
 }
 
 function saveAttendanceSession() {
@@ -1359,7 +2011,10 @@ function saveAttendanceSession() {
       btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Attendance';
     }
     const selectedClass = document.getElementById('rollcall-class-select')?.value || 'Grade 11 - STEM';
-    const selectedDate = document.getElementById('rollcall-date')?.value || '2026-05-20';
+    const selectedDate = getSelectedRollcallDate();
+
+    // Ensure DAILY_ATTENDANCE for this date is committed
+    DAILY_ATTENDANCE[selectedDate] = Object.assign({}, ATTENDANCE_MAP);
 
     // Push into ATTENDANCE_HISTORY
     const list = (selectedClass === 'All') ? STUDENTS_DATA : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
@@ -1383,6 +2038,7 @@ function saveAttendanceSession() {
       rate: pct
     });
 
+    persistAttendanceData();
     showToast(`Attendance recorded for ${selectedClass} (${selectedDate})!`, 'success');
     switchTab('dashboard');
   }, 600);
@@ -1744,9 +2400,14 @@ function renderCalendar() {
     });
 
     cell.innerHTML = `
-      <div class="calendar-day-number">
+      <div class="calendar-day-number" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
         <span>${day}</span>
-        ${isToday ? '<span class="today-indicator-dot" title="Today"></span>' : ''}
+        <div style="display:inline-flex; align-items:center; gap:4px;">
+          ${isToday ? '<span class="today-indicator-dot" title="Today"></span>' : ''}
+          <button type="button" class="btn btn-xs" style="padding:1px 4px; font-size:0.65rem; line-height:1; border:none; background:transparent; color:var(--primary-blue);" title="View Attendance for ${dateStr}" onclick="event.stopPropagation(); navigateCalendarToRollcall('${dateStr}')">
+            <i class="fa-solid fa-clipboard-user"></i>
+          </button>
+        </div>
       </div>
       ${eventsHtml}
     `;
@@ -1894,88 +2555,7 @@ function deleteCalendarEvent(id) {
 // =========================================================================
 // USER ACCOUNTS & ROLES ACTIONS & STATE
 // =========================================================================
-let USERS_DATA = [
-  {
-    id: 1,
-    name: 'Neil Herbert U. Betacura',
-    email: 'neil.betacura@sams.edu.ph',
-    role: 'Administrator',
-    department: 'Repository Lead & IT Architecture',
-    status: 'Active',
-    last_active: 'Today, 8:15 AM',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'
-  },
-  {
-    id: 2,
-    name: 'Demelyn Concepcion',
-    email: 'demelyn.concepcion@sams.edu.ph',
-    role: 'Administrator',
-    department: 'Board Lead & Academic Oversight',
-    status: 'Active',
-    last_active: 'Today, 9:20 AM',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200'
-  },
-  {
-    id: 3,
-    name: 'Jamaica Ganolon',
-    email: 'jamaica.ganolon@sams.edu.ph',
-    role: 'Staff',
-    department: 'Scribe & Records Registry',
-    status: 'Active',
-    last_active: 'Today, 8:45 AM',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200'
-  },
-  {
-    id: 4,
-    name: 'Angelo Dairo',
-    email: 'angelo.dairo@sams.edu.ph',
-    role: 'Instructor',
-    department: 'Builder & Grade 11 - STEM (Math)',
-    status: 'Active',
-    last_active: 'Today, 7:55 AM',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200'
-  },
-  {
-    id: 5,
-    name: 'Angelo Madolaria',
-    email: 'angelo.madolaria@sams.edu.ph',
-    role: 'Instructor',
-    department: 'Builder & Grade 10 - ABM (ICT)',
-    status: 'Active',
-    last_active: 'Today, 8:05 AM',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200'
-  },
-  {
-    id: 6,
-    name: 'Prof. Alan Turing',
-    email: 'alan.turing@sams.edu.ph',
-    role: 'Instructor',
-    department: 'Senior Science & Logic Studies',
-    status: 'Active',
-    last_active: 'Yesterday, 4:20 PM',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200'
-  },
-  {
-    id: 7,
-    name: 'Dr. Ada Lovelace',
-    email: 'ada.lovelace@sams.edu.ph',
-    role: 'Instructor',
-    department: 'Business Analytics & Economics',
-    status: 'Active',
-    last_active: 'Yesterday, 3:15 PM',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200'
-  },
-  {
-    id: 8,
-    name: 'Prof. Grace Hopper',
-    email: 'grace.hopper@sams.edu.ph',
-    role: 'Instructor',
-    department: 'Grade 12 - HUMSS (English)',
-    status: 'Active',
-    last_active: 'May 18, 2026',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200'
-  }
-];
+// (USERS_DATA is declared and managed in global state at top of file)
 
 function renderUsersTable() {
   const tbody = document.getElementById('tbody-users-list');
@@ -2116,14 +2696,22 @@ function handleUserSubmit(e) {
       user.role = role;
       user.status = status;
       user.department = department;
+      if (!user.username) {
+        user.username = email.split('@')[0].toLowerCase();
+      }
       showToast(`User ${name} updated successfully!`, 'success');
     }
   } else {
     // Create new user
+    const defaultPwd = (document.getElementById('user-password')?.value || 'Pass@2026!').trim();
+    const derivedUsername = email.split('@')[0].toLowerCase().replace(/[^a-z0-9_.-]/g, '');
     const newUser = {
       id: Date.now(),
       name,
       email,
+      username: derivedUsername || `user${Date.now().toString().slice(-4)}`,
+      password: defaultPwd,
+      aliases: [derivedUsername],
       role,
       department,
       status,
@@ -2131,11 +2719,13 @@ function handleUserSubmit(e) {
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150'
     };
     USERS_DATA.unshift(newUser);
-    showToast(`New ${role} user "${name}" created!`, 'success');
+    showToast(`New ${role} user "${name}" created with username "${newUser.username}"!`, 'success');
   }
 
+  persistUsersData();
   closeUserModal();
   renderUsersTable();
+  renderCredentialsDirectory();
 }
 
 function toggleUserStatus(userId) {
@@ -2147,10 +2737,7 @@ function toggleUserStatus(userId) {
 }
 
 function resetUserPassword(userId) {
-  const user = USERS_DATA.find(u => u.id === userId);
-  if (!user) return;
-  const tempPass = `SAMS#${Math.floor(1000 + Math.random() * 9000)}`;
-  showToast(`Password for ${user.name} reset to: "${tempPass}"`, 'info');
+  openChangeCredentialsModal(userId);
 }
 
 function deleteUser(userId) {
@@ -2158,7 +2745,9 @@ function deleteUser(userId) {
   if (!user) return;
   if (confirm(`Are you sure you want to delete user account "${user.name}"?`)) {
     USERS_DATA = USERS_DATA.filter(u => u.id !== userId);
+    persistUsersData();
     renderUsersTable();
+    renderCredentialsDirectory();
     showToast(`User account deleted.`, 'info');
   }
 }
@@ -2189,19 +2778,144 @@ function switchSettingsSection(sectionName, clickedBtn) {
   if (clickedBtn) {
     clickedBtn.classList.add('active');
   } else {
-    const btnIndices = { 'policies': 0, 'notifications': 1, 'profile': 2, 'database': 3 };
+    const btnIndices = { 'policies': 0, 'notifications': 1, 'profile': 2, 'database': 3, 'security': 4 };
     const buttons = document.querySelectorAll('.settings-tab-btn');
     const idx = btnIndices[sectionName] ?? 0;
     if (buttons[idx]) buttons[idx].classList.add('active');
   }
 
-  const sections = ['policies', 'notifications', 'profile', 'database'];
+  const sections = ['policies', 'notifications', 'profile', 'database', 'security'];
   sections.forEach(s => {
     const el = document.getElementById(`settings-section-${s}`);
     if (el) {
       el.classList.toggle('d-none', s !== sectionName);
     }
   });
+
+  if (sectionName === 'security') {
+    populateSecuritySection();
+  }
+}
+
+function populateSecuritySection() {
+  if (!CURRENT_USER) return;
+  const avatar = document.getElementById('security-current-avatar');
+  if (avatar && CURRENT_USER.avatar) avatar.src = CURRENT_USER.avatar;
+
+  const name = document.getElementById('security-current-name');
+  if (name) name.textContent = CURRENT_USER.name;
+
+  const badge = document.getElementById('security-current-role-badge');
+  if (badge) {
+    badge.textContent = CURRENT_USER.role;
+    badge.className = 'role-badge ' + (
+      CURRENT_USER.role === 'Administrator' ? 'role-admin' :
+      CURRENT_USER.role === 'Instructor' ? 'role-instructor' : 'role-staff'
+    );
+  }
+
+  const emailSub = document.getElementById('security-current-email-sub');
+  if (emailSub) emailSub.textContent = `${CURRENT_USER.email} • ${CURRENT_USER.department || CURRENT_USER.role}`;
+
+  const dispUsername = document.getElementById('security-display-username');
+  if (dispUsername) dispUsername.textContent = CURRENT_USER.username;
+
+  const inputUsername = document.getElementById('security-input-username');
+  if (inputUsername) inputUsername.value = CURRENT_USER.username || '';
+
+  const curPwd = document.getElementById('security-input-current-pwd');
+  if (curPwd) curPwd.value = '';
+
+  const newPwd = document.getElementById('security-input-new-pwd');
+  if (newPwd) newPwd.value = '';
+
+  const confPwd = document.getElementById('security-input-confirm-pwd');
+  if (confPwd) confPwd.value = '';
+
+  const alertBox = document.getElementById('settings-security-alert');
+  if (alertBox) alertBox.classList.add('d-none');
+}
+
+function handleSettingsSecuritySubmit(event) {
+  if (event) event.preventDefault();
+
+  if (!CURRENT_USER) {
+    showToast('No active user logged in.', 'error');
+    return;
+  }
+
+  const curPwd = (document.getElementById('security-input-current-pwd')?.value || '').trim();
+  const newUsername = (document.getElementById('security-input-username')?.value || '').trim().toLowerCase();
+  const newPwd = (document.getElementById('security-input-new-pwd')?.value || '').trim();
+  const confPwd = (document.getElementById('security-input-confirm-pwd')?.value || '').trim();
+  const alertBox = document.getElementById('settings-security-alert');
+
+  function showSecAlert(msg, isError = true) {
+    if (!alertBox) {
+      showToast(msg, isError ? 'error' : 'success');
+      return;
+    }
+    alertBox.classList.remove('d-none');
+    alertBox.style.display = 'flex';
+    alertBox.style.alignItems = 'center';
+    alertBox.style.gap = '8px';
+    alertBox.style.background = isError ? '#fef2f2' : '#ecfdf5';
+    alertBox.style.color = isError ? '#dc2626' : '#059669';
+    alertBox.style.border = isError ? '1px solid #fecaca' : '1px solid #a7f3d0';
+    alertBox.innerHTML = `<i class="fa-solid ${isError ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> <span>${escapeHTML(msg)}</span>`;
+  }
+
+  // Verify current password
+  if (curPwd !== CURRENT_USER.password) {
+    showSecAlert('Current password does not match your active password.', true);
+    return;
+  }
+
+  // Validate new username
+  if (!newUsername || newUsername.length < 3) {
+    showSecAlert('New username must be at least 3 characters.', true);
+    return;
+  }
+  if (!/^[a-z0-9_.-]+$/.test(newUsername)) {
+    showSecAlert('Username may only contain letters, numbers, dots, and underscores.', true);
+    return;
+  }
+
+  const conflict = USERS_DATA.find(u => u.id !== CURRENT_USER.id && (u.username?.toLowerCase() === newUsername || u.email?.toLowerCase() === newUsername));
+  if (conflict) {
+    showSecAlert(`Username "${newUsername}" is already taken by ${conflict.name}.`, true);
+    return;
+  }
+
+  // Validate new password
+  if (!newPwd || newPwd.length < 4) {
+    showSecAlert('New password must be at least 4 characters.', true);
+    return;
+  }
+  if (newPwd !== confPwd) {
+    showSecAlert('New password and confirmation do not match.', true);
+    return;
+  }
+
+  // Update CURRENT_USER and in USERS_DATA
+  const targetUser = USERS_DATA.find(u => u.id === CURRENT_USER.id);
+  if (targetUser) {
+    targetUser.username = newUsername;
+    targetUser.password = newPwd;
+    if (!targetUser.aliases) targetUser.aliases = [];
+    if (!targetUser.aliases.includes(newUsername)) targetUser.aliases.push(newUsername);
+  }
+  CURRENT_USER.username = newUsername;
+  CURRENT_USER.password = newPwd;
+
+  applyCurrentUser(CURRENT_USER);
+  persistUsersData();
+  renderCredentialsDirectory();
+  renderUsersTable();
+  populateSecuritySection();
+
+  showSecAlert('Username and password updated successfully!', false);
+  showToast(`Credentials successfully saved for ${CURRENT_USER.name}!`, 'success');
 }
 
 function goToSettingsSection(sectionName) {
@@ -2486,13 +3200,15 @@ function handleSaveAdminProfile(event) {
   const settingsEmailSub = document.getElementById('settings-admin-email-sub');
   if (settingsEmailSub) settingsEmailSub.textContent = `${newEmail} • Primary System Administrator`;
 
-  // Update in USERS_DATA (Lead Admin account)
+  // Update in USERS_DATA and apply to current user
   if (USERS_DATA && USERS_DATA.length > 0) {
-    USERS_DATA[0].name = newName;
-    USERS_DATA[0].email = newEmail;
-    USERS_DATA[0].role = 'Administrator';
-    USERS_DATA[0].department = newDept;
-    USERS_DATA[0].avatar = newAvatar;
+    const userToUpdate = (CURRENT_USER ? USERS_DATA.find(u => u.id === CURRENT_USER.id) : null) || USERS_DATA[0];
+    userToUpdate.name = newName;
+    userToUpdate.email = newEmail;
+    userToUpdate.role = newRole;
+    userToUpdate.department = newDept;
+    userToUpdate.avatar = newAvatar;
+    applyCurrentUser(userToUpdate);
     renderUsersTable();
   }
 
@@ -2505,7 +3221,7 @@ function handleSaveAdminProfile(event) {
   }
 
   closeAvatarSettingsActionsModal();
-  showToast('Admin avatar and profile updated successfully!', 'success');
+  showToast(`${newName}'s avatar and profile updated successfully!`, 'success');
 }
 
 function exportDatabaseBackup() {
@@ -2515,6 +3231,7 @@ function exportDatabaseBackup() {
     exported_at: new Date().toISOString(),
     settings: SYSTEM_SETTINGS,
     students: STUDENTS_DATA,
+    daily_attendance: DAILY_ATTENDANCE,
     attendance_records: ATTENDANCE_MAP,
     attendance_history: ATTENDANCE_HISTORY,
     calendar_events: CALENDAR_EVENTS,
@@ -2551,6 +3268,7 @@ function handleImportDatabaseFile(event) {
       }
 
       if (parsed.students) STUDENTS_DATA = parsed.students;
+      if (parsed.daily_attendance) DAILY_ATTENDANCE = parsed.daily_attendance;
       if (parsed.attendance_records) ATTENDANCE_MAP = parsed.attendance_records;
       if (parsed.attendance_history) ATTENDANCE_HISTORY = parsed.attendance_history;
       if (parsed.calendar_events) CALENDAR_EVENTS = parsed.calendar_events;
@@ -2566,6 +3284,10 @@ function handleImportDatabaseFile(event) {
       renderCalendar();
       renderUsersTable();
       renderClassesGrid();
+
+      persistStudentsData();
+      persistAttendanceData();
+      persistUsersData();
 
       showToast(`Database backup "${file.name}" imported successfully! Loaded ${STUDENTS_DATA.length} students.`, 'success');
     } catch (err) {
@@ -2592,6 +3314,7 @@ function confirmPurgeAttendanceLogs() {
     STUDENTS_DATA.forEach(s => {
       ATTENDANCE_MAP[s.id] = 'Present';
     });
+    persistAttendanceData();
     loadRosterForAttendance();
     showToast('Historical attendance logs purged successfully.', 'info');
   }
@@ -2601,6 +3324,15 @@ function confirmResetDefaults() {
   if (confirm('Warning: This will reset all students, attendance marks, and calendar events to default seed data. Proceed?')) {
     try {
       localStorage.removeItem('sams_system_settings');
+      localStorage.removeItem('sams_students_data');
+      localStorage.removeItem('sams_daily_attendance');
+      localStorage.removeItem('sams_attendance_map');
+      localStorage.removeItem('sams_attendance_history');
+      localStorage.removeItem('sams_users_data');
+      localStorage.removeItem('sams_admin_profile');
+      localStorage.removeItem('sams_current_user');
+      localStorage.removeItem('sams_active_tab');
+      localStorage.removeItem('sams_logged_in');
     } catch (e) {}
     location.reload();
   }
@@ -2722,7 +3454,7 @@ function exportAttendanceReportCSV() {
     `"${s.student_id_number}"`,
     `"${s.first_name} ${s.last_name}"`,
     `"${ATTENDANCE_MAP[s.id] || 'Present'}"`,
-    `"John Dela Cruz (Admin)"`
+    `"${CURRENT_USER ? CURRENT_USER.name : 'Neil Herbert U. Betacura'} (${CURRENT_USER ? CURRENT_USER.role : 'Administrator'})"`
   ]);
 
   const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
