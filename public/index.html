@@ -1,0 +1,2922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Management System</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome for crisp icons matching the designs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+  <!-- =====================================================================
+       LOGIN VIEW (SPLIT SCREEN - IMAGE 8)
+       ===================================================================== -->
+  <div id="view-login" class="login-split-page d-none">
+    <!-- Left Hero -->
+    <div class="login-left-brand-hero">
+      <div class="login-brand-top">
+        <div class="login-brand-badge">
+          <i class="fa-solid fa-calendar-check"></i> Attendance Management System
+        </div>
+        <h1>Smart Attendance.<br>Better Management.</h1>
+        <p>A centralized web-based attendance platform for teachers, students, and administrators.</p>
+        
+        <div class="login-features-row">
+          <div class="login-feature-item">
+            <i class="fa-solid fa-users"></i> Track Attendance
+          </div>
+          <div class="login-feature-item">
+            <i class="fa-solid fa-chart-line"></i> Generate Reports
+          </div>
+          <div class="login-feature-item">
+            <i class="fa-solid fa-shield-halved"></i> Secure & Reliable
+          </div>
+        </div>
+      </div>
+
+      <!-- Laptop Mockup Graphic -->
+      <div class="login-mockup-center">
+        <svg viewBox="0 0 500 300" width="100%" height="auto" style="filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3));">
+          <rect x="50" y="20" width="400" height="240" rx="14" fill="#0b1b36" stroke="#475569" stroke-width="6"/>
+          <rect x="65" y="35" width="370" height="210" rx="8" fill="#ffffff"/>
+          <!-- Inner screen mockup -->
+          <rect x="65" y="35" width="80" height="210" fill="#091e42"/>
+          <rect x="160" y="55" width="70" height="35" rx="4" fill="#eff6ff"/>
+          <rect x="245" y="55" width="70" height="35" rx="4" fill="#ecfdf5"/>
+          <rect x="330" y="55" width="70" height="35" rx="4" fill="#fff7ed"/>
+          <path d="M 160 160 Q 220 110, 280 140 T 400 120" fill="none" stroke="#2563eb" stroke-width="4"/>
+          <!-- Base -->
+          <path d="M 20 260 L 480 260 L 460 275 L 40 275 Z" fill="#cbd5e1"/>
+          <rect x="220" y="260" width="60" height="5" rx="2" fill="#94a3b8"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Right Form -->
+    <div class="login-right-form-panel">
+      <div class="login-form-box">
+        <div class="login-emblem-badge">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h2>Welcome Back!</h2>
+        <p class="sub">Please sign in to your account</p>
+
+        <form id="form-login" onsubmit="handleLoginSubmit(event)">
+          <div class="form-group">
+            <div class="input-with-icon">
+              <i class="fa-regular fa-user input-icon"></i>
+              <input type="text" class="form-control" id="login-username" placeholder="Username" value="admin" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="input-with-icon">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input type="password" class="form-control" id="login-password" placeholder="Password" value="password123" required>
+              <i class="fa-regular fa-eye" style="position:absolute; right:14px; color:#94a3b8; cursor:pointer;" onclick="togglePasswordVisibility()"></i>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:0.84rem;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--text-body);">
+              <input type="checkbox" class="custom-checkbox" checked> Remember me
+            </label>
+            <a href="#" style="color:var(--primary-blue); text-decoration:none; font-weight:600;">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; height:44px; font-size:0.95rem;">
+            Log In <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          </button>
+
+          <div class="login-divider">
+            <span>or</span>
+          </div>
+
+          <button type="button" class="btn btn-outline" style="width:100%; height:44px;" onclick="handleLoginSubmit(event)">
+            <i class="fa-solid fa-id-badge"></i> Login as Staff
+          </button>
+        </form>
+
+        <div style="text-align:center; margin-top:36px; font-size:0.75rem; color:#94a3b8;">
+          © 2026 Attendance Management System. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       MAIN APP LAYOUT (HEADER, SIDEBAR & CONTENT VIEWS)
+       ===================================================================== -->
+  <div id="view-app" class="app-container">
+
+    <!-- SIDEBAR (IMAGES 1-10) -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon-box">
+          <i class="fa-solid fa-calendar-check"></i>
+        </div>
+        <div class="brand-text">
+          <h2>Attendance</h2>
+          <p>Management System</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-link active" data-tab="dashboard">
+          <i class="fa-solid fa-house"></i> <span>Dashboard</span>
+        </button>
+        <button class="nav-link" data-tab="students">
+          <i class="fa-solid fa-user-group"></i> <span>Students</span>
+        </button>
+        <button class="nav-link" data-tab="classes">
+          <i class="fa-solid fa-book-open"></i> <span>Classes</span>
+        </button>
+        <button class="nav-link" data-tab="attendance">
+          <i class="fa-solid fa-calendar-days"></i> <span>Attendance</span>
+        </button>
+        <button class="nav-link" data-tab="reports">
+          <i class="fa-solid fa-chart-column"></i> <span>Reports</span>
+        </button>
+        <button class="nav-link" data-tab="calendar">
+          <i class="fa-regular fa-calendar"></i> <span>Calendar</span>
+        </button>
+        <button class="nav-link" data-tab="users">
+          <i class="fa-solid fa-users-gear"></i> <span>Users</span>
+        </button>
+        <button class="nav-link" data-tab="settings">
+          <i class="fa-solid fa-gear"></i> <span>Settings</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Bottom Graphic & Footer -->
+      <div class="sidebar-bottom">
+        <svg class="sidebar-illustration" viewBox="0 0 160 120" fill="none">
+          <rect x="35" y="25" width="90" height="90" rx="8" fill="#ffffff"/>
+          <rect x="45" y="40" width="70" height="8" rx="4" fill="#93c5fd"/>
+          <rect x="45" y="55" width="50" height="6" rx="3" fill="#bfdbfe"/>
+          <rect x="45" y="68" width="60" height="6" rx="3" fill="#bfdbfe"/>
+          <circle cx="50" cy="88" r="5" fill="#10b981"/>
+          <circle cx="50" cy="102" r="5" fill="#10b981"/>
+          <path d="M 60 88 L 90 88 M 60 102 L 80 102" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+          <!-- Clip -->
+          <rect x="65" y="16" width="30" height="15" rx="3" fill="#64748b"/>
+          <circle cx="80" cy="22" r="3" fill="#ffffff"/>
+          <!-- Student figures -->
+          <circle cx="25" cy="55" r="10" fill="#3b82f6"/>
+          <path d="M 15 85 C 15 70, 35 70, 35 85 Z" fill="#1d4ed8"/>
+          <circle cx="135" cy="65" r="9" fill="#10b981"/>
+          <path d="M 125 90 C 125 78, 145 78, 145 90 Z" fill="#059669"/>
+        </svg>
+        <p class="sidebar-copyright">© 2026 Attendance Management System<br>All rights reserved.</p>
+      </div>
+    </aside>
+
+    <!-- MAIN BODY WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- TOPBAR (MATCHES ALL IMAGES) -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger-btn" title="Toggle Menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="top-search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="global-search" placeholder="Search students, classes, etc...">
+          </div>
+        </div>
+
+        <div class="topbar-right" style="position:relative;">
+          <!-- Notification Bell with '3' badge -->
+          <button class="icon-action-btn" title="Notifications" onclick="toggleNotificationsMenu(event)">
+            <i class="fa-regular fa-bell"></i>
+            <span class="badge-counter" id="bell-badge-count">3</span>
+          </button>
+          
+          <!-- Notifications Dropdown Popup -->
+          <div id="dropdown-notifications" class="topbar-dropdown-menu">
+            <div class="dropdown-header">
+              <h4>Notifications (3)</h4>
+              <button class="btn btn-sm btn-outline" style="padding:2px 8px; font-size:0.75rem;" onclick="markAllNotificationsRead()">Mark all read</button>
+            </div>
+            <div class="dropdown-item-list">
+              <div class="dropdown-item-row" onclick="showToast('Viewing notice: Quarter 2 Attendance Check', 'info')">
+                <i class="fa-solid fa-bullhorn" style="color:var(--primary-blue); font-size:16px; margin-top:2px;"></i>
+                <div>
+                  <h5 style="font-size:0.85rem; font-weight:700; color:var(--text-heading);">Quarter 2 Attendance Check</h5>
+                  <p style="font-size:0.75rem; color:var(--text-muted);">Please ensure all classroom attendance logs are recorded.</p>
+                  <small style="font-size:0.7rem; color:var(--text-light);">10 minutes ago</small>
+                </div>
+              </div>
+              <div class="dropdown-item-row" onclick="showToast('Viewing alert: Consecutive Absences for S2026-007', 'error')">
+                <i class="fa-solid fa-triangle-exclamation" style="color:var(--danger-red); font-size:16px; margin-top:2px;"></i>
+                <div>
+                  <h5 style="font-size:0.85rem; font-weight:700; color:var(--text-heading);">Chronic Absence Alert</h5>
+                  <p style="font-size:0.75rem; color:var(--text-muted);">Student Rafael Jose Villanueva (S2026-007) has reached threshold.</p>
+                  <small style="font-size:0.7rem; color:var(--text-light);">1 hour ago</small>
+                </div>
+              </div>
+              <div class="dropdown-item-row" onclick="showToast('Viewing notice: School Holiday May 25', 'success')">
+                <i class="fa-regular fa-calendar-check" style="color:var(--success-green); font-size:16px; margin-top:2px;"></i>
+                <div>
+                  <h5 style="font-size:0.85rem; font-weight:700; color:var(--text-heading);">School Holiday Reminder</h5>
+                  <p style="font-size:0.75rem; color:var(--text-muted);">No classes on May 25 for National Hero's Day.</p>
+                  <small style="font-size:0.7rem; color:var(--text-light);">Yesterday</small>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-footer">
+              <a href="#" onclick="showToast('Opening all notification archives...', 'info')">View All Notifications</a>
+            </div>
+          </div>
+
+          <!-- Mail icon -->
+          <button class="icon-action-btn" title="Messages" onclick="toggleMessagesMenu(event)">
+            <i class="fa-regular fa-envelope"></i>
+          </button>
+
+          <!-- Messages Dropdown Popup -->
+          <div id="dropdown-messages" class="topbar-dropdown-menu">
+            <div class="dropdown-header">
+              <h4>Messages & Inquiries</h4>
+            </div>
+            <div class="dropdown-item-list">
+              <div class="dropdown-item-row" onclick="showToast('Opening inquiry from Mario Santos (Guardian)', 'info')">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100" class="mini-avatar" style="width:32px; height:32px;">
+                <div>
+                  <h5 style="font-size:0.85rem; font-weight:700;">Mario Santos (Guardian)</h5>
+                  <p style="font-size:0.75rem; color:var(--text-muted);">Inquiry regarding Juan's attendance clearance for Math.</p>
+                  <small style="font-size:0.7rem; color:var(--text-light);">Today, 8:40 AM</small>
+                </div>
+              </div>
+              <div class="dropdown-item-row" onclick="showToast('Opening message from Prof. Alan Turing', 'info')">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100" class="mini-avatar" style="width:32px; height:32px;">
+                <div>
+                  <h5 style="font-size:0.85rem; font-weight:700;">Prof. Alan Turing</h5>
+                  <p style="font-size:0.75rem; color:var(--text-muted);">Grade 11 - STEM rollcall has been submitted for Room 201.</p>
+                  <small style="font-size:0.7rem; color:var(--text-light);">Today, 8:15 AM</small>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-footer">
+              <a href="#" onclick="showToast('Opening messaging portal...', 'info')">View All Inquiries</a>
+            </div>
+          </div>
+          
+          <!-- User Profile -->
+          <div class="user-profile-menu" onclick="toggleUserDropdown(event)" title="Click to open Admin Profile & System Settings">
+            <div style="position:relative;">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" alt="Avatar" class="user-avatar-img" id="topbar-user-avatar">
+              <span style="position:absolute; bottom:-1px; right:-1px; background:var(--primary-blue); color:#fff; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:8px; border:1.5px solid #fff;"><i class="fa-solid fa-camera"></i></span>
+            </div>
+            <div class="user-info-text">
+              <h4 id="topbar-user-name">Neil Herbert Betacura</h4>
+              <p id="topbar-user-role">Repository Lead</p>
+            </div>
+            <i class="fa-solid fa-chevron-down" style="font-size:11px; color:#94a3b8;"></i>
+          </div>
+
+          <!-- User Profile Dropdown Popup -->
+          <div id="dropdown-user-profile" class="topbar-dropdown-menu" style="width:280px;">
+            <div style="padding:14px 18px; border-bottom:1px solid var(--card-border); background:#f8fafc; border-top-left-radius:var(--radius-md); border-top-right-radius:var(--radius-md);">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="position:relative; cursor:pointer;" onclick="openAvatarSettingsActionsModal()" title="Click avatar for photo & settings options">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" id="dropdown-user-avatar" class="mini-avatar" style="width:46px; height:46px; border-radius:50%; border:2px solid var(--primary-blue);">
+                  <span style="position:absolute; bottom:-1px; right:-1px; background:var(--primary-blue); color:#fff; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; border:1.5px solid #fff;"><i class="fa-solid fa-camera"></i></span>
+                </div>
+                <div style="flex:1; min-width:0;">
+                  <h5 style="font-weight:700; color:var(--text-heading); font-size:0.88rem; margin:0;" id="dropdown-user-name">Neil Herbert U. Betacura</h5>
+                  <p style="font-size:0.73rem; color:var(--text-muted); margin:2px 0 0; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" id="dropdown-user-email">neil.betacura@sams.edu.ph</p>
+                  <span class="role-badge role-admin" style="margin-top:5px; font-size:0.68rem; padding:2px 8px;" id="dropdown-user-role-badge">Repository Lead</span>
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline-primary btn-xs" style="width:100%; margin-top:10px; font-size:0.75rem;" onclick="openAvatarSettingsActionsModal()">
+                <i class="fa-solid fa-sliders"></i> Avatar & Settings Actions
+              </button>
+            </div>
+
+            <!-- Quick System Settings Actions -->
+            <div style="padding:8px 0; border-bottom:1px solid var(--card-border);">
+              <div style="padding:4px 18px 6px; font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted);">
+                System Settings Actions
+              </div>
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="goToSettingsSection('profile')">
+                <i class="fa-solid fa-school" style="color:var(--primary-blue); width:18px;"></i>
+                <span style="font-size:0.82rem; color:var(--text-body);">Center Profile & Branding</span>
+              </a>
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="goToSettingsSection('policies')">
+                <i class="fa-solid fa-clock-rotate-left" style="color:var(--warning-amber); width:18px;"></i>
+                <span style="font-size:0.82rem; color:var(--text-body);">Attendance Policies</span>
+              </a>
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="goToSettingsSection('notifications')">
+                <i class="fa-regular fa-bell" style="color:#0284c7; width:18px;"></i>
+                <span style="font-size:0.82rem; color:var(--text-body);">SMS / Alert Notifications</span>
+              </a>
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="goToSettingsSection('database')">
+                <i class="fa-solid fa-database" style="color:var(--success-green); width:18px;"></i>
+                <span style="font-size:0.82rem; color:var(--text-body);">Backup & Sync Storage</span>
+              </a>
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="closeAllTopbarDropdowns(); runSystemHealthCheck();">
+                <i class="fa-solid fa-heart-pulse" style="color:var(--danger-red); width:18px;"></i>
+                <span style="font-size:0.82rem; color:var(--text-body);">System Health Diagnostics</span>
+              </a>
+            </div>
+
+            <!-- Account / Global Links -->
+            <div style="padding:6px 0;">
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="closeAllTopbarDropdowns(); switchTab('users');">
+                <i class="fa-solid fa-user-shield" style="color:var(--text-muted); width:18px;"></i>
+                <span style="font-size:0.82rem; color:var(--text-body);">Manage Team & Roles</span>
+              </a>
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px; color:var(--danger-red);" onclick="showLoginView()">
+                <i class="fa-solid fa-arrow-right-from-bracket" style="color:var(--danger-red); width:18px;"></i>
+                <span style="font-size:0.82rem; font-weight:600; color:var(--danger-red);">Sign Out</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Sign-Out / Switch to Login Screen button -->
+          <button class="btn btn-outline btn-sm" onclick="showLoginView()" style="color:#64748b;" title="Switch to Login Screen">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY CONTAINER -->
+      <main class="content-body">
+
+        <!-- =================================================================
+             1. TAB: DASHBOARD (IMAGE 5)
+             ================================================================= -->
+        <section id="pane-dashboard" class="tab-pane-content">
+          <!-- Header -->
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>Dashboard</h1>
+              <p class="breadcrumbs" style="font-size:0.9rem; color:var(--text-muted); margin-top:3px;">
+                Welcome back, John Dela Cruz! Here's what's happening today.
+              </p>
+            </div>
+            <div class="date-badge">
+              <i class="fa-regular fa-calendar" style="color:var(--primary-blue);"></i> May 20, 2026 | Tuesday
+            </div>
+          </div>
+
+          <!-- 4 KPI Cards -->
+          <div class="kpi-grid-4">
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Total Students</span>
+                <span class="kpi-value" id="dash-total-students">30</span>
+                <span class="kpi-meta-tag green"><i class="fa-solid fa-users"></i> 10 per cohort (3 classes)</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-blue">
+                <i class="fa-solid fa-users"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Present Today</span>
+                <span class="kpi-value" id="dash-present-today">26</span>
+                <span class="kpi-meta-tag green"><i class="fa-solid fa-arrow-trend-up"></i> 86.7% of total</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-green">
+                <i class="fa-regular fa-calendar-check"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Absent Today</span>
+                <span class="kpi-value" id="dash-absent-today">2</span>
+                <span class="kpi-meta-tag orange"><i class="fa-solid fa-arrow-trend-down"></i> 6.7% of total</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-orange">
+                <i class="fa-solid fa-user-xmark"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Total Classes</span>
+                <span class="kpi-value" id="dash-total-classes">3</span>
+                <span class="kpi-meta-tag purple"><i class="fa-solid fa-chart-simple"></i> STEM, ABM, HUMSS</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-purple">
+                <i class="fa-solid fa-clipboard-list"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: Charts (Line Chart & Donut Chart) -->
+          <div class="dashboard-charts-grid">
+            <!-- Line Chart Card -->
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Attendance Overview</h3>
+                <select class="select-filter" style="height:34px; padding-right:26px; font-size:0.8rem;">
+                  <option>This Week</option>
+                  <option>This Month</option>
+                </select>
+              </div>
+
+              <div class="chart-container-box">
+                <!-- SVG Vector Line Chart with Tooltip -->
+                <svg class="line-chart-svg" viewBox="0 0 520 220">
+                  <defs>
+                    <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.35"/>
+                      <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
+                    </linearGradient>
+                  </defs>
+                  
+                  <!-- Y-Axis Grid Lines & Labels -->
+                  <line x1="40" y1="20" x2="500" y2="20" class="chart-axis-line"/>
+                  <text x="15" y="24" class="chart-axis-text">100%</text>
+
+                  <line x1="40" y1="65" x2="500" y2="65" class="chart-axis-line"/>
+                  <text x="15" y="69" class="chart-axis-text">75%</text>
+
+                  <line x1="40" y1="110" x2="500" y2="110" class="chart-axis-line"/>
+                  <text x="15" y="114" class="chart-axis-text">50%</text>
+
+                  <line x1="40" y1="155" x2="500" y2="155" class="chart-axis-line"/>
+                  <text x="15" y="159" class="chart-axis-text">25%</text>
+
+                  <line x1="40" y1="195" x2="500" y2="195" class="chart-axis-line"/>
+                  <text x="20" y="198" class="chart-axis-text">0%</text>
+
+                  <!-- X-Axis Labels -->
+                  <text x="60" y="214" class="chart-axis-text">Mon</text>
+                  <text x="140" y="214" class="chart-axis-text">Tue</text>
+                  <text x="220" y="214" class="chart-axis-text">Wed</text>
+                  <text x="300" y="214" class="chart-axis-text">Thu</text>
+                  <text x="380" y="214" class="chart-axis-text">Fri</text>
+                  <text x="460" y="214" class="chart-axis-text">Sat</text>
+
+                  <!-- Area Fill -->
+                  <path d="M 60 110 L 140 85 L 220 120 L 300 78 L 380 65 L 460 92 L 460 195 L 60 195 Z" class="chart-area-fill"/>
+
+                  <!-- Primary Line Path -->
+                  <path d="M 60 110 L 140 85 L 220 120 L 300 78 L 380 65 L 460 92" class="chart-line-path"/>
+
+                  <!-- Data Points -->
+                  <circle cx="60" cy="110" r="4.5" class="chart-point"/>
+                  <circle cx="140" cy="85" r="4.5" class="chart-point"/>
+                  <circle cx="220" cy="120" r="4.5" class="chart-point"/>
+                  <circle cx="300" cy="78" r="4.5" class="chart-point"/>
+                  <circle cx="380" cy="65" r="5" class="chart-point" style="stroke-width:4;"/>
+                  <circle cx="460" cy="92" r="4.5" class="chart-point"/>
+                </svg>
+
+                <!-- Tooltip directly on Fri May 16 (matches design) -->
+                <div class="chart-tooltip-box" style="top: 65px; left: 380px;">
+                  <strong>Fri, May 16</strong>
+                  <span>Attendance: 82%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Donut Chart Card -->
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Attendance Summary</h3>
+              </div>
+
+              <div class="donut-chart-wrapper">
+                <div class="donut-svg-box">
+                  <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: rotate(-90deg);">
+                    <!-- Background Circle -->
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#f1f5f9" stroke-width="15"/>
+                    <!-- Green Segment (78.7%) -->
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15"
+                            stroke-dasharray="188 238" stroke-dashoffset="0"/>
+                    <!-- Red Segment (21.3%) -->
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15"
+                            stroke-dasharray="50 238" stroke-dashoffset="-188"/>
+                  </svg>
+                  <div class="donut-center-text">
+                    <div class="pct">78.7%</div>
+                    <div class="label">Overall</div>
+                  </div>
+                </div>
+
+                <div class="donut-legend-list">
+                  <div class="donut-legend-item">
+                    <span class="legend-left"><span class="legend-dot green"></span> Present</span>
+                    <strong>982 <span style="font-weight:400; color:#64748b;">(78.7%)</span></strong>
+                  </div>
+                  <div class="donut-legend-item">
+                    <span class="legend-left"><span class="legend-dot red"></span> Absent</span>
+                    <strong>266 <span style="font-weight:400; color:#64748b;">(21.3%)</span></strong>
+                  </div>
+                  <div class="donut-legend-item">
+                    <span class="legend-left"><span class="legend-dot orange"></span> Late</span>
+                    <strong>45 <span style="font-weight:400; color:#64748b;">(3.6%)</span></strong>
+                  </div>
+                  <div class="donut-total-bar">
+                    <span>Total</span>
+                    <span>1,248</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: 3 Columns (Recent Attendance, Upcoming Classes, Announcements) -->
+          <div class="dashboard-triple-grid">
+            <!-- Recent Attendance -->
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Recent Attendance</h3>
+                <a href="#" style="font-size:0.8rem; color:var(--primary-blue); font-weight:600; text-decoration:none;" onclick="switchTab('attendance')">View All</a>
+              </div>
+              <div id="dash-recent-list">
+                <div class="compact-list-item">
+                  <div class="student-mini-profile">
+                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=120" class="mini-avatar">
+                    <div class="mini-profile-text">
+                      <h5>Juan Miguel Santos</h5>
+                      <p>Grade 11 - STEM</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="status-pill status-present">Present</span>
+                    <span style="font-size:0.75rem; color:#94a3b8;">8:02 AM</span>
+                  </div>
+                </div>
+
+                <div class="compact-list-item">
+                  <div class="student-mini-profile">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=120" class="mini-avatar">
+                    <div class="mini-profile-text">
+                      <h5>Maria Angelica Reyes</h5>
+                      <p>Grade 10 - ABM</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="status-pill status-present">Present</span>
+                    <span style="font-size:0.75rem; color:#94a3b8;">8:05 AM</span>
+                  </div>
+                </div>
+
+                <div class="compact-list-item">
+                  <div class="student-mini-profile">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120" class="mini-avatar">
+                    <div class="mini-profile-text">
+                      <h5>Daniel Lorenzo Cruz</h5>
+                      <p>Grade 12 - HUMSS</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="status-pill status-absent">Absent</span>
+                    <span style="font-size:0.75rem; color:#94a3b8;">—</span>
+                  </div>
+                </div>
+
+                <div class="compact-list-item">
+                  <div class="student-mini-profile">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=120" class="mini-avatar">
+                    <div class="mini-profile-text">
+                      <h5>Nicole Anne Garcia</h5>
+                      <p>Grade 11 - STEM</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="status-pill status-late">Late</span>
+                    <span style="font-size:0.75rem; color:#94a3b8;">8:23 AM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upcoming Classes -->
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Upcoming Classes</h3>
+                <a href="#" style="font-size:0.8rem; color:var(--primary-blue); font-weight:600; text-decoration:none;" onclick="switchTab('classes')">View All</a>
+              </div>
+              <div>
+                <div class="class-schedule-item">
+                  <div class="class-time-indicator">8:00 AM</div>
+                  <div class="class-details-center">
+                    <h5>General Mathematics</h5>
+                    <p>Grade 11 - STEM</p>
+                  </div>
+                  <span class="room-badge">Room 201</span>
+                </div>
+
+                <div class="class-schedule-item">
+                  <div class="class-time-indicator green">9:30 AM</div>
+                  <div class="class-details-center">
+                    <h5>Physical Science</h5>
+                    <p>Grade 11 - STEM</p>
+                  </div>
+                  <span class="room-badge">Room 203</span>
+                </div>
+
+                <div class="class-schedule-item">
+                  <div class="class-time-indicator purple">11:00 AM</div>
+                  <div class="class-details-center">
+                    <h5>English for Academic Purposes</h5>
+                    <p>Grade 12 - HUMSS</p>
+                  </div>
+                  <span class="room-badge">Room 305</span>
+                </div>
+
+                <div class="class-schedule-item">
+                  <div class="class-time-indicator orange">1:00 PM</div>
+                  <div class="class-details-center">
+                    <h5>Entrepreneurship</h5>
+                    <p>Grade 10 - ABM</p>
+                  </div>
+                  <span class="room-badge">Room 204</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Announcements -->
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Announcements</h3>
+                <a href="#" style="font-size:0.8rem; color:var(--primary-blue); font-weight:600; text-decoration:none;">View All</a>
+              </div>
+              <div>
+                <div class="announcement-item">
+                  <div class="announcement-icon-badge kpi-icon-blue">
+                    <i class="fa-solid fa-bullhorn"></i>
+                  </div>
+                  <div class="announcement-content">
+                    <h5>Quarter 2 Attendance Check</h5>
+                    <p>Please ensure all attendance are recorded on time.</p>
+                    <div class="date">May 19, 2026</div>
+                  </div>
+                </div>
+
+                <div class="announcement-item">
+                  <div class="announcement-icon-badge kpi-icon-green">
+                    <i class="fa-regular fa-calendar"></i>
+                  </div>
+                  <div class="announcement-content">
+                    <h5>School Holiday</h5>
+                    <p>There will be no classes on May 25, 2026 in observance of National Hero's Day.</p>
+                    <div class="date">May 18, 2026</div>
+                  </div>
+                </div>
+
+                <div class="announcement-item">
+                  <div class="announcement-icon-badge kpi-icon-orange">
+                    <i class="fa-regular fa-note-sticky"></i>
+                  </div>
+                  <div class="announcement-content">
+                    <h5>Reminder</h5>
+                    <p>Submit your attendance reports every Friday before 5:00 PM.</p>
+                    <div class="date">May 17, 2026</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =================================================================
+             2. TAB: STUDENTS DIRECTORY (IMAGES 2, 3, 6, 7, 10)
+             ================================================================= -->
+        <section id="pane-students" class="tab-pane-content d-none">
+          <!-- Header -->
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>Students</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Students
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="showCreateStudentForm()">
+                <i class="fa-solid fa-plus"></i> Add New Student
+              </button>
+            </div>
+          </div>
+
+          <!-- Top 4 KPI Cards (Matches Image 10) -->
+          <div class="kpi-grid-4">
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Total Students</span>
+                <span class="kpi-value" id="students-kpi-total">30</span>
+                <span class="kpi-meta-tag green"><i class="fa-solid fa-users"></i> 10 per cohort</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-blue">
+                <i class="fa-solid fa-users"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Present Today</span>
+                <span class="kpi-value" id="students-kpi-present">26</span>
+                <span class="kpi-meta-tag green"><i class="fa-solid fa-arrow-trend-up"></i> 86.7% of total</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-green">
+                <i class="fa-regular fa-calendar-check"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Absent Today</span>
+                <span class="kpi-value" id="students-kpi-absent">2</span>
+                <span class="kpi-meta-tag orange"><i class="fa-solid fa-arrow-trend-down"></i> 6.7% of total</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-orange">
+                <i class="fa-solid fa-user-xmark"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Active Classes</span>
+                <span class="kpi-value" id="students-kpi-classes">3</span>
+                <span class="kpi-meta-tag purple" style="cursor:pointer;" onclick="switchTab('classes')">View classes <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i></span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-purple">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter & Action Bar -->
+          <div class="table-filter-bar">
+            <div class="filter-group-left">
+              <div class="search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="students-search-input" placeholder="Search students..." oninput="handleStudentSearch(this.value)">
+              </div>
+              <select class="select-filter" id="filter-class" onchange="filterStudentsTable()">
+                <option value="All">All Classes</option>
+                <option value="Grade 11 - STEM">Grade 11 - STEM</option>
+                <option value="Grade 10 - ABM">Grade 10 - ABM</option>
+                <option value="Grade 12 - HUMSS">Grade 12 - HUMSS</option>
+              </select>
+              <select class="select-filter" id="filter-status" onchange="filterStudentsTable()">
+                <option value="All">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <button class="btn btn-outline" title="Advanced Filters">
+                <i class="fa-solid fa-filter"></i> Filters
+              </button>
+            </div>
+
+            <div class="filter-group-right">
+              <!-- State Switcher Demo Pills to view Empty / Error states effortlessly -->
+              <div style="display:flex; gap:6px; background:#e2e8f0; padding:3px; border-radius:8px;">
+                <button class="btn btn-sm btn-primary" id="btn-state-normal" onclick="setStudentViewState('normal')" title="Normal Table View">Table</button>
+                <button class="btn btn-sm btn-outline" id="btn-state-empty" onclick="setStudentViewState('empty')" title="View Empty State (Image 6)">Empty</button>
+                <button class="btn btn-sm btn-outline" id="btn-state-error" onclick="setStudentViewState('error')" title="View Error State (Image 7)">Error</button>
+              </div>
+
+              <button class="btn btn-outline" onclick="exportStudentsCSV()">
+                <i class="fa-solid fa-download"></i> Export
+              </button>
+              <button class="btn btn-outline" style="padding: 9px 12px;">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- STATE 1: NORMAL DATA TABLE (IMAGE 3 & 10) -->
+          <div id="student-view-normal" class="data-table-container">
+            <table class="styled-table" id="table-students-main">
+              <thead>
+                <tr>
+                  <th style="width: 40px;"><input type="checkbox" class="custom-checkbox" id="check-all-students"></th>
+                  <th>ID <i class="fa-solid fa-sort" style="font-size:11px; margin-left:4px;"></i></th>
+                  <th>Student Name</th>
+                  <th>Class</th>
+                  <th>Section</th>
+                  <th>Status</th>
+                  <th>Attendance Rate <i class="fa-solid fa-sort" style="font-size:11px; margin-left:4px;"></i></th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-students-list">
+                <!-- Dynamically populated from JS -->
+              </tbody>
+            </table>
+
+            <!-- Pagination Footer (Image 10) -->
+            <div class="table-pagination-footer">
+              <span class="pagination-text" id="pagination-info">Showing 1 to 30 of 30 students</span>
+              <div class="pagination-controls">
+                <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+              <select class="select-filter" style="height:32px; font-size:0.8rem; padding:0 24px 0 10px;">
+                <option>10 / page</option>
+                <option>25 / page</option>
+                <option>50 / page</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- STATE 2: EMPTY STATE (IMAGE 6) -->
+          <div id="student-view-empty" class="empty-state-card d-none">
+            <div class="state-illustration-box">
+              <svg viewBox="0 0 200 160" width="100%" height="auto">
+                <rect x="50" y="25" width="100" height="120" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+                <rect x="80" y="15" width="40" height="18" rx="4" fill="#94a3b8"/>
+                <circle cx="100" cy="55" r="14" fill="#cbd5e1"/>
+                <rect x="70" y="80" width="60" height="6" rx="3" fill="#cbd5e1"/>
+                <rect x="70" y="92" width="45" height="6" rx="3" fill="#e2e8f0"/>
+                <!-- Paper airplane -->
+                <path d="M 140 40 L 190 20 L 160 70 L 148 52 Z" fill="#93c5fd"/>
+                <path d="M 148 52 L 190 20 L 160 70 Z" fill="#60a5fa"/>
+              </svg>
+            </div>
+            <h2>No students found</h2>
+            <p>It looks like there are no students in the system yet. Get started by adding a new student.</p>
+            <button class="btn btn-primary" onclick="showCreateStudentForm()">
+              <i class="fa-solid fa-plus"></i> Add New Student
+            </button>
+          </div>
+
+          <!-- STATE 3: ERROR STATE (IMAGE 7) -->
+          <div id="student-view-error" class="error-state-card d-none">
+            <div class="state-illustration-box">
+              <svg viewBox="0 0 200 140" width="100%" height="auto">
+                <!-- Browser window -->
+                <rect x="30" y="20" width="140" height="95" rx="8" fill="#ffffff" stroke="#fca5a5" stroke-width="2"/>
+                <path d="M 30 20 L 170 20 L 170 38 L 30 38 Z" fill="#fee2e2"/>
+                <circle cx="42" cy="29" r="3" fill="#ef4444"/>
+                <circle cx="52" cy="29" r="3" fill="#f87171"/>
+                <circle cx="62" cy="29" r="3" fill="#fca5a5"/>
+                <!-- Red Alert Triangle -->
+                <path d="M 100 45 L 126 88 L 74 88 Z" fill="#ef4444"/>
+                <text x="100" y="78" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">!</text>
+              </svg>
+            </div>
+            <h2>Oops! Something went wrong.</h2>
+            <p>We couldn't load the students right now. Please try again in a few moments.</p>
+            <div style="display:flex; gap:12px;">
+              <button class="btn btn-primary" onclick="setStudentViewState('normal')">
+                <i class="fa-solid fa-rotate-right"></i> Try Again
+              </button>
+              <button class="btn btn-outline" onclick="switchTab('dashboard')">
+                <i class="fa-solid fa-arrow-left"></i> Go Back
+              </button>
+            </div>
+            <div class="error-contact-footnote">
+              <i class="fa-regular fa-circle-question"></i> If the problem persists, please contact your system administrator.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =================================================================
+             3. VIEW: CREATE NEW STUDENT (IMAGE 1)
+             ================================================================= -->
+        <section id="pane-create-student" class="tab-pane-content d-none">
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>Create New Student</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> 
+                <a href="#" onclick="switchTab('students')">Students</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Create New Student
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-outline" onclick="switchTab('students')">
+                <i class="fa-solid fa-arrow-left"></i> Back to Students
+              </button>
+            </div>
+          </div>
+
+          <form id="form-create-student" onsubmit="handleCreateStudentSubmit(event)">
+            <!-- Card 1: Student Information -->
+            <div class="form-section-card">
+              <h3 class="form-section-title">Student Information</h3>
+              
+              <div class="form-grid-layout-with-photo">
+                <!-- Left Input Fields -->
+                <div>
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label">First Name <span class="req">*</span></label>
+                      <div class="input-with-icon">
+                        <i class="fa-regular fa-user input-icon"></i>
+                        <input type="text" class="form-control" name="first_name" placeholder="Enter first name" required>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Middle Name</label>
+                      <input type="text" class="form-control" name="middle_name" placeholder="Enter middle name">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Last Name <span class="req">*</span></label>
+                      <input type="text" class="form-control" name="last_name" placeholder="Enter last name" required>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label">Student ID <span class="req">*</span></label>
+                      <input type="text" class="form-control" name="student_id_number" placeholder="Enter student ID" value="S2026-009" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Date of Birth <span class="req">*</span></label>
+                      <input type="date" class="form-control" name="dob" value="2008-04-15" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Gender <span class="req">*</span></label>
+                      <select class="form-control" name="gender" required>
+                        <option value="">Select gender</option>
+                        <option value="Male" selected>Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label">Grade Level <span class="req">*</span></label>
+                      <select class="form-control" name="grade_level" required>
+                        <option value="">Select grade level</option>
+                        <option value="Grade 10">Grade 10</option>
+                        <option value="Grade 11" selected>Grade 11</option>
+                        <option value="Grade 12">Grade 12</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Section</label>
+                      <select class="form-control" name="section">
+                        <option value="STEM-A" selected>STEM-A</option>
+                        <option value="STEM-B">STEM-B</option>
+                        <option value="ABM-A">ABM-A</option>
+                        <option value="HUMSS-A">HUMSS-A</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Strand (Optional)</label>
+                      <select class="form-control" name="strand">
+                        <option value="STEM" selected>STEM</option>
+                        <option value="ABM">ABM</option>
+                        <option value="HUMSS">HUMSS</option>
+                        <option value="TVL">TVL</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label class="form-label">Email Address</label>
+                      <div class="input-with-icon">
+                        <i class="fa-regular fa-envelope input-icon"></i>
+                        <input type="email" class="form-control" name="email" placeholder="Enter email address" value="student@example.com">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Contact Number</label>
+                      <div class="input-with-icon">
+                        <i class="fa-solid fa-phone input-icon"></i>
+                        <input type="text" class="form-control" name="contact" placeholder="Enter contact number" value="0917 123 4567">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <div class="input-with-icon">
+                      <i class="fa-solid fa-location-dot input-icon"></i>
+                      <input type="text" class="form-control" name="address" placeholder="Enter complete address" value="Poblacion, Kadingilan, Bukidnon, Philippines">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Side: Student Photo Uploader Dropzone (Image 1) -->
+                <div>
+                  <label class="form-label" style="margin-bottom:8px; display:block;">Student Photo</label>
+                  <div class="photo-uploader-box">
+                    <div class="upload-icon-circle">
+                      <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <h5>Upload Photo</h5>
+                    <p>JPG, PNG or GIF. Max size 2MB.</p>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="triggerPhotoPick()">Choose File</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Additional Information (Optional) -->
+            <div class="form-section-card">
+              <h3 class="form-section-title">Additional Information (Optional)</h3>
+              
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label">Guardian Name</label>
+                  <input type="text" class="form-control" name="guardian_name" placeholder="Enter guardian name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Guardian Contact</label>
+                  <input type="text" class="form-control" name="guardian_contact" placeholder="Enter guardian contact">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Relationship</label>
+                  <input type="text" class="form-control" name="relationship" placeholder="Enter relationship">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" name="notes" placeholder="Enter any notes"></textarea>
+              </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="form-action-bar">
+              <button type="button" class="btn btn-outline" onclick="switchTab('students')">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="btn-save-new-student">
+                <i class="fa-regular fa-floppy-disk"></i> Save Student
+              </button>
+            </div>
+          </form>
+        </section>
+
+
+        <!-- =================================================================
+             4. VIEW: EDIT STUDENT (IMAGE 2)
+             ================================================================= -->
+        <section id="pane-edit-student" class="tab-pane-content d-none">
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>Edit Student</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> 
+                <a href="#" onclick="switchTab('students')">Students</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Edit Student
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-outline" onclick="switchTab('students')">
+                <i class="fa-solid fa-arrow-left"></i> Back to Students
+              </button>
+            </div>
+          </div>
+
+          <form id="form-edit-student" onsubmit="handleEditStudentSubmit(event)">
+            <input type="hidden" id="edit-student-id">
+
+            <div class="form-section-card">
+              <h3 class="form-section-title">Student Information</h3>
+              
+              <div class="form-grid-layout-with-photo">
+                <div>
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label">First Name <span class="req">*</span></label>
+                      <div class="input-with-icon">
+                        <i class="fa-regular fa-user input-icon"></i>
+                        <input type="text" class="form-control" id="edit-first-name" required>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Middle Name</label>
+                      <input type="text" class="form-control" id="edit-middle-name" value="Dela">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Last Name <span class="req">*</span></label>
+                      <input type="text" class="form-control" id="edit-last-name" required>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label">Student ID <span class="req">*</span></label>
+                      <input type="text" class="form-control" id="edit-id-number" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Date of Birth <span class="req">*</span></label>
+                      <input type="text" class="form-control" id="edit-dob" value="April 15, 2008">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Gender <span class="req">*</span></label>
+                      <select class="form-control" id="edit-gender">
+                        <option value="Male" selected>Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label">Grade Level <span class="req">*</span></label>
+                      <select class="form-control" id="edit-grade-level">
+                        <option selected>Grade 11</option>
+                        <option>Grade 10</option>
+                        <option>Grade 12</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Section</label>
+                      <select class="form-control" id="edit-section">
+                        <option selected>STEM-A</option>
+                        <option>STEM-B</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Strand (Optional)</label>
+                      <select class="form-control" id="edit-strand">
+                        <option selected>STEM</option>
+                        <option>ABM</option>
+                        <option>HUMSS</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label class="form-label">Email Address</label>
+                      <div class="input-with-icon">
+                        <i class="fa-regular fa-envelope input-icon"></i>
+                        <input type="email" class="form-control" id="edit-email">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Contact Number</label>
+                      <div class="input-with-icon">
+                        <i class="fa-solid fa-phone input-icon"></i>
+                        <input type="text" class="form-control" id="edit-contact" value="0917 123 4567">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <div class="input-with-icon">
+                      <i class="fa-solid fa-location-dot input-icon"></i>
+                      <input type="text" class="form-control" id="edit-address" value="Poblacion, Kadingilan, Bukidnon, Philippines">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Side: Existing Photo with "Change Photo" / "Remove" (Image 2) -->
+                <div>
+                  <label class="form-label" style="margin-bottom:8px; display:block;">Student Photo</label>
+                  <div style="text-align:center;">
+                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=300" id="edit-photo-preview" class="photo-preview-image">
+                    <div style="display:flex; justify-content:center; gap:8px;">
+                      <button type="button" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-camera"></i> Change Photo</button>
+                      <button type="button" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-trash-can"></i> Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="form-section-card">
+              <h3 class="form-section-title">Additional Information (Optional)</h3>
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label">Guardian Name</label>
+                  <input type="text" class="form-control" id="edit-guardian-name" value="Mario Santos">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Guardian Contact</label>
+                  <input type="text" class="form-control" id="edit-guardian-contact" value="0917 765 4321">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Relationship</label>
+                  <select class="form-control" id="edit-relationship">
+                    <option selected>Father</option>
+                    <option>Mother</option>
+                    <option>Guardian</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" id="edit-notes">No known medical conditions. Active in school activities.</textarea>
+              </div>
+            </div>
+
+            <div class="form-action-bar">
+              <button type="button" class="btn btn-outline" onclick="switchTab('students')">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="btn-update-student">
+                <i class="fa-regular fa-floppy-disk"></i> Update Student
+              </button>
+            </div>
+          </form>
+        </section>
+
+
+        <!-- =================================================================
+             5. TAB: ATTENDANCE / ROLL CALL (IMAGE 4)
+             ================================================================= -->
+        <section id="pane-attendance" class="tab-pane-content d-none">
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>Attendance</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Attendance
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-outline" onclick="openAttendanceHistoryModal()">
+                <i class="fa-solid fa-clock-rotate-left"></i> Attendance History
+              </button>
+            </div>
+          </div>
+
+          <!-- Top Filter Bar Card (Image 4) -->
+          <div class="attendance-filter-card">
+            <div class="filter-input-col">
+              <label class="form-label">Select Class</label>
+              <select class="form-control" id="rollcall-class-select" onchange="handleRollcallClassChange()">
+                <option value="All">All Classes (Full Roster)</option>
+                <option value="Grade 11 - STEM" selected>Grade 11 - STEM</option>
+                <option value="Grade 10 - ABM">Grade 10 - ABM</option>
+                <option value="Grade 12 - HUMSS">Grade 12 - HUMSS</option>
+              </select>
+            </div>
+            <div class="filter-input-col">
+              <label class="form-label">Select Date</label>
+              <input type="date" class="form-control" id="rollcall-date" value="2026-05-20">
+            </div>
+            <div class="filter-input-col">
+              <label class="form-label">Select Subject (Optional)</label>
+              <select class="form-control" id="rollcall-subject">
+                <option selected>General Mathematics</option>
+                <option>Physical Science</option>
+                <option>English for Academic Purposes</option>
+                <option>Entrepreneurship</option>
+              </select>
+            </div>
+            <div>
+              <button class="btn btn-primary" id="btn-load-students" style="height:42px;" onclick="loadRosterForAttendance()">
+                <i class="fa-solid fa-rotate"></i> Load Students
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Stat Summary Cards (Image 4) -->
+          <div class="kpi-grid-4">
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Total Students</span>
+                <span class="kpi-value" id="rollcall-stat-total">40</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-blue">
+                <i class="fa-solid fa-users"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Present</span>
+                <span class="kpi-value" id="rollcall-stat-present" style="color:var(--success-green);">34</span>
+                <span class="kpi-meta-tag green" id="rollcall-pct-present">85.0%</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-green">
+                <i class="fa-regular fa-circle-check"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Absent</span>
+                <span class="kpi-value" id="rollcall-stat-absent" style="color:var(--danger-red);">4</span>
+                <span class="kpi-meta-tag orange" id="rollcall-pct-absent">10.0%</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-orange">
+                <i class="fa-solid fa-user-xmark"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Late</span>
+                <span class="kpi-value" id="rollcall-stat-late" style="color:var(--warning-amber);">2</span>
+                <span class="kpi-meta-tag purple" id="rollcall-pct-late">5.0%</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-purple">
+                <i class="fa-regular fa-clock"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mark Attendance Table Card -->
+          <div class="card" style="padding:0; overflow:hidden;">
+            <div style="padding:20px 24px 14px; display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <h3 class="card-title">Mark Attendance</h3>
+                <p class="card-subtitle">Click on the status to mark attendance for each student.</p>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline-success btn-sm" onclick="markAllAttendance('Present')">
+                  <i class="fa-regular fa-circle-check"></i> Mark All Present
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="clearAllAttendance()">
+                  <i class="fa-regular fa-trash-can"></i> Clear All
+                </button>
+              </div>
+            </div>
+
+            <!-- Attendance Table with Segmented Toggle Buttons -->
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th style="width:40px;"><input type="checkbox" class="custom-checkbox" id="check-all-rollcall"></th>
+                  <th style="width:50px;">#</th>
+                  <th>Student ID</th>
+                  <th>Student Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-rollcall-roster">
+                <!-- Dynamically generated with [ Present ] [ Absent ] [ Late ] segmented buttons -->
+              </tbody>
+            </table>
+
+            <div class="table-pagination-footer">
+              <span class="pagination-text" id="rollcall-showing-text">Showing 1 to 10 of 10 students</span>
+              <div style="display:flex; gap:12px;">
+                <button class="btn btn-outline" onclick="switchTab('dashboard')">Cancel</button>
+                <button class="btn btn-primary" id="btn-save-attendance-submit" onclick="saveAttendanceSession()">
+                  <i class="fa-regular fa-floppy-disk"></i> Save Attendance
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =================================================================
+             6. TAB: REPORTS & ANALYTICS (IMAGE 9)
+             ================================================================= -->
+        <section id="pane-reports" class="tab-pane-content d-none">
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>Reports</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Reports
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-outline" onclick="showToast('Exporting attendance report PDF...', 'success')">
+                <i class="fa-solid fa-download"></i> Export Report <i class="fa-solid fa-chevron-down" style="font-size:10px; margin-left:4px;"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Report Filters (Image 9) -->
+          <div class="attendance-filter-card">
+            <div class="filter-input-col">
+              <label class="form-label">Report Type</label>
+              <select class="form-control">
+                <option selected>Attendance Summary</option>
+                <option>Student-wise Report</option>
+                <option>Absence Incident Log</option>
+              </select>
+            </div>
+            <div class="filter-input-col">
+              <label class="form-label">Class (All)</label>
+              <select class="form-control">
+                <option selected>All Classes</option>
+                <option>Grade 11 - STEM</option>
+                <option>Grade 10 - ABM</option>
+              </select>
+            </div>
+            <div class="filter-input-col">
+              <label class="form-label">Date Range</label>
+              <input type="text" class="form-control" value="May 1, 2026 - May 20, 2026">
+            </div>
+            <div>
+              <button class="btn btn-primary" style="height:42px;" onclick="showToast('Attendance report generated successfully!', 'success')">
+                <i class="fa-regular fa-file-lines"></i> Generate Report
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Stat Cards -->
+          <div class="kpi-grid-4">
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Total Students</span>
+                <span class="kpi-value" id="reports-kpi-total">30</span>
+                <span class="kpi-meta-tag" style="color:#64748b;">3 Classes (10-10-10)</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-blue">
+                <i class="fa-solid fa-users"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Average Attendance</span>
+                <span class="kpi-value" id="reports-kpi-present">90.5%</span>
+                <span class="kpi-meta-tag green">Overall active rate</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-green">
+                <i class="fa-regular fa-circle-check"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Total Absences</span>
+                <span class="kpi-value" id="reports-kpi-absent">2</span>
+                <span class="kpi-meta-tag orange">6.7% of total</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-orange">
+                <i class="fa-solid fa-user-xmark"></i>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Total Late</span>
+                <span class="kpi-value" id="reports-kpi-late">2</span>
+                <span class="kpi-meta-tag purple">6.7% of total</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-purple">
+                <i class="fa-regular fa-clock"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reports Charts Row -->
+          <div class="dashboard-charts-grid">
+            <!-- Daily Line Chart -->
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Attendance Overview</h3>
+                <select class="select-filter" style="height:32px; font-size:0.8rem; padding-right:24px;">
+                  <option>Daily</option>
+                  <option>Weekly</option>
+                </select>
+              </div>
+
+              <div class="chart-container-box">
+                <svg class="line-chart-svg" viewBox="0 0 520 220">
+                  <line x1="40" y1="20" x2="500" y2="20" class="chart-axis-line"/>
+                  <text x="15" y="24" class="chart-axis-text">100%</text>
+
+                  <line x1="40" y1="65" x2="500" y2="65" class="chart-axis-line"/>
+                  <text x="15" y="69" class="chart-axis-text">75%</text>
+
+                  <line x1="40" y1="110" x2="500" y2="110" class="chart-axis-line"/>
+                  <text x="15" y="114" class="chart-axis-text">50%</text>
+
+                  <line x1="40" y1="155" x2="500" y2="155" class="chart-axis-line"/>
+                  <text x="15" y="159" class="chart-axis-text">25%</text>
+
+                  <text x="50" y="214" class="chart-axis-text">May 1</text>
+                  <text x="140" y="214" class="chart-axis-text">May 5</text>
+                  <text x="230" y="214" class="chart-axis-text">May 9</text>
+                  <text x="320" y="214" class="chart-axis-text">May 13</text>
+                  <text x="410" y="214" class="chart-axis-text">May 17</text>
+                  <text x="480" y="214" class="chart-axis-text">May 20</text>
+
+                  <!-- Curved Path -->
+                  <path d="M 50 115 L 100 105 L 150 110 L 200 95 L 250 90 L 300 98 L 350 88 L 400 102 L 450 112 L 490 100" class="chart-line-path"/>
+                  <circle cx="350" cy="88" r="5" class="chart-point"/>
+                </svg>
+
+                <div class="chart-tooltip-box" style="top: 88px; left: 350px;">
+                  <strong>May 13, 2026</strong>
+                  <span>Attendance: 86%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Attendance by Status Donut -->
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Attendance by Status</h3>
+              </div>
+
+              <div class="donut-chart-wrapper">
+                <div class="donut-svg-box">
+                  <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: rotate(-90deg);">
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#f1f5f9" stroke-width="15"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15" stroke-dasharray="204 238" stroke-dashoffset="0"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15" stroke-dasharray="24 238" stroke-dashoffset="-204"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="15" stroke-dasharray="8 238" stroke-dashoffset="-228"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#8b5cf6" stroke-width="15" stroke-dasharray="2 238" stroke-dashoffset="-236"/>
+                  </svg>
+                  <div class="donut-center-text">
+                    <div class="pct">85.7%</div>
+                    <div class="label">Average</div>
+                  </div>
+                </div>
+
+                <div class="donut-legend-list">
+                  <div class="donut-legend-item">
+                    <span class="legend-left"><span class="legend-dot green"></span> Present</span>
+                    <strong>1,067 <span style="font-weight:400; color:#64748b;">(85.7%)</span></strong>
+                  </div>
+                  <div class="donut-legend-item">
+                    <span class="legend-left"><span class="legend-dot red"></span> Absent</span>
+                    <strong>266 <span style="font-weight:400; color:#64748b;">(21.3%)</span></strong>
+                  </div>
+                  <div class="donut-legend-item">
+                    <span class="legend-left"><span class="legend-dot orange"></span> Late</span>
+                    <strong>45 <span style="font-weight:400; color:#64748b;">(3.6%)</span></strong>
+                  </div>
+                  <div class="donut-legend-item">
+                    <span class="legend-left"><span class="legend-dot purple"></span> Excused</span>
+                    <strong>12 <span style="font-weight:400; color:#64748b;">(1.0%)</span></strong>
+                  </div>
+                  <div class="donut-total-bar">
+                    <span>Total</span>
+                    <span>1,248</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Row: Class Attendance Summary & Top/Low Attendance Rankings -->
+          <div style="display:grid; grid-template-columns: 1.8fr 1.2fr; gap:20px;">
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Class Attendance Summary</h3>
+              </div>
+              <table class="styled-table">
+                <thead>
+                  <tr>
+                    <th>Class</th>
+                    <th>Total Students</th>
+                    <th>Average Attendance</th>
+                    <th>Absent</th>
+                    <th>Late</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Grade 11 - STEM</strong></td>
+                    <td>120</td>
+                    <td><strong style="color:var(--success-green);">88.4%</strong></td>
+                    <td>18 (15.0%)</td>
+                    <td>5 (4.2%)</td>
+                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Grade 10 - ABM</strong></td>
+                    <td>115</td>
+                    <td><strong style="color:var(--success-green);">84.1%</strong></td>
+                    <td>21 (18.3%)</td>
+                    <td>6 (5.2%)</td>
+                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Grade 12 - HUMSS</strong></td>
+                    <td>110</td>
+                    <td><strong style="color:var(--success-green);">86.5%</strong></td>
+                    <td>17 (15.5%)</td>
+                    <td>3 (2.7%)</td>
+                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Grade 11 - HUMSS</strong></td>
+                    <td>108</td>
+                    <td><strong style="color:var(--success-green);">82.3%</strong></td>
+                    <td>22 (20.4%)</td>
+                    <td>7 (6.5%)</td>
+                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Grade 10 - STEM</strong></td>
+                    <td>105</td>
+                    <td><strong style="color:var(--success-green);">87.2%</strong></td>
+                    <td>15 (14.3%)</td>
+                    <td>4 (3.8%)</td>
+                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="padding:14px 0 0;">
+                <a href="#" style="font-size:0.85rem; color:var(--primary-blue); font-weight:600; text-decoration:none;">View all classes</a>
+              </div>
+            </div>
+
+            <!-- Top / Low Attendance Card with Tabs -->
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">Top / Low Attendance</h3>
+              </div>
+              <div style="display:flex; border-bottom:1px solid #e2e8f0; margin-bottom:16px;">
+                <button class="btn btn-sm btn-outline-primary" style="border:none; border-bottom:2px solid var(--primary-blue); border-radius:0;">Top Attendance</button>
+                <button class="btn btn-sm btn-outline" style="border:none; border-radius:0; color:#64748b;">Low Attendance</button>
+              </div>
+
+              <div>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                  <span style="font-size:0.85rem; font-weight:600;">1 &nbsp; Grade 12 - STEM</span>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="progress-track"><div class="progress-fill" style="width:91.3%;"></div></div>
+                    <span style="font-size:0.82rem; font-weight:700;">91.3%</span>
+                  </div>
+                </div>
+
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                  <span style="font-size:0.85rem; font-weight:600;">2 &nbsp; Grade 10 - STEM</span>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="progress-track"><div class="progress-fill" style="width:89.7%;"></div></div>
+                    <span style="font-size:0.82rem; font-weight:700;">89.7%</span>
+                  </div>
+                </div>
+
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                  <span style="font-size:0.85rem; font-weight:600;">3 &nbsp; Grade 11 - STEM</span>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="progress-track"><div class="progress-fill" style="width:88.4%;"></div></div>
+                    <span style="font-size:0.82rem; font-weight:700;">88.4%</span>
+                  </div>
+                </div>
+
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                  <span style="font-size:0.85rem; font-weight:600;">4 &nbsp; Grade 12 - ABM</span>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="progress-track"><div class="progress-fill" style="width:87.0%;"></div></div>
+                    <span style="font-size:0.82rem; font-weight:700;">87.0%</span>
+                  </div>
+                </div>
+
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                  <span style="font-size:0.85rem; font-weight:600;">5 &nbsp; Grade 11 - HUMSS</span>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="progress-track"><div class="progress-fill" style="width:82.3%;"></div></div>
+                    <span style="font-size:0.82rem; font-weight:700;">82.3%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding-top:14px;">
+                <a href="#" style="font-size:0.85rem; color:var(--primary-blue); font-weight:600; text-decoration:none;">View full ranking</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             7. TAB: CLASSES MANAGEMENT
+             ================================================================= -->
+        <section id="pane-classes" class="tab-pane-content d-none">
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>Class Management</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Classes
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="openAddClassModal()">
+                <i class="fa-solid fa-plus"></i> Add New Class
+              </button>
+            </div>
+          </div>
+
+          <div class="class-roster-grid" id="classes-grid-container">
+            <div class="class-card">
+              <div class="class-card-header">
+                <div class="class-card-title">
+                  <h3>Grade 11 - STEM</h3>
+                  <p>Room 201 • General Mathematics</p>
+                </div>
+                <span class="status-pill status-active">Active</span>
+              </div>
+              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: Prof. Alan Turing</p>
+              <div class="class-card-stats">
+                <div class="class-stat-item">
+                  <span class="val">40</span>
+                  <span class="lbl">Enrolled</span>
+                </div>
+                <div class="class-stat-item">
+                  <span class="val" style="color:var(--success-green);">88.4%</span>
+                  <span class="lbl">Avg. Attendance</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('Grade 11 - STEM')">
+                  <i class="fa-solid fa-clipboard-check"></i> Take Attendance
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('Grade 11 - STEM')">
+                  <i class="fa-regular fa-folder-open"></i> View
+                </button>
+              </div>
+            </div>
+
+            <div class="class-card">
+              <div class="class-card-header">
+                <div class="class-card-title">
+                  <h3>Grade 10 - ABM</h3>
+                  <p>Room 204 • Entrepreneurship</p>
+                </div>
+                <span class="status-pill status-active">Active</span>
+              </div>
+              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: Dr. Ada Lovelace</p>
+              <div class="class-card-stats">
+                <div class="class-stat-item">
+                  <span class="val">38</span>
+                  <span class="lbl">Enrolled</span>
+                </div>
+                <div class="class-stat-item">
+                  <span class="val" style="color:var(--success-green);">84.1%</span>
+                  <span class="lbl">Avg. Attendance</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('Grade 10 - ABM')">
+                  <i class="fa-solid fa-clipboard-check"></i> Take Attendance
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('Grade 10 - ABM')">
+                  <i class="fa-regular fa-folder-open"></i> View
+                </button>
+              </div>
+            </div>
+
+            <div class="class-card">
+              <div class="class-card-header">
+                <div class="class-card-title">
+                  <h3>Grade 12 - HUMSS</h3>
+                  <p>Room 305 • English for Academic Purposes</p>
+                </div>
+                <span class="status-pill status-active">Active</span>
+              </div>
+              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: Prof. Grace Hopper</p>
+              <div class="class-card-stats">
+                <div class="class-stat-item">
+                  <span class="val">35</span>
+                  <span class="lbl">Enrolled</span>
+                </div>
+                <div class="class-stat-item">
+                  <span class="val" style="color:var(--success-green);">86.5%</span>
+                  <span class="lbl">Avg. Attendance</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('Grade 12 - HUMSS')">
+                  <i class="fa-solid fa-clipboard-check"></i> Take Attendance
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('Grade 12 - HUMSS')">
+                  <i class="fa-regular fa-folder-open"></i> View
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             8. TAB: ACADEMIC CALENDAR (FULL INTERACTIVE ACTIONS)
+             ================================================================= -->
+        <section id="pane-calendar" class="tab-pane-content d-none">
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>Academic Calendar</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Calendar
+              </p>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-outline" onclick="jumpCalendarToday()">
+                <i class="fa-regular fa-calendar"></i> Today
+              </button>
+              <button class="btn btn-primary" onclick="openAddEventModal()">
+                <i class="fa-solid fa-plus"></i> Add Event / Schedule
+              </button>
+            </div>
+          </div>
+
+          <div class="calendar-layout-grid">
+            <!-- Left: Main Calendar View -->
+            <div class="calendar-main-card">
+              <div class="calendar-toolbar">
+                <div class="calendar-nav-controls">
+                  <button class="btn btn-outline btn-sm" onclick="prevCalendarMonth()" title="Previous Month">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <h3 class="calendar-month-title" id="calendar-month-display">May 2026</h3>
+                  <button class="btn btn-outline btn-sm" onclick="nextCalendarMonth()" title="Next Month">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+
+                <div style="display:flex; gap:6px;">
+                  <button class="btn btn-sm btn-primary">Month</button>
+                  <button class="btn btn-sm btn-outline" onclick="showToast('Week view activated', 'info')">Week</button>
+                  <button class="btn btn-sm btn-outline" onclick="showToast('Agenda list view activated', 'info')">List</button>
+                </div>
+              </div>
+
+              <!-- Day of Week Headers -->
+              <div class="calendar-grid">
+                <div class="calendar-day-header">Sun</div>
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+              </div>
+
+              <!-- 35-Day Grid generated interactively -->
+              <div class="calendar-grid" id="calendar-days-container" style="border-top:none; padding-top:4px;">
+                <!-- Dynamically populated from JS -->
+              </div>
+            </div>
+
+            <!-- Right: Upcoming Events & Legend -->
+            <div>
+              <div class="card" style="margin-bottom:16px;">
+                <div class="card-header-flex">
+                  <h3 class="card-title">Upcoming Events</h3>
+                  <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:700;" id="event-count-badge">5 Events</span>
+                </div>
+                <div id="calendar-upcoming-list">
+                  <!-- Dynamically rendered -->
+                </div>
+              </div>
+
+              <div class="card">
+                <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:12px;">Event Legend</h4>
+                <div style="display:flex; flex-direction:column; gap:8px; font-size:0.8rem;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="calendar-event-tag tag-class" style="width:14px; height:14px; padding:0;"></span>
+                    <span>Regular Class Session</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="calendar-event-tag tag-holiday" style="width:14px; height:14px; padding:0;"></span>
+                    <span>School Holiday / No Classes</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="calendar-event-tag tag-exam" style="width:14px; height:14px; padding:0;"></span>
+                    <span>Exam / Assessment</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="calendar-event-tag tag-meeting" style="width:14px; height:14px; padding:0;"></span>
+                    <span>Faculty Meeting</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="calendar-event-tag tag-deadline" style="width:14px; height:14px; padding:0;"></span>
+                    <span>Deadline / Report Submission</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             9. TAB: USER ACCOUNTS & ROLES (FULL ACTIONS)
+             ================================================================= -->
+        <section id="pane-users" class="tab-pane-content d-none">
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>User Accounts & Roles</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Users & Roles
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="openUserModal()">
+                <i class="fa-solid fa-user-plus"></i> Add New User
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 User KPI Stat Cards -->
+          <div class="kpi-grid-4">
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Total System Users</span>
+                <span class="kpi-value" id="user-kpi-total">12</span>
+                <span class="kpi-meta-tag green">Active personnel</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-blue"><i class="fa-solid fa-users"></i></div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Administrators</span>
+                <span class="kpi-value" id="user-kpi-admins">3</span>
+                <span class="kpi-meta-tag purple">Full system control</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-purple"><i class="fa-solid fa-shield-halved"></i></div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Instructors</span>
+                <span class="kpi-value" id="user-kpi-instructors">8</span>
+                <span class="kpi-meta-tag green">Active teaching staff</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-green"><i class="fa-solid fa-chalkboard-user"></i></div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info-box">
+                <span class="kpi-label">Staff / Auditors</span>
+                <span class="kpi-value" id="user-kpi-staff">1</span>
+                <span class="kpi-meta-tag orange">Reporting rights</span>
+              </div>
+              <div class="kpi-icon-container kpi-icon-orange"><i class="fa-solid fa-id-badge"></i></div>
+            </div>
+          </div>
+
+          <!-- User Filters -->
+          <div class="table-filter-bar">
+            <div class="filter-group-left">
+              <div class="search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="users-search-input" placeholder="Search by name, email, or role..." oninput="filterUsersTable()">
+              </div>
+              <select class="select-filter" id="filter-user-role" onchange="filterUsersTable()">
+                <option value="All">All Roles</option>
+                <option value="Administrator">Administrator</option>
+                <option value="Instructor">Instructor</option>
+                <option value="Staff">Staff</option>
+              </select>
+              <select class="select-filter" id="filter-user-status" onchange="filterUsersTable()">
+                <option value="All">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="filter-group-right">
+              <button class="btn btn-outline" onclick="exportUsersCSV()">
+                <i class="fa-solid fa-download"></i> Export Users
+              </button>
+            </div>
+          </div>
+
+          <!-- Users Table -->
+          <div class="data-table-container">
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>User Profile</th>
+                  <th>Role</th>
+                  <th>Assigned Department / Classes</th>
+                  <th>Status</th>
+                  <th>Last Active</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-users-list">
+                <!-- Dynamically generated from JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- =================================================================
+             10. TAB: SYSTEM SETTINGS (FULL INTERACTIVE ACTIONS)
+             ================================================================= -->
+        <section id="pane-settings" class="tab-pane-content d-none">
+          <div class="page-header-row">
+            <div class="page-title-group">
+              <h1>System Settings</h1>
+              <p class="breadcrumbs">
+                <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Settings
+              </p>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-outline" onclick="runSystemHealthCheck()">
+                <i class="fa-solid fa-heart-pulse" style="color:var(--success-green);"></i> System Diagnostics
+              </button>
+              <button class="btn btn-primary" id="btn-save-settings" onclick="saveSystemSettings()">
+                <i class="fa-regular fa-floppy-disk"></i> Save Settings
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-container-grid">
+            <!-- Left: Settings Sub-Navigation -->
+            <div class="settings-nav-panel">
+              <button class="settings-tab-btn active" onclick="switchSettingsSection('policies', this)">
+                <i class="fa-solid fa-clipboard-check"></i> Attendance Policies
+              </button>
+              <button class="settings-tab-btn" onclick="switchSettingsSection('notifications', this)">
+                <i class="fa-regular fa-bell"></i> Notifications & Alerts
+              </button>
+              <button class="settings-tab-btn" onclick="switchSettingsSection('profile', this)">
+                <i class="fa-solid fa-school"></i> Center Profile
+              </button>
+              <button class="settings-tab-btn" onclick="switchSettingsSection('database', this)">
+                <i class="fa-solid fa-database"></i> Data & Backup
+              </button>
+            </div>
+
+            <!-- Right: Content Panels -->
+            <div class="settings-content-card">
+              <!-- Sub-Section 1: Attendance Policies -->
+              <div id="settings-section-policies">
+                <h3 class="card-title">Attendance Policies & Cutoffs</h3>
+                <p class="card-subtitle">Set automated attendance rules, grace periods, and absence classifications.</p>
+
+                <div style="margin-top:24px;">
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label">Morning Session Cutoff Time</label>
+                      <input type="time" class="form-control" id="setting-cutoff-time" value="08:00">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Late Grace Period (Minutes)</label>
+                      <input type="number" class="form-control" id="setting-grace-period" value="15" min="1" max="60">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Absence Alert Threshold (Days)</label>
+                      <input type="number" class="form-control" id="setting-consecutive-threshold" value="3" min="1" max="10">
+                    </div>
+                  </div>
+
+                  <div class="settings-section-divider"></div>
+
+                  <div class="toggle-switch-row">
+                    <div class="switch-label-group">
+                      <h5>Allow Instructors to Edit Past Attendance</h5>
+                      <p>Enable instructors to modify previous session records up to 48 hours after recording.</p>
+                    </div>
+                    <label class="switch-control">
+                      <input type="checkbox" id="setting-allow-retro" checked>
+                      <span class="slider-round"></span>
+                    </label>
+                  </div>
+
+                  <div class="toggle-switch-row">
+                    <div class="switch-label-group">
+                      <h5>Auto-Lock Attendance Sessions at 5:00 PM</h5>
+                      <p>Automatically lock daily logs to prevent modifications without admin authorization.</p>
+                    </div>
+                    <label class="switch-control">
+                      <input type="checkbox" id="setting-auto-lock" checked>
+                      <span class="slider-round"></span>
+                    </label>
+                  </div>
+
+                  <div class="toggle-switch-row">
+                    <div class="switch-label-group">
+                      <h5>Require Remarks on Absent / Excused Marks</h5>
+                      <p>Mandate that instructors enter a justification note when marking a student as absent or excused.</p>
+                    </div>
+                    <label class="switch-control">
+                      <input type="checkbox" id="setting-require-remarks">
+                      <span class="slider-round"></span>
+                    </label>
+                  </div>
+
+                  <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--card-border); display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" class="btn btn-outline btn-sm" onclick="resetPolicyDefaults()">
+                      <i class="fa-solid fa-rotate-left"></i> Reset Policies
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="saveSystemSettings()">
+                      <i class="fa-regular fa-floppy-disk"></i> Apply Policies
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-Section 2: Notifications -->
+              <div id="settings-section-notifications" class="d-none">
+                <h3 class="card-title">Automated Notification Alerts</h3>
+                <p class="card-subtitle">Manage automated notifications for guardians and staff.</p>
+
+                <div style="margin-top:24px;">
+                  <div class="toggle-switch-row">
+                    <div class="switch-label-group">
+                      <h5>Automatic SMS / Email Alerts to Guardians</h5>
+                      <p>Send an immediate notification to parent contact numbers when student is marked Absent.</p>
+                    </div>
+                    <label class="switch-control">
+                      <input type="checkbox" id="setting-notify-guardian" checked>
+                      <span class="slider-round"></span>
+                    </label>
+                  </div>
+
+                  <div class="toggle-switch-row">
+                    <div class="switch-label-group">
+                      <h5>Weekly Attendance Digest to Class Instructors</h5>
+                      <p>Email attendance summary reports every Friday afternoon.</p>
+                    </div>
+                    <label class="switch-control">
+                      <input type="checkbox" id="setting-weekly-digest" checked>
+                      <span class="slider-round"></span>
+                    </label>
+                  </div>
+
+                  <div class="form-group" style="max-width:320px; margin-top:20px;">
+                    <label class="form-label">Low Attendance Warning Percentage</label>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <input type="number" class="form-control" id="setting-warning-pct" value="75" min="50" max="95">
+                      <span style="font-weight:700;">%</span>
+                    </div>
+                    <small style="color:var(--text-muted); font-size:0.75rem;">Flags students whose overall attendance drops below this number.</small>
+                  </div>
+
+                  <!-- Test Alert Action Card -->
+                  <div style="background:#f8fafc; border:1px solid var(--card-border); border-radius:var(--radius-md); padding:18px; margin-top:24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                      <div>
+                        <h5 style="font-weight:700; color:var(--text-heading); margin-bottom:4px;">Test Automated Guardian Alert</h5>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Simulate an SMS alert to verify notification delivery.</p>
+                      </div>
+                      <button type="button" class="btn btn-outline-primary btn-sm" onclick="openTestNotificationModal()">
+                        <i class="fa-regular fa-paper-plane"></i> Send Test Notification
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-Section 3: Center Profile -->
+              <div id="settings-section-profile" class="d-none">
+                <h3 class="card-title">Center & Institution Information</h3>
+                <p class="card-subtitle">Official details displayed on exported attendance certificates and reports.</p>
+
+                <!-- Lead Administrator Account & Avatar Card -->
+                <div class="admin-avatar-card" style="display:flex; align-items:center; gap:16px; padding:16px 20px; background:linear-gradient(135deg, #f0f7ff 0%, #f8fafc 100%); border:1px solid #bfdbfe; border-radius:var(--radius-md); margin-top:16px; margin-bottom:20px;">
+                  <div style="position:relative; cursor:pointer;" onclick="openAvatarSettingsActionsModal()" title="Click avatar to manage profile & system settings actions">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" id="settings-admin-avatar" class="user-avatar-img" style="width:64px; height:64px; border:3px solid var(--primary-blue); box-shadow:0 4px 10px rgba(24,119,242,0.18);">
+                    <span style="position:absolute; bottom:-2px; right:-2px; background:var(--primary-blue); color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; border:2px solid #fff;"><i class="fa-solid fa-camera"></i></span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                      <h4 style="font-weight:700; color:var(--text-heading); margin:0;" id="settings-admin-name">Neil Herbert U. Betacura</h4>
+                      <span class="role-badge role-admin" id="settings-admin-role-badge">Repository Lead</span>
+                      <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-shield-halved" style="color:var(--primary-blue);"></i> Primary System Admin</span>
+                    </div>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:3px 0 0;" id="settings-admin-email-sub">neil.betacura@sams.edu.ph • Click avatar to change photo or launch quick settings</p>
+                    <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+                      <button type="button" class="btn btn-outline-primary btn-xs" onclick="openAvatarSettingsActionsModal()">
+                        <i class="fa-solid fa-camera"></i> Avatar Actions
+                      </button>
+                      <button type="button" class="btn btn-outline btn-xs" onclick="goToSettingsSection('policies')">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Attendance Policies
+                      </button>
+                      <button type="button" class="btn btn-outline btn-xs" onclick="runSystemHealthCheck()">
+                        <i class="fa-solid fa-heart-pulse"></i> Diagnostics
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Center Banner -->
+                <div style="display:flex; align-items:center; gap:16px; padding:16px; background:#f8fafc; border:1px solid var(--card-border); border-radius:var(--radius-md); margin-top:10px; margin-bottom:20px;">
+                  <div id="center-badge-container" onclick="triggerLogoUpload()" style="width:56px; height:56px; border-radius:12px; background:#eff6ff; display:flex; align-items:center; justify-content:center; color:var(--primary-blue); font-size:26px; cursor:pointer; position:relative;" title="Click to change institution emblem">
+                    <i class="fa-solid fa-school" id="center-badge-icon"></i>
+                    <span style="position:absolute; bottom:-2px; right:-2px; background:var(--primary-blue); color:#fff; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; border:1.5px solid #fff;"><i class="fa-solid fa-pen"></i></span>
+                  </div>
+                  <div>
+                    <h5 style="font-weight:700; color:var(--text-heading); margin-bottom:2px;" id="profile-display-name">SAMS Learning & Tutoring Center</h5>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:0;" id="profile-display-sub">Accredited Secondary Institution • Academic Year 2025-2026</p>
+                  </div>
+                  <div style="margin-left:auto;">
+                    <button type="button" class="btn btn-outline btn-sm" onclick="triggerLogoUpload()">
+                      <i class="fa-solid fa-camera"></i> Change Badge
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label class="form-label">Center / School Name</label>
+                      <input type="text" class="form-control" id="setting-org-name" value="SAMS Learning & Tutoring Center">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Current Academic Year / Term</label>
+                      <input type="text" class="form-control" id="setting-academic-term" value="2025 - 2026 / Term 2">
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label class="form-label">Official Contact Email</label>
+                      <input type="email" class="form-control" id="setting-org-email" value="admin@sams.edu.ph">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Contact Phone</label>
+                      <input type="text" class="form-control" id="setting-org-phone" value="+63 917 123 4567">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Campus Address</label>
+                    <input type="text" class="form-control" id="setting-org-address" value="Poblacion, Kadingilan, Bukidnon, Philippines">
+                  </div>
+
+                  <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="saveSystemSettings()">
+                      <i class="fa-regular fa-floppy-disk"></i> Update Center Profile
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-Section 4: Data & Backup Operations -->
+              <div id="settings-section-database" class="d-none">
+                <h3 class="card-title">Data Storage, Backup & Synchronization</h3>
+                <p class="card-subtitle">Perform data dumps, backup restore, database re-synchronization, and emergency resets.</p>
+
+                <div style="margin-top:24px;">
+                  <!-- Hidden File Input for Database Import -->
+                  <input type="file" id="input-import-db" accept=".json" style="display:none;" onchange="handleImportDatabaseFile(event)">
+
+                  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <button type="button" class="btn btn-outline-primary" onclick="exportDatabaseBackup()">
+                      <i class="fa-solid fa-cloud-arrow-down"></i> Export Full Database (JSON)
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="triggerImportDatabase()">
+                      <i class="fa-solid fa-cloud-arrow-up"></i> Import Database (JSON)
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="resyncDatabase()">
+                      <i class="fa-solid fa-arrows-rotate"></i> Re-sync With Server Cache
+                    </button>
+                  </div>
+
+                  <div class="danger-zone-box" style="margin-top:24px;">
+                    <div>
+                      <h4 style="font-size:0.92rem; font-weight:700; color:var(--warning-amber);">Purge Historical Attendance Logs</h4>
+                      <p style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+                        Clears past attendance session logs while preserving all student accounts and class cohorts.
+                      </p>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmPurgeAttendanceLogs()">
+                      <i class="fa-solid fa-trash-can"></i> Purge Logs Only
+                    </button>
+                  </div>
+
+                  <div class="danger-zone-box">
+                    <div>
+                      <h4 style="font-size:0.92rem; font-weight:700; color:var(--danger-red);">Reset to Initial Seed Data</h4>
+                      <p style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+                        Warning: Restores the system back to default seed students, calendar events, and users.
+                      </p>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmResetDefaults()">
+                      <i class="fa-solid fa-triangle-exclamation"></i> Reset Database
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       DELETE CONFIRMATION MODAL (IMAGE 4)
+       ===================================================================== -->
+  <div id="modal-delete-student" class="modal-overlay">
+    <div class="modal-box">
+      <button class="modal-close-x" onclick="closeDeleteModal()">&times;</button>
+      
+      <div class="modal-danger-icon-circle">
+        <i class="fa-regular fa-trash-can"></i>
+      </div>
+
+      <h3 class="modal-title">Delete Student</h3>
+      <p class="modal-subtitle">Are you sure you want to delete this student?<br>This action cannot be undone.</p>
+
+      <!-- Student Card Preview (Image 4) -->
+      <div class="modal-preview-student-card">
+        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=120" id="modal-delete-avatar" class="mini-avatar" style="width:46px; height:46px;">
+        <div>
+          <h4 id="modal-delete-name" style="font-size:0.95rem; font-weight:700; color:var(--text-heading);">Juan Miguel Santos</h4>
+          <p id="modal-delete-details" style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+            ID: S2026-001<br>Class: Grade 11 - STEM | Section: STEM-A
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-actions-bar">
+        <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" id="btn-confirm-delete" onclick="executeDeleteStudent()">
+          <i class="fa-regular fa-trash-can"></i> Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       ADD CALENDAR EVENT MODAL
+       ===================================================================== -->
+  <div id="modal-add-event" class="modal-overlay">
+    <div class="modal-box" style="max-width: 500px; text-align: left;">
+      <button class="modal-close-x" onclick="closeAddEventModal()">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:42px; height:42px; border-radius:10px; background:#eff6ff; color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:20px;">
+          <i class="fa-regular fa-calendar-plus"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" style="margin:0;">Schedule Calendar Event</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Add a class session, holiday, exam, or deadline.</p>
+        </div>
+      </div>
+
+      <form id="form-add-event" onsubmit="handleAddEventSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Event Title <span class="req">*</span></label>
+          <input type="text" class="form-control" id="event-title" placeholder="e.g. Midterm Examination in General Math" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Event Date <span class="req">*</span></label>
+            <input type="date" class="form-control" id="event-date" value="2026-05-20" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Event Category <span class="req">*</span></label>
+            <select class="form-control" id="event-type" required>
+              <option value="class">Regular Class Session</option>
+              <option value="holiday">School Holiday (No Classes)</option>
+              <option value="exam">Exam / Assessment</option>
+              <option value="meeting">Faculty Meeting</option>
+              <option value="deadline">Report Deadline</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Time</label>
+            <input type="text" class="form-control" id="event-time" placeholder="e.g. 08:00 AM - 10:00 AM" value="08:00 AM">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Room / Location</label>
+            <input type="text" class="form-control" id="event-location" placeholder="e.g. Room 201" value="Room 201">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description / Remarks (Optional)</label>
+          <textarea class="form-control" id="event-desc" placeholder="Enter notes or agenda..." style="min-height:60px;"></textarea>
+        </div>
+
+        <div class="modal-actions-bar" style="margin-top:20px;">
+          <button type="button" class="btn btn-outline" onclick="closeAddEventModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-check"></i> Add to Calendar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       ADD / EDIT USER MODAL
+       ===================================================================== -->
+  <div id="modal-user-form" class="modal-overlay">
+    <div class="modal-box" style="max-width: 500px; text-align: left;">
+      <button class="modal-close-x" onclick="closeUserModal()">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:42px; height:42px; border-radius:10px; background:#eff6ff; color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:20px;">
+          <i class="fa-solid fa-user-gear"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" id="user-modal-title" style="margin:0;">Add System User</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Configure credentials and permission roles.</p>
+        </div>
+      </div>
+
+      <form id="form-manage-user" onsubmit="handleUserSubmit(event)">
+        <input type="hidden" id="manage-user-id">
+        
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="req">*</span></label>
+          <input type="text" class="form-control" id="user-fullname" placeholder="e.g. Dr. Alan Turing" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address <span class="req">*</span></label>
+          <input type="email" class="form-control" id="user-email" placeholder="e.g. turing@sams.edu.ph" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">System Role <span class="req">*</span></label>
+            <select class="form-control" id="user-role" required>
+              <option value="Administrator">Administrator</option>
+              <option value="Instructor" selected>Instructor</option>
+              <option value="Staff">Staff</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Status <span class="req">*</span></label>
+            <select class="form-control" id="user-status" required>
+              <option value="Active" selected>Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Assigned Department / Classes</label>
+          <input type="text" class="form-control" id="user-dept" placeholder="e.g. Grade 11 - STEM, Mathematics" value="Grade 11 - STEM">
+        </div>
+
+        <div class="form-group" id="user-password-group">
+          <label class="form-label">Default Password</label>
+          <input type="text" class="form-control" id="user-password" value="Pass@2026!">
+          <small style="color:var(--text-muted); font-size:0.75rem;">User will be prompted to change this upon first login.</small>
+        </div>
+
+        <div class="modal-actions-bar" style="margin-top:20px;">
+          <button type="button" class="btn btn-outline" onclick="closeUserModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-user">
+            <i class="fa-regular fa-floppy-disk"></i> Save User
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       ATTENDANCE HISTORY MODAL
+       ===================================================================== -->
+  <div id="modal-attendance-history" class="modal-overlay">
+    <div class="modal-box" style="max-width: 680px; text-align: left;">
+      <button class="modal-close-x" onclick="closeAttendanceHistoryModal()">&times;</button>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:#ecfdf5; color:var(--success-green); display:flex; align-items:center; justify-content:center; font-size:20px;">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div>
+            <h3 class="modal-title" style="margin:0;">Attendance History Logs</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Past attendance records across academic cohorts.</p>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="exportAttendanceReportCSV()">
+          <i class="fa-solid fa-download"></i> Export Log (CSV)
+        </button>
+      </div>
+
+      <div style="max-height:360px; overflow-y:auto; border:1px solid var(--card-border); border-radius:var(--radius-md);">
+        <table class="styled-table" style="font-size:0.82rem;">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Class</th>
+              <th>Present</th>
+              <th>Absent</th>
+              <th>Rate</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-history-records">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-actions-bar" style="margin-top:20px; justify-content:flex-end;">
+        <button type="button" class="btn btn-outline" onclick="closeAttendanceHistoryModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       ADD CLASS MODAL
+       ===================================================================== -->
+  <div id="modal-add-class" class="modal-overlay">
+    <div class="modal-box" style="max-width: 480px; text-align: left;">
+      <button class="modal-close-x" onclick="closeAddClassModal()">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:40px; height:40px; border-radius:10px; background:#eff6ff; color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:20px;">
+          <i class="fa-solid fa-chalkboard"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" style="margin:0;">Create Academic Class</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Register a new subject, room, and assigned instructor.</p>
+        </div>
+      </div>
+
+      <form id="form-add-class" onsubmit="handleAddClassSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Class Name <span class="req">*</span></label>
+          <input type="text" class="form-control" id="new-class-name" placeholder="e.g. Grade 11 - TVL" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Subject Title <span class="req">*</span></label>
+            <input type="text" class="form-control" id="new-class-subject" placeholder="e.g. Information Technology" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Room / Lab <span class="req">*</span></label>
+            <input type="text" class="form-control" id="new-class-room" placeholder="e.g. Lab 102" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Assigned Instructor <span class="req">*</span></label>
+          <input type="text" class="form-control" id="new-class-instructor" placeholder="e.g. Prof. Alan Turing" required>
+        </div>
+
+        <div class="modal-actions-bar" style="margin-top:20px;">
+          <button type="button" class="btn btn-outline" onclick="closeAddClassModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> Create Class
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       VIEW CLASS ROSTER MODAL
+       ===================================================================== -->
+  <div id="modal-view-class-roster" class="modal-overlay">
+    <div class="modal-box" style="max-width: 600px; text-align: left;">
+      <button class="modal-close-x" onclick="closeClassRosterModal()">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:40px; height:40px; border-radius:10px; background:#eff6ff; color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:20px;">
+          <i class="fa-solid fa-users-rectangle"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" id="roster-modal-class-title" style="margin:0;">Class Roster</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;" id="roster-modal-class-sub">Students enrolled in this section.</p>
+        </div>
+      </div>
+
+      <div style="max-height:300px; overflow-y:auto; border:1px solid var(--card-border); border-radius:var(--radius-md);">
+        <table class="styled-table" style="font-size:0.84rem;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Student Name</th>
+              <th>Attendance Rate</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-class-roster-students">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-actions-bar" style="margin-top:20px; justify-content:space-between;">
+        <button type="button" class="btn btn-primary btn-sm" id="btn-roster-take-attendance" onclick="takeAttendanceForCurrentClass()">
+          <i class="fa-solid fa-clipboard-check"></i> Take Attendance for This Class
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeClassRosterModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       SYSTEM HEALTH DIAGNOSTICS MODAL
+       ===================================================================== -->
+  <div id="modal-system-health" class="modal-overlay">
+    <div class="modal-box" style="max-width: 620px; text-align: left;">
+      <button class="modal-close-x" onclick="closeSystemHealthModal()">&times;</button>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:#ecfdf5; color:var(--success-green); display:flex; align-items:center; justify-content:center; font-size:20px;">
+            <i class="fa-solid fa-heart-pulse"></i>
+          </div>
+          <div>
+            <h3 class="modal-title" style="margin:0;">System Health Diagnostics</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Real-time infrastructure and database telemetry.</p>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="runSystemHealthCheck()">
+          <i class="fa-solid fa-rotate"></i> Re-Run Test
+        </button>
+      </div>
+
+      <div class="kpi-grid-4" style="margin-bottom:16px;">
+        <div style="background:#f8fafc; border:1px solid var(--card-border); border-radius:var(--radius-md); padding:12px; text-align:center;">
+          <span style="font-size:0.75rem; color:var(--text-muted); display:block;">Overall Status</span>
+          <span style="font-size:1.1rem; font-weight:700; color:var(--success-green);" id="diag-overall-status">100% OK</span>
+        </div>
+        <div style="background:#f8fafc; border:1px solid var(--card-border); border-radius:var(--radius-md); padding:12px; text-align:center;">
+          <span style="font-size:0.75rem; color:var(--text-muted); display:block;">Database Records</span>
+          <span style="font-size:1.1rem; font-weight:700; color:var(--primary-blue);" id="diag-total-records">8 Students</span>
+        </div>
+        <div style="background:#f8fafc; border:1px solid var(--card-border); border-radius:var(--radius-md); padding:12px; text-align:center;">
+          <span style="font-size:0.75rem; color:var(--text-muted); display:block;">API Latency</span>
+          <span style="font-size:1.1rem; font-weight:700; color:var(--purple);" id="diag-latency">4 ms</span>
+        </div>
+        <div style="background:#f8fafc; border:1px solid var(--card-border); border-radius:var(--radius-md); padding:12px; text-align:center;">
+          <span style="font-size:0.75rem; color:var(--text-muted); display:block;">Storage Quota</span>
+          <span style="font-size:1.1rem; font-weight:700; color:var(--text-heading);" id="diag-storage">Normal</span>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:#ffffff; border:1px solid var(--card-border); border-radius:var(--radius-md);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fa-solid fa-circle-check" style="color:var(--success-green);"></i>
+            <div>
+              <strong style="font-size:0.85rem; color:var(--text-heading);">Persistence Layer Integrity</strong>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin:0;">Atomic JSON document store responding without read/write lock contention.</p>
+            </div>
+          </div>
+          <span class="status-pill status-active">Pass</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:#ffffff; border:1px solid var(--card-border); border-radius:var(--radius-md);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fa-solid fa-circle-check" style="color:var(--success-green);"></i>
+            <div>
+              <strong style="font-size:0.85rem; color:var(--text-heading);">REST Router & Validation Guards</strong>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin:0;">HTTP endpoints (/api/students, /api/courses, /api/attendance) active.</p>
+            </div>
+          </div>
+          <span class="status-pill status-active">Pass</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:#ffffff; border:1px solid var(--card-border); border-radius:var(--radius-md);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fa-solid fa-circle-check" style="color:var(--success-green);"></i>
+            <div>
+              <strong style="font-size:0.85rem; color:var(--text-heading);">Client LocalStorage & Cache Synchronization</strong>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin:0;">Settings schemas and in-memory caches aligned with system parameters.</p>
+            </div>
+          </div>
+          <span class="status-pill status-active">Pass</span>
+        </div>
+      </div>
+
+      <div class="modal-actions-bar" style="margin-top:20px; justify-content:flex-end;">
+        <button type="button" class="btn btn-outline" onclick="closeSystemHealthModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       TEST NOTIFICATION ALERT MODAL
+       ===================================================================== -->
+  <div id="modal-test-notification" class="modal-overlay">
+    <div class="modal-box" style="max-width: 520px; text-align: left;">
+      <button class="modal-close-x" onclick="closeTestNotificationModal()">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:40px; height:40px; border-radius:10px; background:#eff6ff; color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:20px;">
+          <i class="fa-regular fa-paper-plane"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" style="margin:0;">Simulate Guardian Alert</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Test SMS & Email delivery templates for absence warnings.</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleSendTestNotification(event)">
+        <div class="form-group">
+          <label class="form-label">Recipient Guardian Name</label>
+          <input type="text" class="form-control" id="test-guardian-name" value="Mario Santos" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Phone Number / SMS Recipient</label>
+            <input type="text" class="form-control" id="test-guardian-phone" value="0917 765 4321" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Student Associated</label>
+            <select class="form-control" id="test-student-select" onchange="updateTestAlertPreview()">
+              <option value="Juan Miguel Santos">Juan Miguel Santos (Grade 11 - STEM)</option>
+              <option value="Maria Angelica Reyes">Maria Angelica Reyes (Grade 10 - ABM)</option>
+              <option value="Daniel Lorenzo Cruz">Daniel Lorenzo Cruz (Grade 12 - HUMSS)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notification Message Preview</label>
+          <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:12px; font-size:0.82rem; color:#334155; line-height:1.45;" id="test-alert-preview-box">
+            [SAMS NOTICE]: Dear Mario Santos, your student Juan Miguel Santos was marked ABSENT for Morning Roll Call today (May 20, 2026). Please contact the academic registrar if excused.
+          </div>
+        </div>
+
+        <div class="modal-actions-bar" style="margin-top:20px;">
+          <button type="button" class="btn btn-outline" onclick="closeTestNotificationModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-send-test-alert">
+            <i class="fa-solid fa-paper-plane"></i> Dispatch Test SMS
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       ADMIN AVATAR & SYSTEM SETTINGS ACTIONS MODAL
+       ===================================================================== -->
+  <div id="modal-avatar-settings-actions" class="modal-overlay">
+    <div class="modal-box" style="max-width: 580px; text-align: left;">
+      <button class="modal-close-x" onclick="closeAvatarSettingsActionsModal()">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:42px; height:42px; border-radius:10px; background:#eff6ff; color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:20px;">
+          <i class="fa-solid fa-user-gear"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" style="margin:0; font-size:1.15rem;">Admin Avatar & System Settings</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Quick-manage your profile identity, avatar image, and system settings actions.</p>
+        </div>
+      </div>
+
+      <!-- Avatar Photo Customizer -->
+      <div style="background:#f8fafc; border:1px solid var(--card-border); border-radius:var(--radius-md); padding:16px; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+          <div style="position:relative;">
+            <img id="modal-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" alt="Avatar Preview" style="width:68px; height:68px; border-radius:50%; object-fit:cover; border:3px solid var(--primary-blue); box-shadow:0 4px 10px rgba(24,119,242,0.18);">
+            <span style="position:absolute; bottom:0; right:0; background:var(--primary-blue); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; border:1.5px solid #fff;"><i class="fa-solid fa-camera"></i></span>
+          </div>
+          <div style="flex:1; min-width:200px;">
+            <h5 style="font-size:0.88rem; font-weight:700; margin-bottom:4px; color:var(--text-heading);">Choose Profile Avatar</h5>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">Select a team member avatar preset or enter a custom photo URL.</p>
+            
+            <!-- Quick Team Presets -->
+            <div style="display:flex; gap:8px; align-items:center;">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" title="Neil Herbert Betacura (Repo Lead)" style="width:30px; height:30px; border-radius:50%; cursor:pointer; border:2px solid transparent;" class="avatar-preset-choice" onclick="selectAvatarPreset(this.src)">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200" title="Demelyn Concepcion (Board Lead)" style="width:30px; height:30px; border-radius:50%; cursor:pointer; border:2px solid transparent;" class="avatar-preset-choice" onclick="selectAvatarPreset(this.src)">
+              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200" title="Jamaica Ganolon (Scribe)" style="width:30px; height:30px; border-radius:50%; cursor:pointer; border:2px solid transparent;" class="avatar-preset-choice" onclick="selectAvatarPreset(this.src)">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200" title="Angelo Dairo (Builder)" style="width:30px; height:30px; border-radius:50%; cursor:pointer; border:2px solid transparent;" class="avatar-preset-choice" onclick="selectAvatarPreset(this.src)">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200" title="Angelo Madolaria (Builder)" style="width:30px; height:30px; border-radius:50%; cursor:pointer; border:2px solid transparent;" class="avatar-preset-choice" onclick="selectAvatarPreset(this.src)">
+              
+              <input type="file" id="modal-avatar-file-input" accept="image/*" style="display:none;" onchange="handleAvatarFileUpload(event)">
+              <button type="button" class="btn btn-outline btn-xs" onclick="document.getElementById('modal-avatar-file-input').click()" style="margin-left:4px;">
+                <i class="fa-solid fa-arrow-up-from-bracket"></i> Upload
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:8px;">
+          <input type="url" class="form-control" id="modal-avatar-url-input" placeholder="Or paste image URL (https://...)" style="font-size:0.8rem; height:34px;">
+          <button type="button" class="btn btn-outline-primary btn-xs" style="white-space:nowrap;" onclick="applyCustomAvatarUrl()">
+            Apply URL
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick System Settings Fast Actions -->
+      <div style="background:#f1f5f9; border:1px solid #e2e8f0; border-radius:var(--radius-md); padding:14px; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h5 style="font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-heading); margin:0;">
+            <i class="fa-solid fa-bolt" style="color:var(--warning-amber);"></i> System Settings Actions
+          </h5>
+          <span style="font-size:0.72rem; color:var(--text-muted);">Direct deep-links</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:8px;">
+          <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="goToSettingsSection('policies')">
+            <i class="fa-solid fa-clock-rotate-left" style="color:var(--warning-amber); width:16px;"></i> Attendance Policies
+          </button>
+          <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="goToSettingsSection('notifications')">
+            <i class="fa-regular fa-bell" style="color:#0284c7; width:16px;"></i> Guardian Alerts
+          </button>
+          <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="goToSettingsSection('profile')">
+            <i class="fa-solid fa-school" style="color:var(--primary-blue); width:16px;"></i> Center Profile
+          </button>
+          <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="exportDatabaseBackup()">
+            <i class="fa-solid fa-cloud-arrow-down" style="color:var(--success-green); width:16px;"></i> Backup Database
+          </button>
+          <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="closeAvatarSettingsActionsModal(); runSystemHealthCheck();">
+            <i class="fa-solid fa-heart-pulse" style="color:var(--danger-red); width:16px;"></i> Run Diagnostics
+          </button>
+          <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="closeAvatarSettingsActionsModal(); openTestNotificationModal();">
+            <i class="fa-regular fa-paper-plane" style="color:var(--primary-blue); width:16px;"></i> Simulate SMS
+          </button>
+        </div>
+      </div>
+
+      <!-- Account Profile Credentials Form -->
+      <form onsubmit="handleSaveAdminProfile(event)">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="modal-profile-name" value="Neil Herbert U. Betacura" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role Title</label>
+            <input type="text" class="form-control" id="modal-profile-role" value="Repository Lead" required>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Official Email</label>
+            <input type="email" class="form-control" id="modal-profile-email" value="neil.betacura@sams.edu.ph" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Department / Unit</label>
+            <input type="text" class="form-control" id="modal-profile-dept" value="Repository Lead & IT Architecture" required>
+          </div>
+        </div>
+
+        <div class="modal-actions-bar" style="margin-top:16px;">
+          <button type="button" class="btn btn-outline" onclick="closeAvatarSettingsActionsModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-admin-profile">
+            <i class="fa-regular fa-floppy-disk"></i> Save Avatar & Profile
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- =====================================================================
+       CENTER INSTITUTIONAL EMBLEM PICKER MODAL
+       ===================================================================== -->
+  <div id="modal-center-badge-picker" class="modal-overlay">
+    <div class="modal-box" style="max-width: 460px; text-align: left;">
+      <button class="modal-close-x" onclick="closeCenterBadgePicker()">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:40px; height:40px; border-radius:10px; background:#eff6ff; color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:22px;">
+          <i class="fa-solid fa-school"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" style="margin:0;">Center Badge & Emblem</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Select official emblem icon or upload center crest.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label class="form-label">Choose Center Emblem Icon</label>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-top:8px;">
+          <div class="badge-icon-option" onclick="selectBadgeIcon('fa-school')" style="padding:14px; text-align:center; border:1px solid var(--card-border); border-radius:8px; cursor:pointer; background:#fff; font-size:22px; color:var(--primary-blue);">
+            <i class="fa-solid fa-school"></i>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">School</div>
+          </div>
+          <div class="badge-icon-option" onclick="selectBadgeIcon('fa-graduation-cap')" style="padding:14px; text-align:center; border:1px solid var(--card-border); border-radius:8px; cursor:pointer; background:#fff; font-size:22px; color:var(--primary-blue);">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Academic</div>
+          </div>
+          <div class="badge-icon-option" onclick="selectBadgeIcon('fa-book-open')" style="padding:14px; text-align:center; border:1px solid var(--card-border); border-radius:8px; cursor:pointer; background:#fff; font-size:22px; color:var(--primary-blue);">
+            <i class="fa-solid fa-book-open"></i>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Learning</div>
+          </div>
+          <div class="badge-icon-option" onclick="selectBadgeIcon('fa-building-columns')" style="padding:14px; text-align:center; border:1px solid var(--card-border); border-radius:8px; cursor:pointer; background:#fff; font-size:22px; color:var(--primary-blue);">
+            <i class="fa-solid fa-building-columns"></i>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Institute</div>
+          </div>
+          <div class="badge-icon-option" onclick="selectBadgeIcon('fa-laptop-code')" style="padding:14px; text-align:center; border:1px solid var(--card-border); border-radius:8px; cursor:pointer; background:#fff; font-size:22px; color:var(--primary-blue);">
+            <i class="fa-solid fa-laptop-code"></i>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Tech / IT</div>
+          </div>
+          <div class="badge-icon-option" onclick="selectBadgeIcon('fa-award')" style="padding:14px; text-align:center; border:1px solid var(--card-border); border-radius:8px; cursor:pointer; background:#fff; font-size:22px; color:var(--primary-blue);">
+            <i class="fa-solid fa-award"></i>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Honors</div>
+          </div>
+          <div class="badge-icon-option" onclick="selectBadgeIcon('fa-shield-halved')" style="padding:14px; text-align:center; border:1px solid var(--card-border); border-radius:8px; cursor:pointer; background:#fff; font-size:22px; color:var(--primary-blue);">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Registry</div>
+          </div>
+          <div class="badge-icon-option" onclick="selectBadgeIcon('fa-chalkboard-user')" style="padding:14px; text-align:center; border:1px solid var(--card-border); border-radius:8px; cursor:pointer; background:#fff; font-size:22px; color:var(--primary-blue);">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Classroom</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions-bar" style="margin-top:16px;">
+        <button type="button" class="btn btn-outline" onclick="closeCenterBadgePicker()">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TOAST NOTIFICATIONS CONTAINER -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
