@@ -16,7 +16,7 @@
   <!-- =====================================================================
        LOGIN VIEW (SPLIT SCREEN - IMAGE 8)
        ===================================================================== -->
-  <div id="view-login" class="login-split-page d-none">
+  <div id="view-login" class="login-split-page">
     <!-- Left Hero -->
     <div class="login-left-brand-hero">
       <div class="login-brand-top">
@@ -121,7 +121,7 @@
   <!-- =====================================================================
        MAIN APP LAYOUT (HEADER, SIDEBAR & CONTENT VIEWS)
        ===================================================================== -->
-  <div id="view-app" class="app-container">
+  <div id="view-app" class="app-container d-none">
 
     <!-- SIDEBAR (IMAGES 1-10) -->
     <aside class="sidebar">
@@ -284,7 +284,7 @@
               <span style="position:absolute; bottom:-1px; right:-1px; background:var(--primary-blue); color:#fff; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:8px; border:1.5px solid #fff;"><i class="fa-solid fa-camera"></i></span>
             </div>
             <div class="user-info-text">
-              <h4 id="topbar-user-name">Neil Herbert Betacura</h4>
+              <h4 id="topbar-user-name">Not signed in</h4>
               <p id="topbar-user-role">Repository Lead</p>
             </div>
             <i class="fa-solid fa-chevron-down" style="font-size:11px; color:#94a3b8;"></i>
@@ -299,8 +299,8 @@
                   <span style="position:absolute; bottom:-1px; right:-1px; background:var(--primary-blue); color:#fff; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; border:1.5px solid #fff;"><i class="fa-solid fa-camera"></i></span>
                 </div>
                 <div style="flex:1; min-width:0;">
-                  <h5 style="font-weight:700; color:var(--text-heading); font-size:0.88rem; margin:0;" id="dropdown-user-name">Neil Herbert U. Betacura</h5>
-                  <p style="font-size:0.73rem; color:var(--text-muted); margin:2px 0 0; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" id="dropdown-user-email">neil.betacura@sams.edu.ph</p>
+                  <h5 style="font-weight:700; color:var(--text-heading); font-size:0.88rem; margin:0;" id="dropdown-user-name">Not signed in</h5>
+                  <p style="font-size:0.73rem; color:var(--text-muted); margin:2px 0 0; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" id="dropdown-user-email"></p>
                   <span class="role-badge role-admin" style="margin-top:5px; font-size:0.68rem; padding:2px 8px;" id="dropdown-user-role-badge">Repository Lead</span>
                 </div>
               </div>
@@ -2193,11 +2193,11 @@
                   </div>
                   <div style="flex:1;">
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                      <h4 style="font-weight:700; color:var(--text-heading); margin:0;" id="settings-admin-name">Neil Herbert U. Betacura</h4>
-                      <span class="role-badge role-admin" id="settings-admin-role-badge">Repository Lead</span>
+                      <h4 style="font-weight:700; color:var(--text-heading); margin:0;" id="settings-admin-name">Not signed in</h4>
+                      <span class="role-badge role-admin" id="settings-admin-role-badge">—</span>
                       <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-shield-halved" style="color:var(--primary-blue);"></i> Primary System Admin</span>
                     </div>
-                    <p style="font-size:0.8rem; color:var(--text-muted); margin:3px 0 0;" id="settings-admin-email-sub">neil.betacura@sams.edu.ph • Click avatar to change photo or launch quick settings</p>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:3px 0 0;" id="settings-admin-email-sub">Click avatar to change photo or launch quick settings</p>
                     <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
                       <button type="button" class="btn btn-outline-primary btn-xs" onclick="openAvatarSettingsActionsModal()">
                         <i class="fa-solid fa-camera"></i> Avatar Actions
@@ -2321,12 +2321,12 @@
                   <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" id="security-current-avatar" class="user-avatar-img" style="width:58px; height:58px; border:2px solid var(--primary-blue);">
                   <div style="flex:1;">
                     <div style="display:flex; align-items:center; gap:10px;">
-                      <h4 style="font-weight:700; color:var(--text-heading); margin:0;" id="security-current-name">Neil Herbert U. Betacura</h4>
-                      <span class="role-badge role-admin" id="security-current-role-badge">Administrator</span>
+                      <h4 style="font-weight:700; color:var(--text-heading); margin:0;" id="security-current-name">Not signed in</h4>
+                      <span class="role-badge role-admin" id="security-current-role-badge">—</span>
                     </div>
-                    <p style="font-size:0.8rem; color:var(--text-muted); margin:3px 0 0;" id="security-current-email-sub">neil.betacura@sams.edu.ph</p>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:3px 0 0;" id="security-current-email-sub"></p>
                     <div style="margin-top:6px; font-size:0.82rem; color:var(--text-body);">
-                      Current Username: <code id="security-display-username" style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:4px; font-weight:700;">neil</code>
+                      Current Username: <code id="security-display-username" style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:4px; font-weight:700;">—</code>
                     </div>
                   </div>
                   <button type="button" class="btn btn-outline-primary btn-sm" onclick="openChangeCredentialsModal()">
@@ -2952,22 +2952,22 @@
         <div class="form-grid-2">
           <div class="form-group">
             <label class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="modal-profile-name" value="Neil Herbert U. Betacura" required>
+            <input type="text" class="form-control" id="modal-profile-name" value="" required>
           </div>
           <div class="form-group">
             <label class="form-label">Role Title</label>
-            <input type="text" class="form-control" id="modal-profile-role" value="Repository Lead" required>
+            <input type="text" class="form-control" id="modal-profile-role" value="" required>
           </div>
         </div>
 
         <div class="form-grid-2">
           <div class="form-group">
             <label class="form-label">Official Email</label>
-            <input type="email" class="form-control" id="modal-profile-email" value="neil.betacura@sams.edu.ph" required>
+            <input type="email" class="form-control" id="modal-profile-email" value="" required>
           </div>
           <div class="form-group">
             <label class="form-label">Department / Unit</label>
-            <input type="text" class="form-control" id="modal-profile-dept" value="Repository Lead & IT Architecture" required>
+            <input type="text" class="form-control" id="modal-profile-dept" value="" required>
           </div>
         </div>
 
