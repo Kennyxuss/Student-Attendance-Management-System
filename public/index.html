@@ -66,18 +66,25 @@
         <h2>Welcome Back!</h2>
         <p class="sub">Please sign in to your account</p>
 
+        <div id="login-error-alert" class="login-alert-banner d-none" style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:10px 14px; border-radius:8px; font-size:0.83rem; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span id="login-error-text">Invalid username or password</span>
+        </div>
+
         <form id="form-login" onsubmit="handleLoginSubmit(event)">
           <div class="form-group">
+            <label style="font-size:0.8rem; font-weight:600; color:var(--text-heading); margin-bottom:6px; display:block;">Username or Email</label>
             <div class="input-with-icon">
               <i class="fa-regular fa-user input-icon"></i>
-              <input type="text" class="form-control" id="login-username" placeholder="Username" value="admin" required>
+              <input type="text" class="form-control" id="login-username" placeholder="e.g. neil, demelyn, dairo, madolaria" required autocomplete="username">
             </div>
           </div>
 
           <div class="form-group">
+            <label style="font-size:0.8rem; font-weight:600; color:var(--text-heading); margin-bottom:6px; display:block;">Password</label>
             <div class="input-with-icon">
               <i class="fa-solid fa-lock input-icon"></i>
-              <input type="password" class="form-control" id="login-password" placeholder="Password" value="password123" required>
+              <input type="password" class="form-control" id="login-password" placeholder="Enter your password" required autocomplete="current-password">
               <i class="fa-regular fa-eye" style="position:absolute; right:14px; color:#94a3b8; cursor:pointer;" onclick="togglePasswordVisibility()"></i>
             </div>
           </div>
@@ -86,20 +93,21 @@
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--text-body);">
               <input type="checkbox" class="custom-checkbox" checked> Remember me
             </label>
-            <a href="#" style="color:var(--primary-blue); text-decoration:none; font-weight:600;">Forgot Password?</a>
+            <a href="#" style="color:var(--primary-blue); text-decoration:none; font-weight:600;" onclick="event.preventDefault(); openChangeCredentialsModal();">Change / Forgot Password?</a>
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width:100%; height:44px; font-size:0.95rem;">
+          <button type="submit" class="btn btn-primary" style="width:100%; height:44px; font-size:0.95rem; font-weight:600;">
             Log In <i class="fa-solid fa-arrow-right-to-bracket"></i>
           </button>
 
-          <div class="login-divider">
-            <span>or</span>
+          <div style="display:flex; justify-content:center; gap:12px; margin-top:18px; flex-wrap:wrap;">
+            <button type="button" onclick="openCredentialsDirectoryModal()" style="background:none; border:none; color:var(--primary-blue); font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:4px 8px; font-weight:600;">
+              <i class="fa-solid fa-circle-question"></i> View Registered Logins Directory
+            </button>
+            <button type="button" onclick="openChangeCredentialsModal()" style="background:none; border:none; color:var(--primary-blue); font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:4px 8px; font-weight:600;">
+              <i class="fa-solid fa-key"></i> Change Password or Username
+            </button>
           </div>
-
-          <button type="button" class="btn btn-outline" style="width:100%; height:44px;" onclick="handleLoginSubmit(event)">
-            <i class="fa-solid fa-id-badge"></i> Login as Staff
-          </button>
         </form>
 
         <div style="text-align:center; margin-top:36px; font-size:0.75rem; color:#94a3b8;">
@@ -330,11 +338,19 @@
 
             <!-- Account / Global Links -->
             <div style="padding:6px 0;">
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="closeAllTopbarDropdowns(); goToSettingsSection('security');">
+                <i class="fa-solid fa-key" style="color:var(--primary-blue); width:18px;"></i>
+                <span style="font-size:0.82rem; color:var(--text-body);">Change Username & Password</span>
+              </a>
               <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="closeAllTopbarDropdowns(); switchTab('users');">
                 <i class="fa-solid fa-user-shield" style="color:var(--text-muted); width:18px;"></i>
                 <span style="font-size:0.82rem; color:var(--text-body);">Manage Team & Roles</span>
               </a>
-              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px; color:var(--danger-red);" onclick="showLoginView()">
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px;" onclick="closeAllTopbarDropdowns(); showLoginView();">
+                <i class="fa-solid fa-users-gear" style="color:var(--primary-blue); width:18px;"></i>
+                <span style="font-size:0.82rem; color:var(--text-body);">Switch Account (Manual Sign-In)</span>
+              </a>
+              <a href="#" class="dropdown-item-row" style="text-decoration:none; padding:7px 18px; color:var(--danger-red);" onclick="closeAllTopbarDropdowns(); showLoginView();">
                 <i class="fa-solid fa-arrow-right-from-bracket" style="color:var(--danger-red); width:18px;"></i>
                 <span style="font-size:0.82rem; font-weight:600; color:var(--danger-red);">Sign Out</span>
               </a>
@@ -1254,7 +1270,7 @@
             </div>
             <div class="filter-input-col">
               <label class="form-label">Select Date</label>
-              <input type="date" class="form-control" id="rollcall-date" value="2026-05-20">
+              <input type="date" class="form-control" id="rollcall-date" value="2026-05-20" onchange="handleRollcallDateChange()">
             </div>
             <div class="filter-input-col">
               <label class="form-label">Select Subject (Optional)</label>
@@ -2021,6 +2037,9 @@
               <button class="settings-tab-btn" onclick="switchSettingsSection('database', this)">
                 <i class="fa-solid fa-database"></i> Data & Backup
               </button>
+              <button class="settings-tab-btn" onclick="switchSettingsSection('security', this)">
+                <i class="fa-solid fa-key"></i> Account & Security
+              </button>
             </div>
 
             <!-- Right: Content Panels -->
@@ -2273,6 +2292,85 @@
                       <i class="fa-solid fa-triangle-exclamation"></i> Reset Database
                     </button>
                   </div>
+                </div>
+              </div>
+
+              <!-- Sub-Section 5: Account Credentials & Security -->
+              <div id="settings-section-security" class="d-none">
+                <h3 class="card-title">Account Credentials & Security</h3>
+                <p class="card-subtitle">Manage your personal sign-in username, change your login password, or configure system account credentials.</p>
+
+                <div class="admin-avatar-card" style="display:flex; align-items:center; gap:16px; padding:16px 20px; background:linear-gradient(135deg, #f0f7ff 0%, #f8fafc 100%); border:1px solid #bfdbfe; border-radius:var(--radius-md); margin-top:16px; margin-bottom:20px;">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" id="security-current-avatar" class="user-avatar-img" style="width:58px; height:58px; border:2px solid var(--primary-blue);">
+                  <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <h4 style="font-weight:700; color:var(--text-heading); margin:0;" id="security-current-name">Neil Herbert U. Betacura</h4>
+                      <span class="role-badge role-admin" id="security-current-role-badge">Administrator</span>
+                    </div>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:3px 0 0;" id="security-current-email-sub">neil.betacura@sams.edu.ph</p>
+                    <div style="margin-top:6px; font-size:0.82rem; color:var(--text-body);">
+                      Current Username: <code id="security-display-username" style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:4px; font-weight:700;">neil</code>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary btn-sm" onclick="openChangeCredentialsModal()">
+                    <i class="fa-solid fa-users-gear"></i> Manage Any Account
+                  </button>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid var(--card-border); border-radius:var(--radius-md); padding:20px;">
+                  <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-heading); margin-bottom:4px;">Change Username & Password</h4>
+                  <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:18px;">Update the credentials you use to log in to this portal.</p>
+
+                  <div id="settings-security-alert" class="d-none" style="padding:10px 14px; border-radius:8px; font-size:0.83rem; margin-bottom:16px;"></div>
+
+                  <form onsubmit="handleSettingsSecuritySubmit(event)">
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label class="form-label">New Username</label>
+                        <div class="input-with-icon">
+                          <i class="fa-regular fa-user input-icon"></i>
+                          <input type="text" class="form-control" id="security-input-username" placeholder="Enter new username" required>
+                        </div>
+                        <small style="color:var(--text-muted); font-size:0.75rem;">Minimum 3 characters (letters, numbers, dots, or underscores).</small>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">Current Password (Verification)</label>
+                        <div class="input-with-icon">
+                          <i class="fa-solid fa-lock input-icon"></i>
+                          <input type="password" class="form-control" id="security-input-current-pwd" placeholder="Enter current password" required>
+                          <i class="fa-regular fa-eye" style="position:absolute; right:14px; color:#94a3b8; cursor:pointer;" onclick="toggleInputVisibility('security-input-current-pwd')"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-grid-2" style="margin-top:10px;">
+                      <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <div class="input-with-icon">
+                          <i class="fa-solid fa-key input-icon"></i>
+                          <input type="password" class="form-control" id="security-input-new-pwd" placeholder="Enter new password" required>
+                          <i class="fa-regular fa-eye" style="position:absolute; right:14px; color:#94a3b8; cursor:pointer;" onclick="toggleInputVisibility('security-input-new-pwd')"></i>
+                        </div>
+                        <small style="color:var(--text-muted); font-size:0.75rem;">Minimum 4 characters.</small>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <div class="input-with-icon">
+                          <i class="fa-solid fa-shield-halved input-icon"></i>
+                          <input type="password" class="form-control" id="security-input-confirm-pwd" placeholder="Re-type new password" required>
+                          <i class="fa-regular fa-eye" style="position:absolute; right:14px; color:#94a3b8; cursor:pointer;" onclick="toggleInputVisibility('security-input-confirm-pwd')"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="fa-regular fa-floppy-disk"></i> Save New Credentials
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -2811,6 +2909,9 @@
           <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="closeAvatarSettingsActionsModal(); runSystemHealthCheck();">
             <i class="fa-solid fa-heart-pulse" style="color:var(--danger-red); width:16px;"></i> Run Diagnostics
           </button>
+          <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="closeAvatarSettingsActionsModal(); goToSettingsSection('security');">
+            <i class="fa-solid fa-key" style="color:var(--primary-blue); width:16px;"></i> Account & Password
+          </button>
           <button type="button" class="btn btn-outline btn-xs" style="text-align:left; justify-content:flex-start;" onclick="closeAvatarSettingsActionsModal(); openTestNotificationModal();">
             <i class="fa-regular fa-paper-plane" style="color:var(--primary-blue); width:16px;"></i> Simulate SMS
           </button>
@@ -2913,6 +3014,109 @@
     </div>
   </div>
 
+
+  <!-- REGISTERED LOGINS & PASSWORDS DIRECTORY MODAL -->
+  <div id="modal-credentials-directory" class="modal-overlay">
+    <div class="modal-box" style="max-width:560px; text-align:left; padding:24px 28px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--card-border); padding-bottom:12px;">
+        <h3 style="font-size:1.08rem; font-weight:700; color:var(--text-heading); margin:0; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-key" style="color:var(--primary-blue);"></i> Registered Logins Directory
+        </h3>
+        <button type="button" class="action-icon-btn" onclick="closeCredentialsDirectoryModal()">&times;</button>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px; line-height:1.4;">
+        Every account requires its own unique username and password. You can manually type any of the following credentials on the login form:
+      </p>
+      
+      <div style="max-height:360px; overflow-y:auto; border:1px solid var(--card-border); border-radius:var(--radius-md);">
+        <table class="data-table" style="font-size:0.8rem; margin:0;">
+          <thead style="position:sticky; top:0; background:#f8fafc; z-index:2;">
+            <tr>
+              <th style="padding:8px 12px;">Name & Role</th>
+              <th style="padding:8px 12px;">Username</th>
+              <th style="padding:8px 12px;">Password</th>
+              <th style="padding:8px 12px; text-align:right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-credentials-list">
+            <!-- Populated dynamically by renderCredentialsDirectory() -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-actions-bar" style="margin-top:16px; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <button type="button" class="btn btn-outline-primary btn-sm" onclick="openChangeCredentialsModal()">
+          <i class="fa-solid fa-key"></i> Change Any Account Credentials
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="closeCredentialsDirectoryModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       CHANGE USERNAME & PASSWORD MODAL
+       ===================================================================== -->
+  <div id="modal-change-credentials" class="modal-overlay">
+    <div class="modal-box" style="max-width: 500px; text-align: left;">
+      <button class="modal-close-x" onclick="closeChangeCredentialsModal()">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <div style="width:42px; height:42px; border-radius:10px; background:#eff6ff; color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:20px;">
+          <i class="fa-solid fa-key"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" style="margin:0; font-size:1.15rem;">Change Username & Password</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Update credentials for any registered user account.</p>
+        </div>
+      </div>
+
+      <div id="cred-modal-alert" class="d-none" style="padding:10px 14px; border-radius:8px; font-size:0.83rem; margin-bottom:14px; display:flex; align-items:center; gap:8px;"></div>
+
+      <form onsubmit="handleSaveCredentials(event)">
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label" style="font-weight:600;">Select Account</label>
+          <select class="form-control" id="cred-user-select" onchange="onCredUserSelected(this.value)">
+            <!-- Populated from USERS_DATA -->
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label" style="font-weight:600;">Username</label>
+          <div class="input-with-icon">
+            <i class="fa-regular fa-user input-icon"></i>
+            <input type="text" class="form-control" id="cred-new-username" placeholder="Enter username" required autocomplete="username">
+          </div>
+          <small style="color:var(--text-muted); font-size:0.75rem;">Used to log in. Minimum 3 characters.</small>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label" style="font-weight:600;">New Password</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" class="form-control" id="cred-new-password" placeholder="Enter new password" required autocomplete="new-password">
+            <i class="fa-regular fa-eye" style="position:absolute; right:14px; color:#94a3b8; cursor:pointer;" onclick="toggleInputVisibility('cred-new-password')"></i>
+          </div>
+          <small style="color:var(--text-muted); font-size:0.75rem;">Minimum 4 characters.</small>
+        </div>
+
+        <div class="form-group" style="margin-bottom:18px;">
+          <label class="form-label" style="font-weight:600;">Confirm New Password</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-shield-halved input-icon"></i>
+            <input type="password" class="form-control" id="cred-confirm-password" placeholder="Confirm new password" required autocomplete="new-password">
+            <i class="fa-regular fa-eye" style="position:absolute; right:14px; color:#94a3b8; cursor:pointer;" onclick="toggleInputVisibility('cred-confirm-password')"></i>
+          </div>
+        </div>
+
+        <div class="modal-actions-bar" style="justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn btn-outline" onclick="closeChangeCredentialsModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-regular fa-floppy-disk"></i> Save Credentials
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- TOAST NOTIFICATIONS CONTAINER -->
   <div id="toast-container" class="toast-container"></div>
