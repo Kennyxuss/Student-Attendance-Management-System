@@ -885,7 +885,7 @@ let USERS_DATA = [
   }
 ];
 
-let CURRENT_USER = USERS_DATA[0];
+let CURRENT_USER = null; // only set after a successful sign-in on this browser
 
 function applyCurrentUser(user) {
   if (!user) return;
@@ -945,6 +945,31 @@ function applyCurrentUser(user) {
       classSelect.value = 'Grade 12 - HUMSS';
     }
   }
+
+  // Keep the Settings > Security card in sync with the signed-in user
+  // (its markup defaults to a hardcoded name until this runs).
+  if (typeof populateSecuritySection === 'function') populateSecuritySection();
+}
+
+// Cloud save/read helpers.
+// Firestore writes are async promises: if one fails (too-large document,
+// offline, rejected write) the failure used to be swallowed by an empty
+// catch block, so the UI showed a change that vanished on the next refresh.
+// These helpers always report failures instead.
+function saveToCloud(docName, payload, label) {
+  return db.collection('sams_db').doc(docName).set(payload).then(() => true).catch(err => {
+    console.error(`Firestore save failed (${label}):`, err);
+    showToast(`Could not save ${label} to the cloud database — this change will be lost after a refresh.`, 'error');
+    return false;
+  });
+}
+
+let cloudReadFailureNotified = false;
+function notifyCloudReadFailure(err, label) {
+  console.error(`Firestore read failed (${label}):`, err);
+  if (cloudReadFailureNotified) return;
+  cloudReadFailureNotified = true;
+  showToast('Could not reach the cloud database — showing the last saved local copy. Refresh when you are online.', 'error');
 }
 
 async function loadStoredUsers() {
@@ -964,16 +989,19 @@ async function loadStoredUsers() {
       }
     }
   } catch (e) {
-    console.error("Firebase error loadStoredUsers:", e);
+    notifyCloudReadFailure(e, 'users');
+    // Fallback to local storage migration
+    try {
+      const stored = localStorage.getItem('sams_users_data');
+      if (stored) USERS_DATA = JSON.parse(stored);
+    } catch (e2) {}
   }
 }
 
 
 function persistUsersData() {
-  try {
-    localStorage.setItem('sams_users_data', JSON.stringify(USERS_DATA));
-    db.collection('sams_db').doc('users').set({ data: USERS_DATA });
-  } catch (e) {}
+  try { localStorage.setItem('sams_users_data', JSON.stringify(USERS_DATA)); } catch (e) {}
+  return saveToCloud('users', { data: USERS_DATA }, 'user accounts');
 }
 
 async function loadStoredStudents() {
@@ -988,14 +1016,18 @@ async function loadStoredStudents() {
       const stored = localStorage.getItem('sams_students_data');
       if (stored) { STUDENTS_DATA = JSON.parse(stored); persistStudentsData(); }
     }
-  } catch (e) { console.error(e); }
+  } catch (e) {
+    notifyCloudReadFailure(e, 'students');
+    try {
+      const stored = localStorage.getItem('sams_students_data');
+      if (stored) STUDENTS_DATA = JSON.parse(stored);
+    } catch (e2) {}
+  }
 }
 
 function persistStudentsData() {
-  try {
-    localStorage.setItem('sams_students_data', JSON.stringify(STUDENTS_DATA));
-    db.collection('sams_db').doc('students').set({ data: STUDENTS_DATA });
-  } catch (e) {}
+  try { localStorage.setItem('sams_students_data', JSON.stringify(STUDENTS_DATA)); } catch (e) {}
+  return saveToCloud('students', { data: STUDENTS_DATA }, 'students');
 }
 
 async function loadStoredClasses() {
@@ -1007,14 +1039,12 @@ async function loadStoredClasses() {
       const stored = localStorage.getItem('sams_classes_data');
       if (stored) { CLASSES_DATA = JSON.parse(stored); persistClassesData(); }
     }
-  } catch (e) {}
+  } catch (e) { notifyCloudReadFailure(e, 'classes'); }
 }
 
 function persistClassesData() {
-  try {
-    localStorage.setItem('sams_classes_data', JSON.stringify(CLASSES_DATA));
-    db.collection('sams_db').doc('classes').set({ data: CLASSES_DATA });
-  } catch (e) {}
+  try { localStorage.setItem('sams_classes_data', JSON.stringify(CLASSES_DATA)); } catch (e) {}
+  return saveToCloud('classes', { data: CLASSES_DATA }, 'classes');
 }
 
 async function loadStoredCalendarEvents() {
@@ -1026,14 +1056,12 @@ async function loadStoredCalendarEvents() {
       const stored = localStorage.getItem('sams_calendar_events');
       if (stored) { CALENDAR_EVENTS = JSON.parse(stored); persistCalendarEvents(); }
     }
-  } catch (e) {}
+  } catch (e) { notifyCloudReadFailure(e, 'calendar events'); }
 }
 
 function persistCalendarEvents() {
-  try {
-    localStorage.setItem('sams_calendar_events', JSON.stringify(CALENDAR_EVENTS));
-    db.collection('sams_db').doc('calendar').set({ data: CALENDAR_EVENTS });
-  } catch (e) {}
+  try { localStorage.setItem('sams_calendar_events', JSON.stringify(CALENDAR_EVENTS)); } catch (e) {}
+  return saveToCloud('calendar', { data: CALENDAR_EVENTS }, 'calendar events');
 }
 
 function getSelectedRollcallDate() {
@@ -1107,7 +1135,7 @@ async function loadStoredAttendance() {
       if (stored3) DAILY_ATTENDANCE = JSON.parse(stored3);
       persistAttendanceData();
     }
-  } catch (e) {}
+  } catch (e) { notifyCloudReadFailure(e, 'attendance'); }
 }
 
 function persistAttendanceData() {
@@ -1115,12 +1143,12 @@ function persistAttendanceData() {
     localStorage.setItem('sams_attendance_history', JSON.stringify(ATTENDANCE_HISTORY));
     localStorage.setItem('sams_attendance_map', JSON.stringify(ATTENDANCE_MAP));
     localStorage.setItem('sams_daily_attendance', JSON.stringify(DAILY_ATTENDANCE));
-    db.collection('sams_db').doc('attendance').set({
-      history: ATTENDANCE_HISTORY,
-      map: ATTENDANCE_MAP,
-      daily: DAILY_ATTENDANCE
-    });
   } catch (e) {}
+  return saveToCloud('attendance', {
+    history: ATTENDANCE_HISTORY,
+    map: ATTENDANCE_MAP,
+    daily: DAILY_ATTENDANCE
+  }, 'attendance');
 }
 
 function renderCredentialsDirectory() {
@@ -1182,9 +1210,11 @@ function openChangeCredentialsModal(userId = null) {
       select.appendChild(opt);
     });
 
-    const targetId = userId || (CURRENT_USER ? CURRENT_USER.id : USERS_DATA[0]?.id);
-    select.value = targetId;
-    onCredUserSelected(targetId);
+    const targetId = userId || (CURRENT_USER ? CURRENT_USER.id : null);
+    if (targetId != null) {
+      select.value = targetId;
+      onCredUserSelected(targetId);
+    }
   }
 
   const alertBox = document.getElementById('cred-modal-alert');
@@ -1308,35 +1338,38 @@ document.addEventListener('DOMContentLoaded', async () => {
   initNavigation();
   await loadSystemSettings();
 
-  // Load saved active user or default to Neil (Admin)
+  // Restore the session ONLY when this browser has a persisted sign-in AND the
+  // saved account still exists in the shared account list. Anything else
+  // (fresh browser, cleared storage, deleted/renamed account) falls back to the
+  // login screen, so one user's account can never be opened by somebody else.
+  let restoredUser = null;
   try {
     const savedUser = localStorage.getItem('sams_current_user');
-    if (savedUser) {
+    const loggedInState = localStorage.getItem('sams_logged_in');
+    if (loggedInState === 'true' && savedUser) {
       const parsed = JSON.parse(savedUser);
-      const matched = USERS_DATA.find(u => u.id === parsed.id || u.username === parsed.username || u.email === parsed.email);
-      CURRENT_USER = matched ? Object.assign(matched, parsed) : parsed;
+      restoredUser = USERS_DATA.find(u => u.id === parsed.id)
+        || USERS_DATA.find(u => u.username && u.username === parsed.username)
+        || USERS_DATA.find(u => u.email && u.email === parsed.email);
     }
   } catch (e) {}
 
-  if (!CURRENT_USER) {
-    CURRENT_USER = USERS_DATA[0];
-  }
-  applyCurrentUser(CURRENT_USER);
+  if (restoredUser) {
+    CURRENT_USER = restoredUser;
+    applyCurrentUser(CURRENT_USER);
 
-  // Check persisted login session and last active tab
-  try {
-    const loggedInState = localStorage.getItem('sams_logged_in');
-    if (loggedInState === 'false') {
-      showLoginView();
-    } else {
-      document.getElementById('view-login')?.classList.add('d-none');
-      document.getElementById('view-app')?.classList.remove('d-none');
+    document.getElementById('view-login')?.classList.add('d-none');
+    document.getElementById('view-app')?.classList.remove('d-none');
+    try {
       const savedTab = localStorage.getItem('sams_active_tab') || 'dashboard';
       if (savedTab && document.getElementById(`pane-${savedTab}`)) {
         switchTab(savedTab);
       }
-    }
-  } catch (e) {}
+    } catch (e) {}
+  } else {
+    CURRENT_USER = null;
+    showLoginView();
+  }
 
   updateAllKPIs();
   renderStudentsTable();
@@ -1402,7 +1435,11 @@ function switchTab(tabName) {
 function showLoginView() {
   try {
     localStorage.setItem('sams_logged_in', 'false');
+    // Signing out must drop the stored identity, otherwise the next visit to
+    // this browser silently resumes the previous user's session.
+    localStorage.removeItem('sams_current_user');
   } catch (e) {}
+  CURRENT_USER = null;
   document.getElementById('view-app').classList.add('d-none');
   document.getElementById('view-login').classList.remove('d-none');
   const userField = document.getElementById('login-username');
@@ -1750,21 +1787,58 @@ function showCreateStudentForm() {
   document.getElementById('pane-create-student').classList.remove('d-none');
 }
 
-function handleCreateStudentPhotoUpload(event) {
+// Photos are stored inside the Firestore document itself, and a Firestore
+// document may not exceed ~1 MB. Uploading the original file as a base64 data
+// URL blew past that limit, the write was rejected, and every create/edit/
+// delete silently stopped persisting. Downscale every upload first.
+function compressImageFile(file, maxDim = 512, quality = 0.72) {
+  return new Promise(resolve => {
+    if (!file || typeof FileReader === 'undefined') return resolve(null);
+    const reader = new FileReader();
+    reader.onerror = () => resolve(null);
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = () => resolve(null);
+      img.onload = () => {
+        try {
+          const scale = Math.min(1, maxDim / Math.max(img.width || maxDim, img.height || maxDim));
+          const w = Math.max(1, Math.round((img.width || maxDim) * scale));
+          const h = Math.max(1, Math.round((img.height || maxDim) * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const out = canvas.toDataURL('image/jpeg', quality);
+          // Extremely large result (e.g. tiny canvas quirks): refuse it so the
+          // caller can fall back instead of breaking every future save.
+          resolve(out && out.length < 300000 ? out : null);
+        } catch (err) {
+          resolve(null);
+        }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleCreateStudentPhotoUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const preview = document.getElementById('create-photo-preview');
-    const placeholder = document.getElementById('create-upload-icon-placeholder');
-    if (preview) {
-      preview.src = e.target.result;
-      preview.style.display = 'block';
-    }
-    if (placeholder) placeholder.style.display = 'none';
-    showToast('Student photo selected!', 'info');
-  };
-  reader.readAsDataURL(file);
+  const dataUrl = await compressImageFile(file);
+  if (!dataUrl) {
+    showToast('Could not read that photo. Please try a different image.', 'error');
+    return;
+  }
+  const preview = document.getElementById('create-photo-preview');
+  const placeholder = document.getElementById('create-upload-icon-placeholder');
+  if (preview) {
+    preview.src = dataUrl;
+    preview.style.display = 'block';
+  }
+  if (placeholder) placeholder.style.display = 'none';
+  showToast('Student photo selected and optimized for saving!', 'info');
 }
 
 function handleCreateStudentPhotoPrompt() {
@@ -1797,7 +1871,7 @@ function handleCreateStudentSubmit(event) {
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
-  setTimeout(() => {
+  setTimeout(async () => {
     const customAvatar = document.getElementById('create-photo-preview')?.src;
     const newStudent = {
       id: Date.now(),
@@ -1823,7 +1897,7 @@ function handleCreateStudentSubmit(event) {
     };
 
     STUDENTS_DATA.unshift(newStudent);
-    persistStudentsData();
+    const saved = await persistStudentsData();
     form.reset();
     const createPreview = document.getElementById('create-photo-preview');
     if (createPreview) createPreview.style.display = 'none';
@@ -1831,7 +1905,11 @@ function handleCreateStudentSubmit(event) {
     if (createPlaceholder) createPlaceholder.style.display = 'flex';
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Student';
-    showToast(`New student "${newStudent.first_name} ${newStudent.last_name}" created successfully!`, 'success');
+    if (saved) {
+      showToast(`New student "${newStudent.first_name} ${newStudent.last_name}" created successfully!`, 'success');
+    } else {
+      showToast(`"${newStudent.first_name} ${newStudent.last_name}" was only added to this screen — the cloud save failed, so a refresh will undo it.`, 'error');
+    }
     switchTab('students');
   }, 600);
 }
@@ -1839,16 +1917,17 @@ function handleCreateStudentSubmit(event) {
 // =========================================================================
 // EDIT STUDENT (IMAGE 2)
 // =========================================================================
-function handleEditStudentPhotoUpload(event) {
+async function handleEditStudentPhotoUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const preview = document.getElementById('edit-photo-preview');
-    if (preview) preview.src = e.target.result;
-    showToast('Student photo updated in preview. Click "Update Student" to save.', 'info');
-  };
-  reader.readAsDataURL(file);
+  const dataUrl = await compressImageFile(file);
+  if (!dataUrl) {
+    showToast('Could not read that photo. Please try a different image.', 'error');
+    return;
+  }
+  const preview = document.getElementById('edit-photo-preview');
+  if (preview) preview.src = dataUrl;
+  showToast('Photo updated in preview (optimized). Click "Update Student" to save.', 'info');
 }
 
 function handleEditStudentPhotoPrompt() {
@@ -1899,7 +1978,7 @@ function handleEditStudentSubmit(event) {
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
 
-  setTimeout(() => {
+  setTimeout(async () => {
     const id = Number(document.getElementById('edit-student-id').value);
     const student = STUDENTS_DATA.find(s => s.id === id);
     if (student) {
@@ -1924,11 +2003,18 @@ function handleEditStudentSubmit(event) {
       if (preview && preview.src) {
         student.avatar = preview.src;
       }
-      persistStudentsData();
+      const saved = await persistStudentsData();
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Update Student';
+      if (saved) {
+        showToast(`Student information updated successfully!`, 'success');
+      } else {
+        showToast('The edit was applied on this screen only — the cloud save failed, so a refresh will undo it.', 'error');
+      }
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Update Student';
     }
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Update Student';
-    showToast(`Student information updated successfully!`, 'success');
     switchTab('students');
   }, 600);
 }
@@ -1965,13 +2051,17 @@ function executeDeleteStudent() {
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting...';
 
-  setTimeout(() => {
+  setTimeout(async () => {
     STUDENTS_DATA = STUDENTS_DATA.filter(s => s.id !== studentToDeleteId);
-    persistStudentsData();
+    const saved = await persistStudentsData();
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-regular fa-trash-can"></i> Yes, Delete';
     closeDeleteModal();
-    showToast('Student record deleted successfully.', 'success');
+    if (saved) {
+      showToast('Student record deleted successfully.', 'success');
+    } else {
+      showToast('The record was removed on this screen only — the cloud delete failed, so a refresh will bring it back.', 'error');
+    }
     renderStudentsTable();
   }, 600);
 }
@@ -3122,7 +3212,7 @@ async function loadSystemSettings() {
       const saved = localStorage.getItem('sams_system_settings');
       if (saved) { SYSTEM_SETTINGS = Object.assign(SYSTEM_SETTINGS, JSON.parse(saved)); }
     }
-  } catch (err) {}
+  } catch (err) { console.error('Firestore read failed (settings):', err); }
 }
 
 function saveSystemSettings() {
@@ -3155,7 +3245,7 @@ function saveSystemSettings() {
     SYSTEM_SETTINGS.org_address = getVal('setting-org-address', 'Poblacion, Kadingilan, Bukidnon, Philippines');
 
     try {
-      localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS)); db.collection('sams_db').doc('settings').set({ data: SYSTEM_SETTINGS });
+      localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS)); saveToCloud('settings', { data: SYSTEM_SETTINGS }, 'system settings');
     } catch (e) {}
 
     // Update profile banner
@@ -3200,7 +3290,7 @@ function selectBadgeIcon(iconClass) {
   }
   SYSTEM_SETTINGS.badge_icon = iconClass;
   try {
-    localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS)); db.collection('sams_db').doc('settings').set({ data: SYSTEM_SETTINGS });
+    localStorage.setItem('sams_system_settings', JSON.stringify(SYSTEM_SETTINGS)); saveToCloud('settings', { data: SYSTEM_SETTINGS }, 'system settings');
   } catch (e) {}
   closeCenterBadgePicker();
   showToast(`Center emblem updated to ${iconClass.replace('fa-', '')}`, 'success');
@@ -3260,28 +3350,37 @@ function applyCustomAvatarUrl() {
   showToast('Custom avatar URL loaded into preview!', 'info');
 }
 
-function handleAvatarFileUpload(event) {
+async function handleAvatarFileUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const dataUrl = e.target.result;
-    const preview = document.getElementById('modal-avatar-preview');
-    if (preview) preview.src = dataUrl;
-    showToast('Photo loaded from local device!', 'info');
-  };
-  reader.readAsDataURL(file);
+  const dataUrl = await compressImageFile(file, 320, 0.75);
+  if (!dataUrl) {
+    showToast('Could not read that photo. Please try a different image.', 'error');
+    return;
+  }
+  const preview = document.getElementById('modal-avatar-preview');
+  if (preview) preview.src = dataUrl;
+  showToast('Photo loaded from local device (optimized)!', 'info');
 }
 
 function handleSaveAdminProfile(event) {
   if (event) event.preventDefault();
+  if (!CURRENT_USER) {
+    showToast('Please sign in before editing your profile.', 'error');
+    return;
+  }
 
-  const newAvatar = document.getElementById('modal-avatar-preview')?.src || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200';
-  const newName = (document.getElementById('modal-profile-name')?.value || 'Neil Herbert U. Betacura').trim();
-  const newRole = (document.getElementById('modal-profile-role')?.value || 'Repository Lead').trim();
-  const newEmail = (document.getElementById('modal-profile-email')?.value || 'neil.betacura@sams.edu.ph').trim();
-  const newDept = (document.getElementById('modal-profile-dept')?.value || 'Repository Lead & IT Architecture').trim();
+  const newAvatar = document.getElementById('modal-avatar-preview')?.src || CURRENT_USER.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200';
+  const newName = (document.getElementById('modal-profile-name')?.value || CURRENT_USER.name || '').trim();
+  const newRole = (document.getElementById('modal-profile-role')?.value || CURRENT_USER.role || '').trim();
+  const newEmail = (document.getElementById('modal-profile-email')?.value || CURRENT_USER.email || '').trim();
+  const newDept = (document.getElementById('modal-profile-dept')?.value || CURRENT_USER.department || '').trim();
+
+  if (!newName || !newEmail) {
+    showToast('Name and email are required.', 'error');
+    return;
+  }
 
   // Update Topbar
   const topbarAvatar = document.getElementById('topbar-user-avatar');
@@ -3313,7 +3412,14 @@ function handleSaveAdminProfile(event) {
 
   // Update in USERS_DATA and apply to current user
   if (USERS_DATA && USERS_DATA.length > 0) {
-    const userToUpdate = (CURRENT_USER ? USERS_DATA.find(u => u.id === CURRENT_USER.id) : null) || USERS_DATA[0];
+    const userToUpdate = CURRENT_USER ? USERS_DATA.find(u => u.id === CURRENT_USER.id) : null;
+    if (!userToUpdate) {
+      // Never fall back to another account here: overwriting the first record
+      // is how one user's profile used to end up assigned to somebody else.
+      closeAvatarSettingsActionsModal();
+      showToast('Your session does not match any account. Please sign in again.', 'error');
+      return;
+    }
     userToUpdate.name = newName;
     userToUpdate.email = newEmail;
     userToUpdate.role = newRole;
@@ -3562,7 +3668,7 @@ function exportAttendanceReportCSV() {
     `"${s.student_id_number}"`,
     `"${s.first_name} ${s.last_name}"`,
     `"${ATTENDANCE_MAP[s.id] || 'Present'}"`,
-    `"${CURRENT_USER ? CURRENT_USER.name : 'Neil Herbert U. Betacura'} (${CURRENT_USER ? CURRENT_USER.role : 'Administrator'})"`
+    `"${CURRENT_USER ? CURRENT_USER.name : 'Signed-in User'} (${CURRENT_USER ? CURRENT_USER.role : 'Unknown'})"`
   ]);
 
   const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
