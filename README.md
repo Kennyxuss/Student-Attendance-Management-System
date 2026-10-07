@@ -209,23 +209,23 @@ Student-Attendance-Management-System/
 
 ## 📷 System Screenshots
 
-| Screen | Description / Path |
+| Screen | Description / Wireframe |
 |---|---|
-| **Login View** | Authentication screen with role-based sign-in (`docs/wireframes/login.png`) |
-| **Admin Dashboard** | Main analytics dashboard with line and donut charts (`docs/wireframes/admin/dashboard.png`) |
-| **Students Directory** | Searchable roster with progress bars and pagination (`docs/wireframes/admin/student-management.png`) |
-| **Create Student Form** | Student enrollment with photo uploader (`docs/wireframes/states/loading-state.png`) |
-| **Edit Student Profile** | Modal and view for updating student records (`docs/wireframes/admin/student-management.png`) |
-| **Delete Confirmation Modal** | Safety modal before deleting student records (`docs/wireframes/states/delete-confirmation.png`) |
-| **Roll Call (Take Attendance)** | Daily attendance marking with segmented status buttons (`docs/wireframes/instructor/take-attendance.png`) |
-| **Attendance History Logs** | Past session logs modal with CSV export (`docs/wireframes/instructor/attendance-history.png`) |
-| **Class Management & Roster** | Class grid and enrollment roster modal (`docs/wireframes/admin/class-management.png`) |
-| **Academic Calendar** | Monthly schedule with event categories and jump to today (`docs/wireframes/instructor/classes.png`) |
-| **User Accounts & Roles** | Administrator, Instructor, and Staff role management (`docs/wireframes/admin/instructor-management.png`) |
-| **Empty State** | Fallback display when zero records match filters (`docs/wireframes/states/empty-state.png`) |
-| **Error State** | Graceful error recovery screen (`docs/wireframes/states/error-state.png`) |
-| **System Settings & Policies** | Cutoff times, alert policies, and branding (`docs/wireframes/instructor/profile-settings.png`) |
-| **System Diagnostics Modal** | Live health check for database and API latency (`docs/wireframes/admin/attendance-report.png`) |
+| **Login View** | Authentication screen with role-based sign-in<br><img src="docs/wireframes/login.png" alt="Login View" width="100%"> |
+| **Admin Dashboard** | Main analytics dashboard with line and donut charts<br><img src="docs/wireframes/admin/dashboard.png" alt="Admin Dashboard" width="100%"> |
+| **Students Directory** | Searchable roster with progress bars and pagination<br><img src="docs/wireframes/admin/student-management.png" alt="Students Directory" width="100%"> |
+| **Create Student Form** | Student enrollment with photo uploader<br><img src="docs/wireframes/states/loading-state.png" alt="Create Student Form" width="100%"> |
+| **Edit Student Profile** | Modal and view for updating student records<br><img src="docs/wireframes/admin/student-management.png" alt="Edit Student Profile" width="100%"> |
+| **Delete Confirmation Modal** | Safety modal before deleting student records<br><img src="docs/wireframes/states/delete-confirmation.png" alt="Delete Confirmation Modal" width="100%"> |
+| **Roll Call (Take Attendance)** | Daily attendance marking with segmented status buttons<br><img src="docs/wireframes/instructor/take-attendance.png" alt="Roll Call" width="100%"> |
+| **Attendance History Logs** | Past session logs modal with CSV export<br><img src="docs/wireframes/instructor/attendance-history.png" alt="Attendance History Logs" width="100%"> |
+| **Class Management & Roster** | Class grid and enrollment roster modal<br><img src="docs/wireframes/admin/class-management.png" alt="Class Management and Roster" width="100%"> |
+| **Academic Calendar** | Monthly schedule with event categories and jump to today<br><img src="docs/wireframes/instructor/classes.png" alt="Academic Calendar" width="100%"> |
+| **User Accounts & Roles** | Administrator, Instructor, and Staff role management<br><img src="docs/wireframes/admin/instructor-management.png" alt="User Accounts and Roles" width="100%"> |
+| **Empty State** | Fallback display when zero records match filters<br><img src="docs/wireframes/states/empty-state.png" alt="Empty State" width="100%"> |
+| **Error State** | Graceful error recovery screen<br><img src="docs/wireframes/states/error-state.png" alt="Error State" width="100%"> |
+| **System Settings & Policies** | Cutoff times, alert policies, and branding<br><img src="docs/wireframes/instructor/profile-settings.png" alt="System Settings and Policies" width="100%"> |
+| **System Diagnostics Modal** | Live health check for database and API latency<br><img src="docs/wireframes/admin/attendance-report.png" alt="System Diagnostics Modal" width="100%"> |
 
 ---
 
