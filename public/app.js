@@ -948,7 +948,9 @@ function loadStoredUsers() {
         });
       }
     }
+  } catch (e) {}
 }
+
 
 function persistUsersData() {
   try {
