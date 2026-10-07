@@ -1,0 +1,90 @@
+{
+  "students": [
+    {
+      "id": 1,
+      "student_id_number": "STU-2026-001",
+      "first_name": "Elena",
+      "last_name": "Reyes",
+      "email": "elena.reyes@example.edu",
+      "grade_or_cohort": "Sophomore - Computer Science",
+      "status": "Active"
+    },
+    {
+      "id": 2,
+      "student_id_number": "STU-2026-002",
+      "first_name": "Marcus",
+      "last_name": "Chen",
+      "email": "marcus.chen@example.edu",
+      "grade_or_cohort": "Sophomore - Computer Science",
+      "status": "Active"
+    },
+    {
+      "id": 3,
+      "student_id_number": "STU-2026-003",
+      "first_name": "Amina",
+      "last_name": "Diallo",
+      "email": "amina.diallo@example.edu",
+      "grade_or_cohort": "Junior - Information Systems",
+      "status": "Active"
+    },
+    {
+      "id": 4,
+      "student_id_number": "STU-2026-004",
+      "first_name": "Lucas",
+      "last_name": "Vargas",
+      "email": "lucas.vargas@example.edu",
+      "grade_or_cohort": "Sophomore - Computer Science",
+      "status": "Active"
+    },
+    {
+      "id": 5,
+      "student_id_number": "STU-2026-005",
+      "first_name": "Sarah",
+      "last_name": "O'Connor",
+      "email": "sarah.oc@example.edu",
+      "grade_or_cohort": "Junior - Information Systems",
+      "status": "Active"
+    }
+  ],
+  "courses": [
+    {
+      "id": 1,
+      "course_code": "CS-201",
+      "title": "Data Structures & Algorithms",
+      "instructor_name": "Dr. Alan Turing",
+      "term_semester": "Fall 2026",
+      "schedule_time": "Mon/Wed 10:00 AM - 11:30 AM",
+      "room": "Hall B-102",
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "course_code": "IS-310",
+      "title": "Database Systems & Modeling",
+      "instructor_name": "Prof. Grace Hopper",
+      "term_semester": "Fall 2026",
+      "schedule_time": "Tue/Thu 02:00 PM - 03:30 PM",
+      "room": "Lab 4A",
+      "is_active": true
+    }
+  ],
+  "enrollments": [
+    { "id": 1, "student_id": 1, "course_id": 1, "enrollment_date": "2026-09-01", "status": "Enrolled" },
+    { "id": 2, "student_id": 2, "course_id": 1, "enrollment_date": "2026-09-01", "status": "Enrolled" },
+    { "id": 3, "student_id": 3, "course_id": 1, "enrollment_date": "2026-09-02", "status": "Enrolled" },
+    { "id": 4, "student_id": 4, "course_id": 1, "enrollment_date": "2026-09-03", "status": "Enrolled" },
+    { "id": 5, "student_id": 2, "course_id": 2, "enrollment_date": "2026-09-01", "status": "Enrolled" },
+    { "id": 6, "student_id": 3, "course_id": 2, "enrollment_date": "2026-09-02", "status": "Enrolled" },
+    { "id": 7, "student_id": 5, "course_id": 2, "enrollment_date": "2026-09-02", "status": "Enrolled" }
+  ],
+  "attendance_records": [
+    { "id": 1, "course_id": 1, "student_id": 1, "session_date": "2026-10-01", "status": "Present", "remarks": "On time", "recorded_by": "Dr. Alan Turing" },
+    { "id": 2, "course_id": 1, "student_id": 2, "session_date": "2026-10-01", "status": "Present", "remarks": "On time", "recorded_by": "Dr. Alan Turing" },
+    { "id": 3, "course_id": 1, "student_id": 3, "session_date": "2026-10-01", "status": "Late", "remarks": "10 mins late due to transit", "recorded_by": "Dr. Alan Turing" },
+    { "id": 4, "course_id": 1, "student_id": 4, "session_date": "2026-10-01", "status": "Absent", "remarks": "Unexcused", "recorded_by": "Dr. Alan Turing" },
+    { "id": 5, "course_id": 1, "student_id": 1, "session_date": "2026-10-03", "status": "Present", "remarks": "Participated actively", "recorded_by": "Dr. Alan Turing" },
+    { "id": 6, "course_id": 1, "student_id": 2, "session_date": "2026-10-03", "status": "Excused", "remarks": "Medical note submitted", "recorded_by": "Dr. Alan Turing" },
+    { "id": 7, "course_id": 1, "student_id": 3, "session_date": "2026-10-03", "status": "Present", "remarks": "On time", "recorded_by": "Dr. Alan Turing" },
+    { "id": 8, "course_id": 1, "student_id": 4, "session_date": "2026-10-03", "status": "Present", "remarks": "On time", "recorded_by": "Dr. Alan Turing" }
+  ]
+}
