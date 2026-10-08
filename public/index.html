@@ -437,7 +437,7 @@
             <div class="card">
               <div class="card-header-flex">
                 <h3 class="card-title">Attendance Overview</h3>
-                <select class="select-filter" style="height:34px; padding-right:26px; font-size:0.8rem;">
+                <select id="dash-chart-range" class="select-filter" style="height:34px; padding-right:26px; font-size:0.8rem;" onchange="renderDashTrend()">
                   <option>This Week</option>
                   <option>This Month</option>
                 </select>
@@ -445,7 +445,7 @@
 
               <div class="chart-container-box">
                 <!-- SVG Vector Line Chart with Tooltip -->
-                <svg class="line-chart-svg" viewBox="0 0 520 220">
+                <svg id="dash-chart-svg" class="line-chart-svg" viewBox="0 0 520 220">
                   <defs>
                     <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stop-color="#2563eb" stop-opacity="0.35"/>
@@ -470,30 +470,30 @@
                   <text x="20" y="198" class="chart-axis-text">0%</text>
 
                   <!-- X-Axis Labels -->
-                  <text x="60" y="214" class="chart-axis-text">Mon</text>
-                  <text x="140" y="214" class="chart-axis-text">Tue</text>
-                  <text x="220" y="214" class="chart-axis-text">Wed</text>
-                  <text x="300" y="214" class="chart-axis-text">Thu</text>
-                  <text x="380" y="214" class="chart-axis-text">Fri</text>
-                  <text x="460" y="214" class="chart-axis-text">Sat</text>
+                  <text id="dash-chart-x-0" x="60" y="214" class="chart-axis-text">Mon</text>
+                  <text id="dash-chart-x-1" x="140" y="214" class="chart-axis-text">Tue</text>
+                  <text id="dash-chart-x-2" x="220" y="214" class="chart-axis-text">Wed</text>
+                  <text id="dash-chart-x-3" x="300" y="214" class="chart-axis-text">Thu</text>
+                  <text id="dash-chart-x-4" x="380" y="214" class="chart-axis-text">Fri</text>
+                  <text id="dash-chart-x-5" x="460" y="214" class="chart-axis-text">Sat</text>
 
                   <!-- Area Fill -->
-                  <path d="M 60 110 L 140 85 L 220 120 L 300 78 L 380 65 L 460 92 L 460 195 L 60 195 Z" class="chart-area-fill"/>
+                  <path id="dash-chart-area" d="M 60 195 L 140 195 L 220 195 L 300 195 L 380 195 L 460 195 L 460 195 L 60 195 Z" class="chart-area-fill"/>
 
                   <!-- Primary Line Path -->
-                  <path d="M 60 110 L 140 85 L 220 120 L 300 78 L 380 65 L 460 92" class="chart-line-path"/>
+                  <path id="dash-chart-line" d="M 60 195 L 140 195 L 220 195 L 300 195 L 380 195 L 460 195" class="chart-line-path"/>
 
                   <!-- Data Points -->
-                  <circle cx="60" cy="110" r="4.5" class="chart-point"/>
-                  <circle cx="140" cy="85" r="4.5" class="chart-point"/>
-                  <circle cx="220" cy="120" r="4.5" class="chart-point"/>
-                  <circle cx="300" cy="78" r="4.5" class="chart-point"/>
-                  <circle cx="380" cy="65" r="5" class="chart-point" style="stroke-width:4;"/>
-                  <circle cx="460" cy="92" r="4.5" class="chart-point"/>
+                  <circle id="dash-chart-dot-0" cx="60" cy="195" r="4.5" class="chart-point"/>
+                  <circle id="dash-chart-dot-1" cx="140" cy="195" r="4.5" class="chart-point"/>
+                  <circle id="dash-chart-dot-2" cx="220" cy="195" r="4.5" class="chart-point"/>
+                  <circle id="dash-chart-dot-3" cx="300" cy="195" r="4.5" class="chart-point"/>
+                  <circle id="dash-chart-dot-4" cx="380" cy="195" r="4.5" class="chart-point"/>
+                  <circle id="dash-chart-dot-5" cx="460" cy="195" r="4.5" class="chart-point"/>
                 </svg>
 
-                <!-- Tooltip directly on Fri May 16 (matches design) -->
-                <div class="chart-tooltip-box" style="top: 65px; left: 380px;">
+                <!-- Tooltip animated by renderDashTrend() -->
+                <div id="dash-chart-tooltip" class="chart-tooltip-box" style="top: 110px; left: 460px;">
                   <strong>Current week</strong>
                   <span>No attendance yet</span>
                 </div>
@@ -511,35 +511,38 @@
                   <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: rotate(-90deg);">
                     <!-- Background Circle -->
                     <circle cx="50" cy="50" r="38" fill="none" stroke="#f1f5f9" stroke-width="15"/>
-                    <!-- Green Segment (0%) -->
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15"
+                    <!-- Green Segment (Present) -->
+                    <circle id="dash-donut-present-seg" cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15"
                             stroke-dasharray="0 238" stroke-dashoffset="0"/>
-                    <!-- Red Segment (0%) -->
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15"
+                    <!-- Red Segment (Absent) -->
+                    <circle id="dash-donut-absent-seg" cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15"
+                            stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <!-- Orange Segment (Late) -->
+                    <circle id="dash-donut-late-seg" cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="15"
                             stroke-dasharray="0 238" stroke-dashoffset="0"/>
                   </svg>
                   <div class="donut-center-text">
-                    <div class="pct">0.0%</div>
-                    <div class="label">Overall</div>
+                    <div id="dash-donut-pct" class="pct">0.0%</div>
+                    <div id="dash-donut-label" class="label">Overall</div>
                   </div>
                 </div>
 
                 <div class="donut-legend-list">
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot green"></span> Present</span>
-                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
+                    <strong><span id="dash-donut-present">0</span> <span id="dash-donut-present-pct" style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot red"></span> Absent</span>
-                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
+                    <strong><span id="dash-donut-absent">0</span> <span id="dash-donut-absent-pct" style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot orange"></span> Late</span>
-                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
+                    <strong><span id="dash-donut-late">0</span> <span id="dash-donut-late-pct" style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-total-bar">
                     <span>Total</span>
-                    <span>0</span>
+                    <span id="dash-donut-total">0</span>
                   </div>
                 </div>
               </div>
@@ -1446,14 +1449,14 @@
             <div class="card">
               <div class="card-header-flex">
                 <h3 class="card-title">Attendance Overview</h3>
-                <select class="select-filter" style="height:32px; font-size:0.8rem; padding-right:24px;">
+                <select id="report-chart-range" class="select-filter" style="height:32px; font-size:0.8rem; padding-right:24px;" onchange="renderReportTrend()">
                   <option>Daily</option>
                   <option>Weekly</option>
                 </select>
               </div>
 
               <div class="chart-container-box">
-                <svg class="line-chart-svg" viewBox="0 0 520 220">
+                <svg id="report-chart-svg" class="line-chart-svg" viewBox="0 0 520 220">
                   <line x1="40" y1="20" x2="500" y2="20" class="chart-axis-line"/>
                   <text x="15" y="24" class="chart-axis-text">100%</text>
 
@@ -1466,19 +1469,19 @@
                   <line x1="40" y1="155" x2="500" y2="155" class="chart-axis-line"/>
                   <text x="15" y="159" class="chart-axis-text">25%</text>
 
-                  <text x="50" y="214" class="chart-axis-text">May 1</text>
-                  <text x="140" y="214" class="chart-axis-text">May 5</text>
-                  <text x="230" y="214" class="chart-axis-text">May 9</text>
-                  <text x="320" y="214" class="chart-axis-text">May 13</text>
-                  <text x="410" y="214" class="chart-axis-text">May 17</text>
-                  <text x="480" y="214" class="chart-axis-text">May 20</text>
+                  <text id="report-chart-x-0" x="50" y="214" class="chart-axis-text">May 1</text>
+                  <text id="report-chart-x-1" x="140" y="214" class="chart-axis-text">May 5</text>
+                  <text id="report-chart-x-2" x="230" y="214" class="chart-axis-text">May 9</text>
+                  <text id="report-chart-x-3" x="320" y="214" class="chart-axis-text">May 13</text>
+                  <text id="report-chart-x-4" x="410" y="214" class="chart-axis-text">May 17</text>
+                  <text id="report-chart-x-5" x="480" y="214" class="chart-axis-text">May 20</text>
 
                   <!-- Curved Path -->
-                  <path d="M 50 115 L 100 105 L 150 110 L 200 95 L 250 90 L 300 98 L 350 88 L 400 102 L 450 112 L 490 100" class="chart-line-path"/>
+                  <path id="report-chart-line" d="M 50 195 L 140 195 L 230 195 L 320 195 L 410 195 L 480 195" class="chart-line-path"/>
                   <circle cx="350" cy="88" r="5" class="chart-point"/>
                 </svg>
 
-                <div class="chart-tooltip-box" style="top: 88px; left: 350px;">
+                <div id="report-chart-tooltip" class="chart-tooltip-box" style="top: 110px; left: 480px;">
                   <strong>Current period</strong>
                   <span>No attendance yet</span>
                 </div>
@@ -1495,37 +1498,37 @@
                 <div class="donut-svg-box">
                   <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: rotate(-90deg);">
                     <circle cx="50" cy="50" r="38" fill="none" stroke="#f1f5f9" stroke-width="15"/>
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#8b5cf6" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <circle id="report-donut-present-seg" cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <circle id="report-donut-absent-seg" cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <circle id="report-donut-late-seg" cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <circle id="report-donut-excused-seg" cx="50" cy="50" r="38" fill="none" stroke="#8b5cf6" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
                   </svg>
                   <div class="donut-center-text">
-                    <div class="pct">0.0%</div>
-                    <div class="label">Average</div>
+                    <div id="report-donut-pct" class="pct">0.0%</div>
+                    <div id="report-donut-label" class="label">Average</div>
                   </div>
                 </div>
 
                 <div class="donut-legend-list">
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot green"></span> Present</span>
-                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
+                    <strong><span id="report-donut-present">0</span> <span id="report-donut-present-pct" style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot red"></span> Absent</span>
-                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
+                    <strong><span id="report-donut-absent">0</span> <span id="report-donut-absent-pct" style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot orange"></span> Late</span>
-                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
+                    <strong><span id="report-donut-late">0</span> <span id="report-donut-late-pct" style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot purple"></span> Excused</span>
-                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
+                    <strong><span id="report-donut-excused">0</span> <span id="report-donut-excused-pct" style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-total-bar">
                     <span>Total</span>
-                    <span>0</span>
+                    <span id="report-donut-total">0</span>
                   </div>
                 </div>
               </div>
@@ -1549,7 +1552,7 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="class-attendance-summary-tbody">
                   <tr>
                     <td colspan="6" style="text-align:center; padding:24px; color:var(--text-muted);">
                       <i class="fa-regular fa-file-lines" style="margin-right:6px;"></i>
@@ -1569,14 +1572,14 @@
                 <h3 class="card-title">Top / Low Attendance</h3>
               </div>
               <div style="display:flex; border-bottom:1px solid #e2e8f0; margin-bottom:16px;">
-                <button class="btn btn-sm btn-outline-primary" style="border:none; border-bottom:2px solid var(--primary-blue); border-radius:0;">Top Attendance</button>
-                <button class="btn btn-sm btn-outline" style="border:none; border-radius:0; color:#64748b;">Low Attendance</button>
+                <button id="top-low-tab-top" class="btn btn-sm btn-outline-primary" style="border:none; border-bottom:2px solid var(--primary-blue); border-radius:0;" onclick="setTopLowTab('top')">Top Attendance</button>
+                <button id="top-low-tab-low" class="btn btn-sm btn-outline" style="border:none; border-radius:0; color:#64748b;" onclick="setTopLowTab('low')">Low Attendance</button>
               </div>
 
-              <div>
+              <div id="top-low-content">
                 <div style="padding:24px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
                   <i class="fa-regular fa-chart-bar" style="margin-right:6px;"></i>
-                  No recorded attendance yet. Rankings will appear here once attendance is taken.
+                  No students enrolled yet. Rankings will appear here once students are added and attendance is taken.
                 </div>
               </div>
 
