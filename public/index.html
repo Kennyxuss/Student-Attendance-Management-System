@@ -263,11 +263,11 @@
                   <small style="font-size:0.7rem; color:var(--text-light);">Today, 8:40 AM</small>
                 </div>
               </div>
-              <div class="dropdown-item-row" onclick="showToast('Opening message from Prof. Alan Turing', 'info')">
+              <div class="dropdown-item-row" onclick="showToast('Opening message from Wilfredo Villas', 'info')">
                 <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100" class="mini-avatar" style="width:32px; height:32px;">
                 <div>
-                  <h5 style="font-size:0.85rem; font-weight:700;">Prof. Alan Turing</h5>
-                  <p style="font-size:0.75rem; color:var(--text-muted);">Grade 11 - STEM rollcall has been submitted for Room 201.</p>
+                  <h5 style="font-size:0.85rem; font-weight:700;">Wilfredo Villas</h5>
+                  <p style="font-size:0.75rem; color:var(--text-muted);">BSIT 1st Year rollcall has been submitted for Room 201.</p>
                   <small style="font-size:0.7rem; color:var(--text-light);">Today, 8:15 AM</small>
                 </div>
               </div>
@@ -376,11 +376,11 @@
             <div class="page-title-group">
               <h1>Dashboard</h1>
               <p class="breadcrumbs" style="font-size:0.9rem; color:var(--text-muted); margin-top:3px;">
-                Welcome back, John Dela Cruz! Here's what's happening today.
+                Welcome back, <span id="dash-welcome-name">Guest</span>! Here's what's happening today.
               </p>
             </div>
-            <div class="date-badge">
-              <i class="fa-regular fa-calendar" style="color:var(--primary-blue);"></i> May 20, 2026 | Tuesday
+            <div class="date-badge" id="dash-date-badge">
+              <i class="fa-regular fa-calendar" style="color:var(--primary-blue);"></i> 
             </div>
           </div>
 
@@ -389,8 +389,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Total Students</span>
-                <span class="kpi-value" id="dash-total-students">30</span>
-                <span class="kpi-meta-tag green"><i class="fa-solid fa-users"></i> 10 per cohort (3 classes)</span>
+                <span class="kpi-value" id="dash-total-students">0</span>
+                <span class="kpi-meta-tag green"><i class="fa-solid fa-users"></i> 4 BSIT year levels</span>
               </div>
               <div class="kpi-icon-container kpi-icon-blue">
                 <i class="fa-solid fa-users"></i>
@@ -400,8 +400,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Present Today</span>
-                <span class="kpi-value" id="dash-present-today">26</span>
-                <span class="kpi-meta-tag green"><i class="fa-solid fa-arrow-trend-up"></i> 86.7% of total</span>
+                <span class="kpi-value" id="dash-present-today">0</span>
+                <span class="kpi-meta-tag green"><i class="fa-solid fa-arrow-trend-up"></i> 0.0% of total</span>
               </div>
               <div class="kpi-icon-container kpi-icon-green">
                 <i class="fa-regular fa-calendar-check"></i>
@@ -411,8 +411,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Absent Today</span>
-                <span class="kpi-value" id="dash-absent-today">2</span>
-                <span class="kpi-meta-tag orange"><i class="fa-solid fa-arrow-trend-down"></i> 6.7% of total</span>
+                <span class="kpi-value" id="dash-absent-today">0</span>
+                <span class="kpi-meta-tag orange"><i class="fa-solid fa-arrow-trend-down"></i> 0.0% of total</span>
               </div>
               <div class="kpi-icon-container kpi-icon-orange">
                 <i class="fa-solid fa-user-xmark"></i>
@@ -422,8 +422,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Total Classes</span>
-                <span class="kpi-value" id="dash-total-classes">3</span>
-                <span class="kpi-meta-tag purple"><i class="fa-solid fa-chart-simple"></i> STEM, ABM, HUMSS</span>
+                <span class="kpi-value" id="dash-total-classes">4</span>
+                <span class="kpi-meta-tag purple"><i class="fa-solid fa-chart-simple"></i> BSIT 1st-4th Year</span>
               </div>
               <div class="kpi-icon-container kpi-icon-purple">
                 <i class="fa-solid fa-clipboard-list"></i>
@@ -494,8 +494,8 @@
 
                 <!-- Tooltip directly on Fri May 16 (matches design) -->
                 <div class="chart-tooltip-box" style="top: 65px; left: 380px;">
-                  <strong>Fri, May 16</strong>
-                  <span>Attendance: 82%</span>
+                  <strong>Current week</strong>
+                  <span>No attendance yet</span>
                 </div>
               </div>
             </div>
@@ -511,15 +511,15 @@
                   <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: rotate(-90deg);">
                     <!-- Background Circle -->
                     <circle cx="50" cy="50" r="38" fill="none" stroke="#f1f5f9" stroke-width="15"/>
-                    <!-- Green Segment (78.7%) -->
+                    <!-- Green Segment (0%) -->
                     <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15"
-                            stroke-dasharray="188 238" stroke-dashoffset="0"/>
-                    <!-- Red Segment (21.3%) -->
+                            stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <!-- Red Segment (0%) -->
                     <circle cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15"
-                            stroke-dasharray="50 238" stroke-dashoffset="-188"/>
+                            stroke-dasharray="0 238" stroke-dashoffset="0"/>
                   </svg>
                   <div class="donut-center-text">
-                    <div class="pct">78.7%</div>
+                    <div class="pct">0.0%</div>
                     <div class="label">Overall</div>
                   </div>
                 </div>
@@ -527,19 +527,19 @@
                 <div class="donut-legend-list">
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot green"></span> Present</span>
-                    <strong>982 <span style="font-weight:400; color:#64748b;">(78.7%)</span></strong>
+                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot red"></span> Absent</span>
-                    <strong>266 <span style="font-weight:400; color:#64748b;">(21.3%)</span></strong>
+                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot orange"></span> Late</span>
-                    <strong>45 <span style="font-weight:400; color:#64748b;">(3.6%)</span></strong>
+                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-total-bar">
                     <span>Total</span>
-                    <span>1,248</span>
+                    <span>0</span>
                   </div>
                 </div>
               </div>
@@ -555,60 +555,9 @@
                 <a href="#" style="font-size:0.8rem; color:var(--primary-blue); font-weight:600; text-decoration:none;" onclick="switchTab('attendance')">View All</a>
               </div>
               <div id="dash-recent-list">
-                <div class="compact-list-item">
-                  <div class="student-mini-profile">
-                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=120" class="mini-avatar">
-                    <div class="mini-profile-text">
-                      <h5>Juan Miguel Santos</h5>
-                      <p>Grade 11 - STEM</p>
-                    </div>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span class="status-pill status-present">Present</span>
-                    <span style="font-size:0.75rem; color:#94a3b8;">8:02 AM</span>
-                  </div>
-                </div>
-
-                <div class="compact-list-item">
-                  <div class="student-mini-profile">
-                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=120" class="mini-avatar">
-                    <div class="mini-profile-text">
-                      <h5>Maria Angelica Reyes</h5>
-                      <p>Grade 10 - ABM</p>
-                    </div>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span class="status-pill status-present">Present</span>
-                    <span style="font-size:0.75rem; color:#94a3b8;">8:05 AM</span>
-                  </div>
-                </div>
-
-                <div class="compact-list-item">
-                  <div class="student-mini-profile">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120" class="mini-avatar">
-                    <div class="mini-profile-text">
-                      <h5>Daniel Lorenzo Cruz</h5>
-                      <p>Grade 12 - HUMSS</p>
-                    </div>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span class="status-pill status-absent">Absent</span>
-                    <span style="font-size:0.75rem; color:#94a3b8;">—</span>
-                  </div>
-                </div>
-
-                <div class="compact-list-item">
-                  <div class="student-mini-profile">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=120" class="mini-avatar">
-                    <div class="mini-profile-text">
-                      <h5>Nicole Anne Garcia</h5>
-                      <p>Grade 11 - STEM</p>
-                    </div>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span class="status-pill status-late">Late</span>
-                    <span style="font-size:0.75rem; color:#94a3b8;">8:23 AM</span>
-                  </div>
+                <div style="padding:20px 8px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+                  <i class="fa-regular fa-calendar-check" style="margin-right:6px;"></i>
+                  No attendance recorded yet. Go to Attendance to start roll call as soon as students are enrolled.
                 </div>
               </div>
             </div>
@@ -623,8 +572,8 @@
                 <div class="class-schedule-item">
                   <div class="class-time-indicator">8:00 AM</div>
                   <div class="class-details-center">
-                    <h5>General Mathematics</h5>
-                    <p>Grade 11 - STEM</p>
+                    <h5>Introduction to Computing</h5>
+                    <p>BSIT 1st Year</p>
                   </div>
                   <span class="room-badge">Room 201</span>
                 </div>
@@ -632,17 +581,17 @@
                 <div class="class-schedule-item">
                   <div class="class-time-indicator green">9:30 AM</div>
                   <div class="class-details-center">
-                    <h5>Physical Science</h5>
-                    <p>Grade 11 - STEM</p>
+                    <h5>Data Structures & Algorithms</h5>
+                    <p>BSIT 2nd Year</p>
                   </div>
-                  <span class="room-badge">Room 203</span>
+                  <span class="room-badge">Room 204</span>
                 </div>
 
                 <div class="class-schedule-item">
                   <div class="class-time-indicator purple">11:00 AM</div>
                   <div class="class-details-center">
-                    <h5>English for Academic Purposes</h5>
-                    <p>Grade 12 - HUMSS</p>
+                    <h5>Database Management Systems</h5>
+                    <p>BSIT 3rd Year</p>
                   </div>
                   <span class="room-badge">Room 305</span>
                 </div>
@@ -650,10 +599,10 @@
                 <div class="class-schedule-item">
                   <div class="class-time-indicator orange">1:00 PM</div>
                   <div class="class-details-center">
-                    <h5>Entrepreneurship</h5>
-                    <p>Grade 10 - ABM</p>
+                    <h5>Capstone Project & IT Practicum</h5>
+                    <p>BSIT 4th Year</p>
                   </div>
-                  <span class="room-badge">Room 204</span>
+                  <span class="room-badge">Lab 404</span>
                 </div>
               </div>
             </div>
@@ -727,8 +676,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Total Students</span>
-                <span class="kpi-value" id="students-kpi-total">30</span>
-                <span class="kpi-meta-tag green"><i class="fa-solid fa-users"></i> 10 per cohort</span>
+                <span class="kpi-value" id="students-kpi-total">0</span>
+                <span class="kpi-meta-tag green"><i class="fa-solid fa-users"></i> 4 BSIT classes</span>
               </div>
               <div class="kpi-icon-container kpi-icon-blue">
                 <i class="fa-solid fa-users"></i>
@@ -738,8 +687,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Present Today</span>
-                <span class="kpi-value" id="students-kpi-present">26</span>
-                <span class="kpi-meta-tag green"><i class="fa-solid fa-arrow-trend-up"></i> 86.7% of total</span>
+                <span class="kpi-value" id="students-kpi-present">0</span>
+                <span class="kpi-meta-tag green"><i class="fa-solid fa-arrow-trend-up"></i> 0.0% of total</span>
               </div>
               <div class="kpi-icon-container kpi-icon-green">
                 <i class="fa-regular fa-calendar-check"></i>
@@ -749,8 +698,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Absent Today</span>
-                <span class="kpi-value" id="students-kpi-absent">2</span>
-                <span class="kpi-meta-tag orange"><i class="fa-solid fa-arrow-trend-down"></i> 6.7% of total</span>
+                <span class="kpi-value" id="students-kpi-absent">0</span>
+                <span class="kpi-meta-tag orange"><i class="fa-solid fa-arrow-trend-down"></i> 0.0% of total</span>
               </div>
               <div class="kpi-icon-container kpi-icon-orange">
                 <i class="fa-solid fa-user-xmark"></i>
@@ -760,7 +709,7 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Active Classes</span>
-                <span class="kpi-value" id="students-kpi-classes">3</span>
+                <span class="kpi-value" id="students-kpi-classes">4</span>
                 <span class="kpi-meta-tag purple" style="cursor:pointer;" onclick="switchTab('classes')">View classes <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i></span>
               </div>
               <div class="kpi-icon-container kpi-icon-purple">
@@ -778,9 +727,10 @@
               </div>
               <select class="select-filter" id="filter-class" onchange="filterStudentsTable()">
                 <option value="All">All Classes</option>
-                <option value="Grade 11 - STEM">Grade 11 - STEM</option>
-                <option value="Grade 10 - ABM">Grade 10 - ABM</option>
-                <option value="Grade 12 - HUMSS">Grade 12 - HUMSS</option>
+                <option value="BSIT 1st Year">BSIT 1st Year</option>
+                <option value="BSIT 2nd Year">BSIT 2nd Year</option>
+                <option value="BSIT 3rd Year">BSIT 3rd Year</option>
+                <option value="BSIT 4th Year">BSIT 4th Year</option>
               </select>
               <select class="select-filter" id="filter-status" onchange="filterStudentsTable()">
                 <option value="All">All Status</option>
@@ -831,7 +781,7 @@
 
             <!-- Pagination Footer (Image 10) -->
             <div class="table-pagination-footer">
-              <span class="pagination-text" id="pagination-info">Showing 1 to 30 of 30 students</span>
+              <span class="pagination-text" id="pagination-info">Showing 0 to 0 of 0 students</span>
               <div class="pagination-controls">
                 <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
                 <button class="page-btn active">1</button>
@@ -967,30 +917,21 @@
 
                   <div class="form-grid-3">
                     <div class="form-group">
-                      <label class="form-label">Grade Level <span class="req">*</span></label>
-                      <select class="form-control" name="grade_level" required>
-                        <option value="">Select grade level</option>
-                        <option value="Grade 10">Grade 10</option>
-                        <option value="Grade 11" selected>Grade 11</option>
-                        <option value="Grade 12">Grade 12</option>
+                      <label class="form-label">Class / Year Level <span class="req">*</span></label>
+                      <select class="form-control" name="class_name" id="create-student-class" onchange="triggerCreateSectionSync()" required>
+                        <option value="">Select class</option>
                       </select>
                     </div>
                     <div class="form-group">
-                      <label class="form-label">Section</label>
-                      <select class="form-control" name="section">
-                        <option value="STEM-A" selected>STEM-A</option>
-                        <option value="STEM-B">STEM-B</option>
-                        <option value="ABM-A">ABM-A</option>
-                        <option value="HUMSS-A">HUMSS-A</option>
+                      <label class="form-label">Section <span class="req">*</span></label>
+                      <select class="form-control" name="section" id="create-student-section" required disabled>
+                        <option value="">Select class first</option>
                       </select>
                     </div>
                     <div class="form-group">
-                      <label class="form-label">Strand (Optional)</label>
+                      <label class="form-label">Program <span class="req">*</span></label>
                       <select class="form-control" name="strand">
-                        <option value="STEM" selected>STEM</option>
-                        <option value="ABM">ABM</option>
-                        <option value="HUMSS">HUMSS</option>
-                        <option value="TVL">TVL</option>
+                        <option value="BSIT" selected>BSIT</option>
                       </select>
                     </div>
                   </div>
@@ -1146,26 +1087,19 @@
 
                   <div class="form-grid-3">
                     <div class="form-group">
-                      <label class="form-label">Grade Level <span class="req">*</span></label>
-                      <select class="form-control" id="edit-grade-level">
-                        <option selected>Grade 11</option>
-                        <option>Grade 10</option>
-                        <option>Grade 12</option>
+                      <label class="form-label">Class / Year Level <span class="req">*</span></label>
+                      <select class="form-control" id="edit-class-name" onchange="populateEditSectionSelect(this.value)">
                       </select>
                     </div>
                     <div class="form-group">
                       <label class="form-label">Section</label>
                       <select class="form-control" id="edit-section">
-                        <option selected>STEM-A</option>
-                        <option>STEM-B</option>
                       </select>
                     </div>
                     <div class="form-group">
-                      <label class="form-label">Strand (Optional)</label>
+                      <label class="form-label">Program</label>
                       <select class="form-control" id="edit-strand">
-                        <option selected>STEM</option>
-                        <option>ABM</option>
-                        <option>HUMSS</option>
+                        <option selected>BSIT</option>
                       </select>
                     </div>
                   </div>
@@ -1280,9 +1214,16 @@
               <label class="form-label">Select Class</label>
               <select class="form-control" id="rollcall-class-select" onchange="handleRollcallClassChange()">
                 <option value="All">All Classes (Full Roster)</option>
-                <option value="Grade 11 - STEM" selected>Grade 11 - STEM</option>
-                <option value="Grade 10 - ABM">Grade 10 - ABM</option>
-                <option value="Grade 12 - HUMSS">Grade 12 - HUMSS</option>
+                <option value="BSIT 1st Year" selected>BSIT 1st Year</option>
+                <option value="BSIT 2nd Year">BSIT 2nd Year</option>
+                <option value="BSIT 3rd Year">BSIT 3rd Year</option>
+                <option value="BSIT 4th Year">BSIT 4th Year</option>
+              </select>
+            </div>
+            <div class="filter-input-col">
+              <label class="form-label">Select Section</label>
+              <select class="form-control" id="rollcall-section-select" onchange="handleRollcallSectionChange()">
+                <option value="All">All Sections</option>
               </select>
             </div>
             <div class="filter-input-col">
@@ -1292,10 +1233,10 @@
             <div class="filter-input-col">
               <label class="form-label">Select Subject (Optional)</label>
               <select class="form-control" id="rollcall-subject">
-                <option selected>General Mathematics</option>
-                <option>Physical Science</option>
-                <option>English for Academic Purposes</option>
-                <option>Entrepreneurship</option>
+                <option selected>Introduction to Computing</option>
+                <option>Data Structures & Algorithms</option>
+                <option>Database Management Systems</option>
+                <option>Capstone Project & IT Practicum</option>
               </select>
             </div>
             <div>
@@ -1310,7 +1251,7 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Total Students</span>
-                <span class="kpi-value" id="rollcall-stat-total">40</span>
+                <span class="kpi-value" id="rollcall-stat-total">0</span>
               </div>
               <div class="kpi-icon-container kpi-icon-blue">
                 <i class="fa-solid fa-users"></i>
@@ -1320,8 +1261,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Present</span>
-                <span class="kpi-value" id="rollcall-stat-present" style="color:var(--success-green);">34</span>
-                <span class="kpi-meta-tag green" id="rollcall-pct-present">85.0%</span>
+                <span class="kpi-value" id="rollcall-stat-present" style="color:var(--success-green);">0</span>
+                <span class="kpi-meta-tag green" id="rollcall-pct-present">0.0%</span>
               </div>
               <div class="kpi-icon-container kpi-icon-green">
                 <i class="fa-regular fa-circle-check"></i>
@@ -1331,8 +1272,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Absent</span>
-                <span class="kpi-value" id="rollcall-stat-absent" style="color:var(--danger-red);">4</span>
-                <span class="kpi-meta-tag orange" id="rollcall-pct-absent">10.0%</span>
+                <span class="kpi-value" id="rollcall-stat-absent" style="color:var(--danger-red);">0</span>
+                <span class="kpi-meta-tag orange" id="rollcall-pct-absent">0.0%</span>
               </div>
               <div class="kpi-icon-container kpi-icon-orange">
                 <i class="fa-solid fa-user-xmark"></i>
@@ -1342,8 +1283,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Late</span>
-                <span class="kpi-value" id="rollcall-stat-late" style="color:var(--warning-amber);">2</span>
-                <span class="kpi-meta-tag purple" id="rollcall-pct-late">5.0%</span>
+                <span class="kpi-value" id="rollcall-stat-late" style="color:var(--warning-amber);">0</span>
+                <span class="kpi-meta-tag purple" id="rollcall-pct-late">0.0%</span>
               </div>
               <div class="kpi-icon-container kpi-icon-purple">
                 <i class="fa-regular fa-clock"></i>
@@ -1385,7 +1326,7 @@
             </table>
 
             <div class="table-pagination-footer">
-              <span class="pagination-text" id="rollcall-showing-text">Showing 1 to 10 of 10 students</span>
+              <span class="pagination-text" id="rollcall-showing-text">Showing 0 to 0 of 0 students</span>
               <div style="display:flex; gap:12px;">
                 <button class="btn btn-outline" onclick="switchTab('dashboard')">Cancel</button>
                 <button class="btn btn-primary" id="btn-save-attendance-submit" onclick="saveAttendanceSession()">
@@ -1408,9 +1349,15 @@
                 <a href="#" onclick="switchTab('dashboard')">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Reports
               </p>
             </div>
-            <div>
-              <button class="btn btn-outline" onclick="showToast('Exporting attendance report PDF...', 'success')">
-                <i class="fa-solid fa-download"></i> Export Report <i class="fa-solid fa-chevron-down" style="font-size:10px; margin-left:4px;"></i>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="printInstructorReport()">
+                <i class="fa-solid fa-print"></i> Print / Save as PDF
+              </button>
+              <button class="btn btn-outline" onclick="openInstructorReportPreview()">
+                <i class="fa-regular fa-file-lines"></i> Preview Report
+              </button>
+              <button class="btn btn-outline" onclick="downloadInstructorReport()">
+                <i class="fa-solid fa-download"></i> Download (HTML)
               </button>
             </div>
           </div>
@@ -1426,11 +1373,13 @@
               </select>
             </div>
             <div class="filter-input-col">
-              <label class="form-label">Class (All)</label>
-              <select class="form-control">
-                <option selected>All Classes</option>
-                <option>Grade 11 - STEM</option>
-                <option>Grade 10 - ABM</option>
+              <label class="form-label">Class</label>
+              <select class="form-control" id="report-class-select">
+                <option value="All Classes">All Classes</option>
+                <option>BSIT 1st Year</option>
+                <option>BSIT 2nd Year</option>
+                <option>BSIT 3rd Year</option>
+                <option>BSIT 4th Year</option>
               </select>
             </div>
             <div class="filter-input-col">
@@ -1438,7 +1387,7 @@
               <input type="text" class="form-control" value="May 1, 2026 - May 20, 2026">
             </div>
             <div>
-              <button class="btn btn-primary" style="height:42px;" onclick="showToast('Attendance report generated successfully!', 'success')">
+              <button class="btn btn-primary" style="height:42px;" onclick="openInstructorReportPreview()">
                 <i class="fa-regular fa-file-lines"></i> Generate Report
               </button>
             </div>
@@ -1449,8 +1398,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Total Students</span>
-                <span class="kpi-value" id="reports-kpi-total">30</span>
-                <span class="kpi-meta-tag" style="color:#64748b;">3 Classes (10-10-10)</span>
+                <span class="kpi-value" id="reports-kpi-total">0</span>
+                <span class="kpi-meta-tag" style="color:#64748b;">4 Classes · roster starting empty</span>
               </div>
               <div class="kpi-icon-container kpi-icon-blue">
                 <i class="fa-solid fa-users"></i>
@@ -1471,8 +1420,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Total Absences</span>
-                <span class="kpi-value" id="reports-kpi-absent">2</span>
-                <span class="kpi-meta-tag orange">6.7% of total</span>
+                <span class="kpi-value" id="reports-kpi-absent">0</span>
+                <span class="kpi-meta-tag orange">0.0% of total</span>
               </div>
               <div class="kpi-icon-container kpi-icon-orange">
                 <i class="fa-solid fa-user-xmark"></i>
@@ -1482,8 +1431,8 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Total Late</span>
-                <span class="kpi-value" id="reports-kpi-late">2</span>
-                <span class="kpi-meta-tag purple">6.7% of total</span>
+                <span class="kpi-value" id="reports-kpi-late">0</span>
+                <span class="kpi-meta-tag purple">0.0% of total</span>
               </div>
               <div class="kpi-icon-container kpi-icon-purple">
                 <i class="fa-regular fa-clock"></i>
@@ -1530,8 +1479,8 @@
                 </svg>
 
                 <div class="chart-tooltip-box" style="top: 88px; left: 350px;">
-                  <strong>May 13, 2026</strong>
-                  <span>Attendance: 86%</span>
+                  <strong>Current period</strong>
+                  <span>No attendance yet</span>
                 </div>
               </div>
             </div>
@@ -1546,13 +1495,13 @@
                 <div class="donut-svg-box">
                   <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: rotate(-90deg);">
                     <circle cx="50" cy="50" r="38" fill="none" stroke="#f1f5f9" stroke-width="15"/>
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15" stroke-dasharray="204 238" stroke-dashoffset="0"/>
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15" stroke-dasharray="24 238" stroke-dashoffset="-204"/>
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="15" stroke-dasharray="8 238" stroke-dashoffset="-228"/>
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#8b5cf6" stroke-width="15" stroke-dasharray="2 238" stroke-dashoffset="-236"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#8b5cf6" stroke-width="15" stroke-dasharray="0 238" stroke-dashoffset="0"/>
                   </svg>
                   <div class="donut-center-text">
-                    <div class="pct">85.7%</div>
+                    <div class="pct">0.0%</div>
                     <div class="label">Average</div>
                   </div>
                 </div>
@@ -1560,23 +1509,23 @@
                 <div class="donut-legend-list">
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot green"></span> Present</span>
-                    <strong>1,067 <span style="font-weight:400; color:#64748b;">(85.7%)</span></strong>
+                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot red"></span> Absent</span>
-                    <strong>266 <span style="font-weight:400; color:#64748b;">(21.3%)</span></strong>
+                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot orange"></span> Late</span>
-                    <strong>45 <span style="font-weight:400; color:#64748b;">(3.6%)</span></strong>
+                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-legend-item">
                     <span class="legend-left"><span class="legend-dot purple"></span> Excused</span>
-                    <strong>12 <span style="font-weight:400; color:#64748b;">(1.0%)</span></strong>
+                    <strong>0 <span style="font-weight:400; color:#64748b;">(0.0%)</span></strong>
                   </div>
                   <div class="donut-total-bar">
                     <span>Total</span>
-                    <span>1,248</span>
+                    <span>0</span>
                   </div>
                 </div>
               </div>
@@ -1602,44 +1551,10 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td><strong>Grade 11 - STEM</strong></td>
-                    <td>120</td>
-                    <td><strong style="color:var(--success-green);">88.4%</strong></td>
-                    <td>18 (15.0%)</td>
-                    <td>5 (4.2%)</td>
-                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Grade 10 - ABM</strong></td>
-                    <td>115</td>
-                    <td><strong style="color:var(--success-green);">84.1%</strong></td>
-                    <td>21 (18.3%)</td>
-                    <td>6 (5.2%)</td>
-                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Grade 12 - HUMSS</strong></td>
-                    <td>110</td>
-                    <td><strong style="color:var(--success-green);">86.5%</strong></td>
-                    <td>17 (15.5%)</td>
-                    <td>3 (2.7%)</td>
-                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Grade 11 - HUMSS</strong></td>
-                    <td>108</td>
-                    <td><strong style="color:var(--success-green);">82.3%</strong></td>
-                    <td>22 (20.4%)</td>
-                    <td>7 (6.5%)</td>
-                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Grade 10 - STEM</strong></td>
-                    <td>105</td>
-                    <td><strong style="color:var(--success-green);">87.2%</strong></td>
-                    <td>15 (14.3%)</td>
-                    <td>4 (3.8%)</td>
-                    <td><button class="action-icon-btn"><i class="fa-regular fa-eye"></i></button></td>
+                    <td colspan="6" style="text-align:center; padding:24px; color:var(--text-muted);">
+                      <i class="fa-regular fa-file-lines" style="margin-right:6px;"></i>
+                      No attendance data yet. Enroll students and start taking attendance to see class summaries here.
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -1659,44 +1574,9 @@
               </div>
 
               <div>
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                  <span style="font-size:0.85rem; font-weight:600;">1 &nbsp; Grade 12 - STEM</span>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="progress-track"><div class="progress-fill" style="width:91.3%;"></div></div>
-                    <span style="font-size:0.82rem; font-weight:700;">91.3%</span>
-                  </div>
-                </div>
-
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                  <span style="font-size:0.85rem; font-weight:600;">2 &nbsp; Grade 10 - STEM</span>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="progress-track"><div class="progress-fill" style="width:89.7%;"></div></div>
-                    <span style="font-size:0.82rem; font-weight:700;">89.7%</span>
-                  </div>
-                </div>
-
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                  <span style="font-size:0.85rem; font-weight:600;">3 &nbsp; Grade 11 - STEM</span>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="progress-track"><div class="progress-fill" style="width:88.4%;"></div></div>
-                    <span style="font-size:0.82rem; font-weight:700;">88.4%</span>
-                  </div>
-                </div>
-
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                  <span style="font-size:0.85rem; font-weight:600;">4 &nbsp; Grade 12 - ABM</span>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="progress-track"><div class="progress-fill" style="width:87.0%;"></div></div>
-                    <span style="font-size:0.82rem; font-weight:700;">87.0%</span>
-                  </div>
-                </div>
-
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                  <span style="font-size:0.85rem; font-weight:600;">5 &nbsp; Grade 11 - HUMSS</span>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="progress-track"><div class="progress-fill" style="width:82.3%;"></div></div>
-                    <span style="font-size:0.82rem; font-weight:700;">82.3%</span>
-                  </div>
+                <div style="padding:24px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+                  <i class="fa-regular fa-chart-bar" style="margin-right:6px;"></i>
+                  No recorded attendance yet. Rankings will appear here once attendance is taken.
                 </div>
               </div>
 
@@ -1729,28 +1609,37 @@
             <div class="class-card">
               <div class="class-card-header">
                 <div class="class-card-title">
-                  <h3>Grade 11 - STEM</h3>
-                  <p>Room 201 • General Mathematics</p>
+                  <h3>BSIT 1st Year</h3>
+                  <p>Room 201 • Introduction to Computing</p>
                 </div>
                 <span class="status-pill status-active">Active</span>
               </div>
-              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: Prof. Alan Turing</p>
+              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: Wilfredo Villas</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 12px;">
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec A</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec B</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec C</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec Sunday</span>
+              </div>
               <div class="class-card-stats">
                 <div class="class-stat-item">
-                  <span class="val">40</span>
+                  <span class="val">0</span>
                   <span class="lbl">Enrolled</span>
                 </div>
                 <div class="class-stat-item">
-                  <span class="val" style="color:var(--success-green);">88.4%</span>
+                  <span class="val" style="color:var(--success-green);">0.0%</span>
                   <span class="lbl">Avg. Attendance</span>
                 </div>
               </div>
               <div style="display:flex; gap:10px;">
-                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('Grade 11 - STEM')">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('BSIT 1st Year')">
                   <i class="fa-solid fa-clipboard-check"></i> Take Attendance
                 </button>
-                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('Grade 11 - STEM')">
+                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('BSIT 1st Year')">
                   <i class="fa-regular fa-folder-open"></i> View
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="openEditClassModal('BSIT 1st Year')" title="Edit class">
+                  <i class="fa-solid fa-pen"></i> Edit
                 </button>
               </div>
             </div>
@@ -1758,28 +1647,37 @@
             <div class="class-card">
               <div class="class-card-header">
                 <div class="class-card-title">
-                  <h3>Grade 10 - ABM</h3>
-                  <p>Room 204 • Entrepreneurship</p>
+                  <h3>BSIT 2nd Year</h3>
+                  <p>Room 204 • Data Structures & Algorithms</p>
                 </div>
                 <span class="status-pill status-active">Active</span>
               </div>
-              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: Dr. Ada Lovelace</p>
+              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: Jessiemae C. Jusayan</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 12px;">
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec A</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec B</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec C</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec Sunday</span>
+              </div>
               <div class="class-card-stats">
                 <div class="class-stat-item">
-                  <span class="val">38</span>
+                  <span class="val">0</span>
                   <span class="lbl">Enrolled</span>
                 </div>
                 <div class="class-stat-item">
-                  <span class="val" style="color:var(--success-green);">84.1%</span>
+                  <span class="val" style="color:var(--success-green);">0.0%</span>
                   <span class="lbl">Avg. Attendance</span>
                 </div>
               </div>
               <div style="display:flex; gap:10px;">
-                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('Grade 10 - ABM')">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('BSIT 2nd Year')">
                   <i class="fa-solid fa-clipboard-check"></i> Take Attendance
                 </button>
-                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('Grade 10 - ABM')">
+                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('BSIT 2nd Year')">
                   <i class="fa-regular fa-folder-open"></i> View
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="openEditClassModal('BSIT 2nd Year')" title="Edit class">
+                  <i class="fa-solid fa-pen"></i> Edit
                 </button>
               </div>
             </div>
@@ -1787,28 +1685,74 @@
             <div class="class-card">
               <div class="class-card-header">
                 <div class="class-card-title">
-                  <h3>Grade 12 - HUMSS</h3>
-                  <p>Room 305 • English for Academic Purposes</p>
+                  <h3>BSIT 3rd Year</h3>
+                  <p>Room 305 • Database Management Systems</p>
                 </div>
                 <span class="status-pill status-active">Active</span>
               </div>
-              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: Prof. Grace Hopper</p>
+              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: April Jean Villas</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 12px;">
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec A</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec B</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec C</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec Sunday</span>
+              </div>
               <div class="class-card-stats">
                 <div class="class-stat-item">
-                  <span class="val">35</span>
+                  <span class="val">0</span>
                   <span class="lbl">Enrolled</span>
                 </div>
                 <div class="class-stat-item">
-                  <span class="val" style="color:var(--success-green);">86.5%</span>
+                  <span class="val" style="color:var(--success-green);">0.0%</span>
                   <span class="lbl">Avg. Attendance</span>
                 </div>
               </div>
               <div style="display:flex; gap:10px;">
-                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('Grade 12 - HUMSS')">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('BSIT 3rd Year')">
                   <i class="fa-solid fa-clipboard-check"></i> Take Attendance
                 </button>
-                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('Grade 12 - HUMSS')">
+                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('BSIT 3rd Year')">
                   <i class="fa-regular fa-folder-open"></i> View
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="openEditClassModal('BSIT 3rd Year')" title="Edit class">
+                  <i class="fa-solid fa-pen"></i> Edit
+                </button>
+              </div>
+            </div>
+
+            <div class="class-card">
+              <div class="class-card-header">
+                <div class="class-card-title">
+                  <h3>BSIT 4th Year</h3>
+                  <p>Lab 404 • Capstone Project & IT Practicum</p>
+                </div>
+                <span class="status-pill status-active">Active</span>
+              </div>
+              <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: April Jean Villas</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 12px;">
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec A</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec B</span>
+                <span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec Sunday</span>
+              </div>
+              <div class="class-card-stats">
+                <div class="class-stat-item">
+                  <span class="val">0</span>
+                  <span class="lbl">Enrolled</span>
+                </div>
+                <div class="class-stat-item">
+                  <span class="val" style="color:var(--success-green);">0.0%</span>
+                  <span class="lbl">Avg. Attendance</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="takeAttendanceForClass('BSIT 4th Year')">
+                  <i class="fa-solid fa-clipboard-check"></i> Take Attendance
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="viewClassRoster('BSIT 4th Year')">
+                  <i class="fa-regular fa-folder-open"></i> View
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="openEditClassModal('BSIT 4th Year')" title="Edit class">
+                  <i class="fa-solid fa-pen"></i> Edit
                 </button>
               </div>
             </div>
@@ -1938,7 +1882,7 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Total System Users</span>
-                <span class="kpi-value" id="user-kpi-total">12</span>
+                <span class="kpi-value" id="user-kpi-total">8</span>
                 <span class="kpi-meta-tag green">Active personnel</span>
               </div>
               <div class="kpi-icon-container kpi-icon-blue"><i class="fa-solid fa-users"></i></div>
@@ -1947,7 +1891,7 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Administrators</span>
-                <span class="kpi-value" id="user-kpi-admins">3</span>
+                <span class="kpi-value" id="user-kpi-admins">1</span>
                 <span class="kpi-meta-tag purple">Full system control</span>
               </div>
               <div class="kpi-icon-container kpi-icon-purple"><i class="fa-solid fa-shield-halved"></i></div>
@@ -1956,7 +1900,7 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Instructors</span>
-                <span class="kpi-value" id="user-kpi-instructors">8</span>
+                <span class="kpi-value" id="user-kpi-instructors">3</span>
                 <span class="kpi-meta-tag green">Active teaching staff</span>
               </div>
               <div class="kpi-icon-container kpi-icon-green"><i class="fa-solid fa-chalkboard-user"></i></div>
@@ -1965,7 +1909,7 @@
             <div class="kpi-card">
               <div class="kpi-info-box">
                 <span class="kpi-label">Staff / Auditors</span>
-                <span class="kpi-value" id="user-kpi-staff">1</span>
+                <span class="kpi-value" id="user-kpi-staff">0</span>
                 <span class="kpi-meta-tag orange">Reporting rights</span>
               </div>
               <div class="kpi-icon-container kpi-icon-orange"><i class="fa-solid fa-id-badge"></i></div>
@@ -2419,7 +2363,7 @@
         <div>
           <h4 id="modal-delete-name" style="font-size:0.95rem; font-weight:700; color:var(--text-heading);">Juan Miguel Santos</h4>
           <p id="modal-delete-details" style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
-            ID: S2026-001<br>Class: Grade 11 - STEM | Section: STEM-A
+            ID: S2026-001<br>Class: BSIT 1st Year | Section: A
           </p>
         </div>
       </div>
@@ -2523,7 +2467,7 @@
         
         <div class="form-group">
           <label class="form-label">Full Name <span class="req">*</span></label>
-          <input type="text" class="form-control" id="user-fullname" placeholder="e.g. Dr. Alan Turing" required>
+          <input type="text" class="form-control" id="user-fullname" placeholder="e.g. Wilfredo Villas" required>
         </div>
 
         <div class="form-group">
@@ -2551,7 +2495,7 @@
 
         <div class="form-group">
           <label class="form-label">Assigned Department / Classes</label>
-          <input type="text" class="form-control" id="user-dept" placeholder="e.g. Grade 11 - STEM, Mathematics" value="Grade 11 - STEM">
+          <input type="text" class="form-control" id="user-dept" placeholder="e.g. BSIT 1st Year, BSIT Coding" value="BSIT - CODER">
         </div>
 
         <div class="form-group">
@@ -2600,9 +2544,14 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Past attendance records across academic cohorts.</p>
           </div>
         </div>
-        <button class="btn btn-outline btn-sm" onclick="exportAttendanceReportCSV()">
-          <i class="fa-solid fa-download"></i> Export Log (CSV)
-        </button>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" onclick="exportAttendanceReportCSV()">
+            <i class="fa-solid fa-download"></i> Export Log (CSV)
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="printInstructorReport()">
+            <i class="fa-solid fa-print"></i> Export Instructor Report
+          </button>
+        </div>
       </div>
 
       <div style="max-height:360px; overflow-y:auto; border:1px solid var(--card-border); border-radius:var(--radius-md);">
@@ -2642,15 +2591,16 @@
           <i class="fa-solid fa-chalkboard"></i>
         </div>
         <div>
-          <h3 class="modal-title" style="margin:0;">Create Academic Class</h3>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Register a new subject, room, and assigned instructor.</p>
+          <h3 class="modal-title" style="margin:0;" id="modal-add-class-title">Create Academic Class</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:0;" id="modal-add-class-sub">Register a new subject, room, sections, and assigned instructor.</p>
         </div>
       </div>
 
       <form id="form-add-class" onsubmit="handleAddClassSubmit(event)">
+        <input type="hidden" id="new-class-edit-name">
         <div class="form-group">
           <label class="form-label">Class Name <span class="req">*</span></label>
-          <input type="text" class="form-control" id="new-class-name" placeholder="e.g. Grade 11 - TVL" required>
+          <input type="text" class="form-control" id="new-class-name" placeholder="e.g. BSIT 1st Year" required>
         </div>
 
         <div class="form-grid-2">
@@ -2666,12 +2616,18 @@
 
         <div class="form-group">
           <label class="form-label">Assigned Instructor <span class="req">*</span></label>
-          <input type="text" class="form-control" id="new-class-instructor" placeholder="e.g. Prof. Alan Turing" required>
+          <input type="text" class="form-control" id="new-class-instructor" placeholder="e.g. Wilfredo Villas" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Sections <span class="req">*</span></label>
+          <input type="text" class="form-control" id="new-class-sections" placeholder="e.g. A, B, C, Sunday" value="A, B, C, Sunday">
+          <p style="font-size:0.75rem; color:var(--text-muted); margin:4px 0 0;">Comma-separated list of section names for this class.</p>
         </div>
 
         <div class="modal-actions-bar" style="margin-top:20px;">
           <button type="button" class="btn btn-outline" onclick="closeAddClassModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary" id="btn-save-new-class">
             <i class="fa-solid fa-plus"></i> Create Class
           </button>
         </div>
@@ -2837,9 +2793,9 @@
           <div class="form-group">
             <label class="form-label">Student Associated</label>
             <select class="form-control" id="test-student-select" onchange="updateTestAlertPreview()">
-              <option value="Juan Miguel Santos">Juan Miguel Santos (Grade 11 - STEM)</option>
-              <option value="Maria Angelica Reyes">Maria Angelica Reyes (Grade 10 - ABM)</option>
-              <option value="Daniel Lorenzo Cruz">Daniel Lorenzo Cruz (Grade 12 - HUMSS)</option>
+              <option value="Juan Miguel Santos">Juan Miguel Santos (BSIT 1st Year - A)</option>
+              <option value="Nicole Anne Garcia">Nicole Anne Garcia (BSIT 1st Year - A)</option>
+              <option value="Christian Mark Dela Peña">Christian Mark Dela Peña (BSIT 1st Year - B)</option>
             </select>
           </div>
         </div>
@@ -2847,7 +2803,7 @@
         <div class="form-group">
           <label class="form-label">Notification Message Preview</label>
           <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:12px; font-size:0.82rem; color:#334155; line-height:1.45;" id="test-alert-preview-box">
-            [SAMS NOTICE]: Dear Mario Santos, your student Juan Miguel Santos was marked ABSENT for Morning Roll Call today (May 20, 2026). Please contact the academic registrar if excused.
+            [SAMS NOTICE]: Dear Mario Santos, your student Juan Miguel Santos was marked ABSENT for Morning Roll Call today. Please contact the academic registrar if excused.
           </div>
         </div>
 
