@@ -940,6 +940,419 @@ function updateAllKPIs() {
   if (repAbs) repAbs.textContent = absent;
   const repLate = document.getElementById('reports-kpi-late');
   if (repLate) repLate.textContent = late;
+  // Keep the Attendance Overview / Attendance Summary widgets live with the
+  // current in-memory data (students, roll-call map, per-date + session history).
+  renderLiveWidgets();
+}
+
+// =========================================================================
+// LIVE ATTENDANCE OVERVIEW & SUMMARY WIDGETS
+// The "Attendance Overview" (line charts), "Attendance Summary" / "Attendance
+// by Status" (donuts), Recent Attendance, Class Attendance Summary and the
+// Top/Low rankings are rendered here from the same in-memory data the rest of
+// the app uses (STUDENTS_DATA, ATTENDANCE_MAP, DAILY_ATTENDANCE and
+// ATTENDANCE_HISTORY). No stored data is modified by these functions.
+// =========================================================================
+
+const DONUT_C = 238;                                           // donut circumference (r=38)
+const CHART_XS = [60, 140, 220, 300, 380, 460];                // x positions of the 6 chart points
+
+function widgetText(id, txt) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = txt;
+}
+
+function widgetEsc(t) {
+  return String(t == null ? '' : t).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+function pctStr(part, total) {
+  return total ? ((part / total) * 100).toFixed(1) : '0.0';
+}
+
+// Date helpers run in UTC to match the app's roll-call date convention
+// (the roll-call input is set to new Date().toISOString().split('T')[0]).
+function ymd(d) {
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
+}
+
+function addDays(d, n) {
+  const r = new Date(d);
+  r.setUTCDate(r.getUTCDate() + n);
+  return r;
+}
+
+function mondayOf(d) {
+  const day = d.getUTCDay(); // 0 = Sunday
+  return addDays(d, day === 0 ? -6 : 1 - day);
+}
+
+function todayBase() {
+  return new Date(new Date().toISOString().split('T')[0] + 'T00:00:00Z');
+}
+
+function marksForDate(dateStr) {
+  const rec = DAILY_ATTENDANCE[dateStr];
+  return rec && typeof rec === 'object' ? rec : {};
+}
+
+function dayRate(dateStr) {
+  const vals = Object.values(marksForDate(dateStr));
+  if (!vals.length) return null;
+  const present = vals.filter(s => s === 'Present').length;
+  return (present / vals.length) * 100;
+}
+
+function setDonutSegments(segIds, values) {
+  const total = values.reduce((a, b) => a + b, 0);
+  let cumulative = 0;
+  segIds.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const v = values[i] || 0;
+    if (total > 0 && v > 0) {
+      const len = (v / total) * DONUT_C;
+      el.setAttribute('stroke-dasharray', `${len.toFixed(2)} ${DONUT_C}`);
+      el.setAttribute('stroke-dashoffset', `-${cumulative.toFixed(2)}`);
+      cumulative += len;
+    } else {
+      el.setAttribute('stroke-dasharray', `0 ${DONUT_C}`);
+      el.setAttribute('stroke-dashoffset', '0');
+    }
+  });
+}
+
+// Paints a 6-point attendance trend line. yPcts entries are percentages or
+// null (null = no marks recorded for that day, drawn flat at the baseline).
+function paintTrendChart(svgId, linePathId, xLabelPrefix, labels, yPcts, tooltipId, tooltipTitle, areaPathId) {
+  const pts = yPcts.map((p, i) => ({
+    x: CHART_XS[i] || (60 + i * 80),
+    y: p == null ? 195 : Math.round(195 - (p / 100) * 175),
+    v: p
+  }));
+
+  const line = document.getElementById(linePathId);
+  if (line) {
+    line.setAttribute('d', pts.map((pt, i) => `${i ? 'L' : 'M'} ${pt.x} ${pt.y}`).join(' '));
+  }
+  if (areaPathId) {
+    const area = document.getElementById(areaPathId);
+    if (area) {
+      area.setAttribute('d', pts.map((pt, i) => `${i ? 'L' : 'M'} ${pt.x} ${pt.y}`).join(' ')
+        + ` L ${pts[pts.length - 1].x} 195 L ${pts[0].x} 195 Z`);
+    }
+  }
+
+  const svg = document.getElementById(svgId);
+  if (svg) {
+    labels.forEach((lab, i) => {
+      const t = document.getElementById(`${xLabelPrefix}-${i}`);
+      if (t) {
+        t.setAttribute('x', pts[i].x);
+        t.textContent = lab;
+      }
+    });
+    // Rebuild the data points (keeps the hover styling from .chart-point).
+    svg.querySelectorAll('.chart-point').forEach(c => c.remove());
+    pts.forEach((pt, i) => {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('class', 'chart-point');
+      c.setAttribute('cx', pt.x);
+      c.setAttribute('cy', pt.y);
+      c.setAttribute('r', i === pts.length - 1 ? 5 : 4.5);
+      svg.appendChild(c);
+    });
+  }
+
+  // Tooltip sits on the last point that actually has data.
+  const tip = document.getElementById(tooltipId);
+  if (tip) {
+    let i = pts.length - 1;
+    while (i >= 0 && pts[i].v == null) i--;
+    const anchor = pts[Math.max(0, i)];
+    tip.style.left = `${anchor.x}px`;
+    if (i < 0) {
+      tip.style.top = '110px';
+      tip.innerHTML = `<strong>${widgetEsc(tooltipTitle)}</strong><span>No attendance yet</span>`;
+    } else {
+      tip.style.top = `${anchor.y}px`;
+      tip.innerHTML = `<strong>${widgetEsc(labels[i] || tooltipTitle)}</strong><span>${pts[i].v.toFixed(1)}% attendance</span>`;
+    }
+  }
+}
+
+// ---- Dashboard: Attendance Overview line chart ---------------------------
+function dashTrendData() {
+  const sel = document.getElementById('dash-chart-range');
+  const mode = (sel && sel.value === 'This Month') ? 'month' : 'week';
+  const today = todayBase();
+  if (mode === 'week') {
+    const mon = mondayOf(today);
+    const days = [0, 1, 2, 3, 4, 5].map(i => addDays(mon, i));
+    return {
+      labels: days.map(d => d.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' })),
+      pcts: days.map(d => dayRate(ymd(d))),
+      title: 'Week of ' + mon.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+    };
+  }
+  // This Month: the most recent days that have attendance marks, padded with
+  // trailing calendar days so the chart always shows six date points.
+  const markedDays = Object.keys(DAILY_ATTENDANCE).filter(d => Object.values(marksForDate(d)).length);
+  const set = new Set(markedDays);
+  for (let i = 0; i < 12; i++) set.add(ymd(addDays(today, -i)));
+  const days = [...set].sort().slice(-6);
+  return {
+    labels: days.map(d => new Date(d + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })),
+    pcts: days.map(d => dayRate(d)),
+    title: 'This Month'
+  };
+}
+
+function renderDashTrend() {
+  const d = dashTrendData();
+  paintTrendChart('dash-chart-svg', 'dash-chart-line', 'dash-chart-x', d.labels, d.pcts, 'dash-chart-tooltip', d.title, 'dash-chart-area');
+}
+
+// ---- Reports: Attendance Overview line chart -----------------------------
+function reportTrendData() {
+  const sel = document.getElementById('report-chart-range');
+  const mode = (sel && sel.value === 'Weekly') ? 'weekly' : 'daily';
+  const today = todayBase();
+  const mon = mondayOf(today);
+  if (mode === 'daily') {
+    const days = [0, 1, 2, 3, 4, 5].map(i => addDays(mon, i));
+    return {
+      labels: days.map(d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })),
+      pcts: days.map(d => dayRate(ymd(d))),
+      title: 'This Week'
+    };
+  }
+  // Weekly: aggregate every recorded mark across each of the last 6 weeks.
+  const weeks = [];
+  for (let w = 5; w >= 0; w--) {
+    const start = addDays(mon, -7 * w);
+    let present = 0, marked = 0;
+    for (let d = 0; d < 7; d++) {
+      Object.values(marksForDate(ymd(addDays(start, d)))).forEach(s => {
+        marked++;
+        if (s === 'Present') present++;
+      });
+    }
+    weeks.push({
+      label: start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }),
+      pct: marked ? (present / marked) * 100 : null
+    });
+  }
+  return { labels: weeks.map(w => w.label), pcts: weeks.map(w => w.pct), title: 'Weekly average' };
+}
+
+function renderReportTrend() {
+  const d = reportTrendData();
+  paintTrendChart('report-chart-svg', 'report-chart-line', 'report-chart-x', d.labels, d.pcts, 'report-chart-tooltip', d.title);
+}
+
+// ---- Dashboard: Attendance Summary donut ---------------------------------
+function renderDashSummaryDonut() {
+  const total = STUDENTS_DATA.length;
+  let present = 0, absent = 0, late = 0;
+  STUDENTS_DATA.forEach(s => {
+    const st = ATTENDANCE_MAP[s.id] || 'Present';
+    if (st === 'Present') present++;
+    else if (st === 'Absent') absent++;
+    else if (st === 'Late') late++;
+  });
+  setDonutSegments(
+    ['dash-donut-present-seg', 'dash-donut-absent-seg', 'dash-donut-late-seg'],
+    [present, absent, late]
+  );
+  widgetText('dash-donut-pct', `${pctStr(present, total)}%`);
+  widgetText('dash-donut-present', present);
+  widgetText('dash-donut-present-pct', `(${total ? `${pctStr(present, total)}%` : '0.0%'})`);
+  widgetText('dash-donut-absent', absent);
+  widgetText('dash-donut-absent-pct', `(${total ? `${pctStr(absent, total)}%` : '0.0%'})`);
+  widgetText('dash-donut-late', late);
+  widgetText('dash-donut-late-pct', `(${total ? `${pctStr(late, total)}%` : '0.0%'})`);
+  widgetText('dash-donut-total', total);
+}
+
+// ---- Reports: Attendance by Status donut ----------------------------------
+function renderReportStatusDonut() {
+  let present = 0, absent = 0, late = 0, excused = 0;
+  Object.keys(DAILY_ATTENDANCE).forEach(d => {
+    Object.values(marksForDate(d)).forEach(s => {
+      if (s === 'Present') present++;
+      else if (s === 'Absent') absent++;
+      else if (s === 'Late') late++;
+      else if (s === 'Excused') excused++;
+    });
+  });
+  const marked = present + absent + late + excused;
+  setDonutSegments(
+    ['report-donut-present-seg', 'report-donut-absent-seg', 'report-donut-late-seg', 'report-donut-excused-seg'],
+    [present, absent, late, excused]
+  );
+  widgetText('report-donut-pct', `${pctStr(present, marked)}%`);
+  widgetText('report-donut-present', present);
+  widgetText('report-donut-present-pct', `(${pctStr(present, marked)}%)`);
+  widgetText('report-donut-absent', absent);
+  widgetText('report-donut-absent-pct', `(${pctStr(absent, marked)}%)`);
+  widgetText('report-donut-late', late);
+  widgetText('report-donut-late-pct', `(${pctStr(late, marked)}%)`);
+  widgetText('report-donut-excused', excused);
+  widgetText('report-donut-excused-pct', `(${pctStr(excused, marked)}%)`);
+  widgetText('report-donut-total', marked);
+}
+
+// ---- Dashboard: Recent Attendance -----------------------------------------
+function renderRecentAttendance() {
+  const box = document.getElementById('dash-recent-list');
+  if (!box) return;
+  if (!ATTENDANCE_HISTORY.length) {
+    box.innerHTML = `
+      <div style="padding:20px 8px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+        <i class="fa-regular fa-calendar-check" style="margin-right:6px;"></i>
+        No attendance recorded yet. Go to Attendance to start roll call as soon as students are enrolled.
+      </div>`;
+    return;
+  }
+  box.innerHTML = ATTENDANCE_HISTORY.slice(0, 5).map(h => `
+    <div style="display:flex; align-items:center; gap:10px; padding:10px 2px; border-bottom:1px solid #f1f5f9;">
+      <div style="width:40px;height:40px;border-radius:10px;background:#eff6ff;color:var(--primary-blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i class="fa-solid fa-clipboard-check"></i>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-weight:600; font-size:0.82rem; color:var(--text-heading); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${widgetEsc(h.className || 'All Classes')}</div>
+        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">${widgetEsc(h.dateFormatted || h.date || '')}</div>
+      </div>
+      <div style="text-align:right; font-size:0.72rem; color:var(--text-muted); line-height:1.5;">
+        <div><span style="color:var(--success-green); font-weight:600;">${h.present || 0}</span> present</div>
+        <div><span style="color:var(--danger-red); font-weight:600;">${h.absent || 0}</span> absent · <span style="color:#f59e0b; font-weight:600;">${h.late || 0}</span> late</div>
+      </div>
+      <span style="font-weight:700; font-size:0.85rem; color:var(--text-heading); flex-shrink:0;">${widgetEsc(h.rate || '100.0%')}</span>
+    </div>`).join('');
+}
+
+// ---- Reports: Class Attendance Summary ------------------------------------
+function renderClassAttendanceSummary() {
+  const tbody = document.getElementById('class-attendance-summary-tbody');
+  if (!tbody) return;
+  if (!STUDENTS_DATA.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; padding:24px; color:var(--text-muted);">
+          <i class="fa-regular fa-file-lines" style="margin-right:6px;"></i>
+          No attendance data yet. Enroll students and start taking attendance to see class summaries here.
+        </td>
+      </tr>`;
+    return;
+  }
+  tbody.innerHTML = CLASSES_DATA.map((cls, i) => {
+    const students = STUDENTS_DATA.filter(s => s.class_name === cls.name);
+    const total = students.length;
+    const avg = total
+      ? (students.reduce((a, s) => a + (Number(s.attendance_rate) || 0), 0) / total).toFixed(1)
+      : '0.0';
+    const avgN = Number(avg);
+    let absent = 0, late = 0;
+    Object.keys(DAILY_ATTENDANCE).forEach(d => {
+      const rec = marksForDate(d);
+      students.forEach(s => {
+        const st = rec[s.id];
+        if (st === 'Absent') absent++;
+        else if (st === 'Late') late++;
+      });
+    });
+    return `
+      <tr style="border-bottom:1px solid #f1f5f9;">
+        <td style="padding:12px;">
+          <strong style="color:var(--text-heading);">${widgetEsc(cls.name)}</strong><br>
+          <span style="font-size:0.7rem; color:var(--text-muted);">${widgetEsc(cls.room || '')} • ${widgetEsc(cls.subject || '')}</span>
+        </td>
+        <td style="padding:12px; text-align:center; color:var(--text-heading);">${total}</td>
+        <td style="padding:12px; text-align:center;"><span style="color:${avgN >= 80 ? 'var(--success-green)' : (avgN >= 60 ? '#f59e0b' : 'var(--danger-red)')}; font-weight:600;">${avg}%</span></td>
+        <td style="padding:12px; text-align:center; color:var(--danger-red);">${absent}</td>
+        <td style="padding:12px; text-align:center; color:#f59e0b;">${late}</td>
+        <td style="padding:12px; text-align:center;">
+          <button class="btn btn-sm btn-outline-primary" onclick="openClassInRollcall(${i})" style="padding:4px 12px;">Open</button>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function openClassInRollcall(classIndex) {
+  const cls = CLASSES_DATA[classIndex];
+  if (!cls) return;
+  const sel = document.getElementById('rollcall-class-select');
+  if (sel) sel.value = cls.name;
+  const secSel = document.getElementById('rollcall-section-select');
+  if (secSel) secSel.value = 'All';
+  switchTab('attendance');
+  showToast(`Roll call opened for ${cls.name}`, 'success');
+}
+
+// ---- Reports: Top / Low Attendance ----------------------------------------
+let topLowTab = 'top';
+
+function setTopLowTab(tab) {
+  topLowTab = tab;
+  const tTop = document.getElementById('top-low-tab-top');
+  const tLow = document.getElementById('top-low-tab-low');
+  if (tTop) {
+    tTop.style.borderBottom = tab === 'top' ? '2px solid var(--primary-blue)' : 'none';
+    tTop.style.color = tab === 'top' ? 'var(--primary-blue)' : '#64748b';
+  }
+  if (tLow) {
+    tLow.style.borderBottom = tab === 'low' ? '2px solid var(--primary-blue)' : 'none';
+    tLow.style.color = tab === 'low' ? 'var(--primary-blue)' : '#64748b';
+  }
+  renderTopLowAttendance();
+}
+
+function renderTopLowAttendance() {
+  const content = document.getElementById('top-low-content');
+  if (!content) return;
+  const sorted = STUDENTS_DATA.slice().sort(
+    (a, b) => (Number(b.attendance_rate) || 0) - (Number(a.attendance_rate) || 0)
+  );
+  if (!sorted.length) {
+    content.innerHTML = `
+      <div style="padding:24px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+        <i class="fa-regular fa-chart-bar" style="margin-right:6px;"></i>
+        No students enrolled yet. Rankings will appear here once students are added and attendance is taken.
+      </div>`;
+    return;
+  }
+  const pool = topLowTab === 'top' ? sorted.slice(0, 5) : sorted.slice(-5).reverse();
+  content.innerHTML = pool.map((s, i) => {
+    const rate = Number(s.attendance_rate) || 0;
+    const barColor = rate >= 80 ? 'var(--success-green)' : rate >= 60 ? '#f59e0b' : 'var(--danger-red)';
+    return `
+      <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #f1f5f9;">
+        <span style="width:26px;height:26px;border-radius:50%;background:#eff6ff;color:var(--primary-blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.72rem;flex-shrink:0;">${i + 1}</span>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:600; font-size:0.8rem; color:var(--text-heading); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${widgetEsc(s.first_name)} ${widgetEsc(s.last_name)}</div>
+          <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${widgetEsc(s.class_name || '')}${s.section ? ' • Section ' + widgetEsc(s.section) : ''}</div>
+          <div style="height:5px; background:#eef2f7; border-radius:4px; margin-top:6px;">
+            <div style="height:100%; width:${Math.min(100, rate)}%; background:${barColor}; border-radius:4px;"></div>
+          </div>
+        </div>
+        <span style="font-weight:700; font-size:0.85rem; color:var(--text-heading); flex-shrink:0;">${rate}%</span>
+      </div>`;
+  }).join('');
+}
+
+// ---- Master refresh --------------------------------------------------------
+function renderLiveWidgets() {
+  renderDashSummaryDonut();
+  renderDashTrend();
+  renderRecentAttendance();
+  renderReportStatusDonut();
+  renderReportTrend();
+  renderClassAttendanceSummary();
+  renderTopLowAttendance();
 }
 
 // =========================================================================
@@ -1668,6 +2081,10 @@ function updateAttendanceCounters(customList = null) {
   if (elShowing) elShowing.textContent = total
     ? `Showing 1 to ${total} of ${total} students`
     : 'Showing 0 to 0 of 0 students';
+
+  // Keep dashboard/reports KPIs and the live Overview/Summary widgets in sync
+  // as roll-call statuses are toggled.
+  updateAllKPIs();
 }
 
 function markAllAttendance(status) {
