@@ -38,7 +38,7 @@ Academic institutions and learning centers that manage attendance manually exper
 | **Neil Herbert U. Betacura** | Repository Lead | Managed the GitHub repository, reviewed and merged pull requests, coordinated team collaboration. |
 | **Demelyn Concepcion** | Board Lead |Managed the project board, organized tasks and issues, monitored team progress, and tracked task completion. |
 | **Jamaica S. Gañolon** | Scribe | Prepared project documentation, user stories, backlog, and meeting notes. |
-| **Angelo E. Dairo** | Builder | Developed project features, implemented assigned tasks, and contributed code. |
+| **Angelo E. Dairo** | Builder | Developed project features, implemented assigned tasks, and contributed code, building/developing. |
 | **Angelo Madolaria** | Builder | Developed project features, implemented assigned tasks, and contributed code. |
 
 ---
