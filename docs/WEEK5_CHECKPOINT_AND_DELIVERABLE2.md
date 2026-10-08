@@ -13,11 +13,11 @@ Every team member completed their solo checkpoint task (route + validation guard
 
 | Member Name | Assigned Role | Solo Checkpoint Task Assigned | Status | Observation Notes |
 |-------------|---------------|-------------------------------|--------|-------------------|
-| **[Member 1 Name]** | **Repo Lead** | Built `GET /api/reports/summary` with rate calculations & 405 error dispatcher. | `Completed (100%)` | Verified route registration, envelope consistency, zero unhandled errors. |
-| **[Member 2 Name]** | **Board Lead** | Built `POST /api/attendance` & `POST /api/attendance/batch` with enrollment checking. | `Completed (100%)` | Correctly blocked unenrolled attendance logging with 422 before controller was reached. |
-| **[Member 3 Name]** | **Scribe** | Built `POST /api/enrollments` & `DELETE /api/enrollments/:id` with composite unique constraint. | `Completed (100%)` | Handled duplicate student/course enrollment with immediate 422; cascading references verified. |
-| **[Member 4 Name]** | **Builder 1** | Built `POST /api/students` & `PUT /api/students/:id` with regex email format & trimming guards. | `Completed (100%)` | Thin controller isolated from regex logic; AAA unit test passed green on first attempt. |
-| **[Member 5 Name]** | **Builder 2** | Built `POST /api/courses` & `GET /api/courses/:id` with unique course code enforcement. | `Completed (100%)` | Returned standardized `{ status: 201, data: course }` and `{ status: 404, error: "Course not found" }`. |
+| **Neil Herbert U. Betacura** | **Repo Lead** | Built `GET /api/reports/summary` with rate calculations & 405 error dispatcher. | `Completed (100%)` | Verified route registration, envelope consistency, zero unhandled errors. |
+| **Demelyn Concepcion** | **Board Lead** | Built `POST /api/attendance` & `POST /api/attendance/batch` with enrollment checking. | `Completed (100%)` | Correctly blocked unenrolled attendance logging with 422 before controller was reached. |
+| **Jamaica S. Gañolon** | **Scribe** | Built `POST /api/enrollments` & `DELETE /api/enrollments/:id` with composite unique constraint. | `Completed (100%)` | Handled duplicate student/course enrollment with immediate 422; cascading references verified. |
+| **Angelo Madolaria** | **Builder 1** | Built `POST /api/students` & `PUT /api/students/:id` with regex email format & trimming guards. | `Completed (100%)` | Thin controller isolated from regex logic; AAA unit test passed green on first attempt. |
+| **Angelo Dairo** | **Builder 2** | Built `POST /api/courses` & `GET /api/courses/:id` with unique course code enforcement. | `Completed (100%)` | Returned standardized `{ status: 201, data: course }` and `{ status: 404, error: "Course not found" }`. |
 
 ---
 
