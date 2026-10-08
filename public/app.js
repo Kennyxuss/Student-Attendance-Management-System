@@ -44,734 +44,13 @@ function showToast(message, type = 'info') {
 }
 
 // In-Memory Database matching screenshot records exactly
-// In-Memory Database matching screenshot records exactly (10-10-10 per cohort = 30 students)
-let STUDENTS_DATA = [
-  // =========================================================================
-  // COHORT 1: Grade 11 - STEM (10 Students)
-  // =========================================================================
-  {
-    id: 1,
-    student_id_number: 'S2026-001',
-    first_name: 'Juan Miguel',
-    middle_name: 'Dela',
-    last_name: 'Santos',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-A',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 92,
-    dob: 'April 15, 2008',
-    gender: 'Male',
-    email: 'juan.santos@example.com',
-    contact: '0917 123 4567',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Mario Santos',
-    guardian_contact: '0917 765 4321',
-    relationship: 'Father',
-    notes: 'No known medical conditions. Active in Math olympiad.',
-    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=200'
-  },
-  {
-    id: 2,
-    student_id_number: 'S2026-002',
-    first_name: 'Nicole Anne',
-    middle_name: 'Marie',
-    last_name: 'Garcia',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-A',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 95,
-    dob: 'January 14, 2008',
-    gender: 'Female',
-    email: 'nicole.garcia@example.com',
-    contact: '0920 456 7890',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Carmen Garcia',
-    guardian_contact: '0920 765 4321',
-    relationship: 'Mother',
-    notes: 'Class representative.',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200'
-  },
-  {
-    id: 3,
-    student_id_number: 'S2026-003',
-    first_name: 'Christian Mark',
-    middle_name: 'Paul',
-    last_name: 'Dela Peña',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-A',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 88,
-    dob: 'March 05, 2008',
-    gender: 'Male',
-    email: 'christian.pena@example.com',
-    contact: '0921 567 8901',
-    address: 'Barangay 2, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Mark Dela Peña',
-    guardian_contact: '0921 654 3210',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200'
-  },
-  {
-    id: 4,
-    student_id_number: 'S2026-004',
-    first_name: 'Samantha Rose',
-    middle_name: 'Cruz',
-    last_name: 'Alcantara',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-A',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 94,
-    dob: 'May 22, 2008',
-    gender: 'Female',
-    email: 'samantha.alcantara@example.com',
-    contact: '0925 123 7890',
-    address: 'Barangay 3, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Teresa Alcantara',
-    guardian_contact: '0925 987 6543',
-    relationship: 'Mother',
-    notes: 'Honor student.',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'
-  },
-  {
-    id: 5,
-    student_id_number: 'S2026-005',
-    first_name: 'Ethan Gabriel',
-    middle_name: 'Luis',
-    last_name: 'Mercado',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-A',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 90,
-    dob: 'July 11, 2008',
-    gender: 'Male',
-    email: 'ethan.mercado@example.com',
-    contact: '0926 234 8901',
-    address: 'San Andres, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Ramon Mercado',
-    guardian_contact: '0926 876 5432',
-    relationship: 'Father',
-    notes: 'School robotics club officer.',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200'
-  },
-  {
-    id: 6,
-    student_id_number: 'S2026-006',
-    first_name: 'Hannah Mae',
-    middle_name: 'Joy',
-    last_name: 'Bautista',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-B',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 96,
-    dob: 'September 08, 2008',
-    gender: 'Female',
-    email: 'hannah.bautista@example.com',
-    contact: '0927 345 9012',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Maria Bautista',
-    guardian_contact: '0927 765 4321',
-    relationship: 'Mother',
-    notes: 'Consistent perfect attendance contender.',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200'
-  },
-  {
-    id: 7,
-    student_id_number: 'S2026-007',
-    first_name: 'Joshua David',
-    middle_name: 'Lee',
-    last_name: 'Tan',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-B',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 86,
-    dob: 'October 19, 2008',
-    gender: 'Male',
-    email: 'joshua.tan@example.com',
-    contact: '0928 456 0123',
-    address: 'Barangay 5, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'David Tan',
-    guardian_contact: '0928 654 3210',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=200'
-  },
-  {
-    id: 8,
-    student_id_number: 'S2026-008',
-    first_name: 'Patricia Claire',
-    middle_name: 'Anne',
-    last_name: 'Ramos',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-B',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 91,
-    dob: 'December 03, 2008',
-    gender: 'Female',
-    email: 'patricia.ramos@example.com',
-    contact: '0929 567 1234',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Claire Ramos',
-    guardian_contact: '0929 543 2109',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=200'
-  },
-  {
-    id: 9,
-    student_id_number: 'S2026-009',
-    first_name: 'Miguel Antonio',
-    middle_name: 'Jose',
-    last_name: 'Mendoza',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-B',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 93,
-    dob: 'February 27, 2008',
-    gender: 'Male',
-    email: 'miguel.mendoza@example.com',
-    contact: '0930 678 2345',
-    address: 'Barangay 1, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Antonio Mendoza',
-    guardian_contact: '0930 432 1098',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200'
-  },
-  {
-    id: 10,
-    student_id_number: 'S2026-010',
-    first_name: 'Chloe Sofia',
-    middle_name: 'Grace',
-    last_name: 'Pascual',
-    class_name: 'Grade 11 - STEM',
-    section: 'STEM-B',
-    strand: 'STEM',
-    status: 'Active',
-    attendance_rate: 89,
-    dob: 'November 15, 2008',
-    gender: 'Female',
-    email: 'chloe.pascual@example.com',
-    contact: '0931 789 3456',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Sofia Pascual',
-    guardian_contact: '0931 321 0987',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200'
-  },
-
-  // =========================================================================
-  // COHORT 2: Grade 10 - ABM (10 Students)
-  // =========================================================================
-  {
-    id: 11,
-    student_id_number: 'S2026-011',
-    first_name: 'Maria Angelica',
-    middle_name: 'Santos',
-    last_name: 'Reyes',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-A',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 89,
-    dob: 'June 10, 2009',
-    gender: 'Female',
-    email: 'maria.reyes@example.com',
-    contact: '0918 234 5678',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Elena Reyes',
-    guardian_contact: '0918 987 6543',
-    relationship: 'Mother',
-    notes: 'Active in Entrepreneurship fair.',
-    avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=200'
-  },
-  {
-    id: 12,
-    student_id_number: 'S2026-012',
-    first_name: 'Beatriz Chloe',
-    middle_name: 'Uy',
-    last_name: 'Lim',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-A',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 92,
-    dob: 'December 04, 2009',
-    gender: 'Female',
-    email: 'beatriz.lim@example.com',
-    contact: '0924 890 1234',
-    address: 'Barangay 4, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Grace Lim',
-    guardian_contact: '0924 321 0987',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1548142813-c348350df52b?q=80&w=200'
-  },
-  {
-    id: 13,
-    student_id_number: 'S2026-013',
-    first_name: 'Kyle Justin',
-    middle_name: 'B.',
-    last_name: 'Navarro',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-A',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 85,
-    dob: 'August 14, 2009',
-    gender: 'Male',
-    email: 'kyle.navarro@example.com',
-    contact: '0932 890 4567',
-    address: 'San Andres, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Justin Navarro',
-    guardian_contact: '0932 210 9876',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=200'
-  },
-  {
-    id: 14,
-    student_id_number: 'S2026-014',
-    first_name: 'Andrea Camille',
-    middle_name: 'Diaz',
-    last_name: 'Flores',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-A',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 94,
-    dob: 'October 25, 2009',
-    gender: 'Female',
-    email: 'andrea.flores@example.com',
-    contact: '0933 901 5678',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Camille Flores',
-    guardian_contact: '0933 109 8765',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200'
-  },
-  {
-    id: 15,
-    student_id_number: 'S2026-015',
-    first_name: 'Vincent Paul',
-    middle_name: 'Torres',
-    last_name: 'Salazar',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-A',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 88,
-    dob: 'April 02, 2009',
-    gender: 'Male',
-    email: 'vincent.salazar@example.com',
-    contact: '0934 012 6789',
-    address: 'Barangay 2, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Paul Salazar',
-    guardian_contact: '0934 098 7654',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=200'
-  },
-  {
-    id: 16,
-    student_id_number: 'S2026-016',
-    first_name: 'Stephanie Joyce',
-    middle_name: 'G.',
-    last_name: 'Torres',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-B',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 90,
-    dob: 'February 18, 2009',
-    gender: 'Female',
-    email: 'stephanie.torres@example.com',
-    contact: '0935 123 7890',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Joyce Torres',
-    guardian_contact: '0935 987 6543',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=200'
-  },
-  {
-    id: 17,
-    student_id_number: 'S2026-017',
-    first_name: 'Adrian James',
-    middle_name: 'Castro',
-    last_name: 'Del Rosario',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-B',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 82,
-    dob: 'July 29, 2009',
-    gender: 'Male',
-    email: 'adrian.delrosario@example.com',
-    contact: '0936 234 8901',
-    address: 'Barangay 3, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'James Del Rosario',
-    guardian_contact: '0936 876 5432',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1463453091185-61582044d556?q=80&w=200'
-  },
-  {
-    id: 18,
-    student_id_number: 'S2026-018',
-    first_name: 'Bianca Marie',
-    middle_name: 'R.',
-    last_name: 'Ocampo',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-B',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 95,
-    dob: 'March 12, 2009',
-    gender: 'Female',
-    email: 'bianca.ocampo@example.com',
-    contact: '0937 345 9012',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Marie Ocampo',
-    guardian_contact: '0937 765 4321',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=200'
-  },
-  {
-    id: 19,
-    student_id_number: 'S2026-019',
-    first_name: 'Kevin Matthew',
-    middle_name: 'S.',
-    last_name: 'Aquino',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-B',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 87,
-    dob: 'May 09, 2009',
-    gender: 'Male',
-    email: 'kevin.aquino@example.com',
-    contact: '0938 456 0123',
-    address: 'Barangay 5, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Matthew Aquino',
-    guardian_contact: '0938 654 3210',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=200'
-  },
-  {
-    id: 20,
-    student_id_number: 'S2026-020',
-    first_name: 'Alyssa Nicole',
-    middle_name: 'P.',
-    last_name: 'Castro',
-    class_name: 'Grade 10 - ABM',
-    section: 'ABM-B',
-    strand: 'ABM',
-    status: 'Active',
-    attendance_rate: 91,
-    dob: 'November 20, 2009',
-    gender: 'Female',
-    email: 'alyssa.castro@example.com',
-    contact: '0939 567 1234',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Nicole Castro',
-    guardian_contact: '0939 543 2109',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=200'
-  },
-
-  // =========================================================================
-  // COHORT 3: Grade 12 - HUMSS (10 Students)
-  // =========================================================================
-  {
-    id: 21,
-    student_id_number: 'S2026-021',
-    first_name: 'Daniel Lorenzo',
-    middle_name: 'M.',
-    last_name: 'Cruz',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-A',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 85,
-    dob: 'September 22, 2007',
-    gender: 'Male',
-    email: 'daniel.cruz@example.com',
-    contact: '0919 345 6789',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Roberto Cruz',
-    guardian_contact: '0919 876 5432',
-    relationship: 'Father',
-    notes: 'Journalism editor.',
-    avatar: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?q=80&w=200'
-  },
-  {
-    id: 22,
-    student_id_number: 'S2026-022',
-    first_name: 'Sophia Isabelle',
-    middle_name: 'Grace',
-    last_name: 'Valdez',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-A',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 93,
-    dob: 'January 30, 2007',
-    gender: 'Female',
-    email: 'sophia.valdez@example.com',
-    contact: '0940 678 2345',
-    address: 'San Andres, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Isabelle Valdez',
-    guardian_contact: '0940 432 1098',
-    relationship: 'Mother',
-    notes: 'Debate society captain.',
-    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=200'
-  },
-  {
-    id: 23,
-    student_id_number: 'S2026-023',
-    first_name: 'Rafael Dominic',
-    middle_name: 'Jose',
-    last_name: 'Villanueva',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-A',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 84,
-    dob: 'August 30, 2007',
-    gender: 'Male',
-    email: 'rafael.v@example.com',
-    contact: '0923 789 0123',
-    address: 'Barangay 1, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Jose Villanueva',
-    guardian_contact: '0923 432 1098',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200'
-  },
-  {
-    id: 24,
-    student_id_number: 'S2026-024',
-    first_name: 'Mikaela Denise',
-    middle_name: 'L.',
-    last_name: 'Soriano',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-A',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 96,
-    dob: 'April 14, 2007',
-    gender: 'Female',
-    email: 'mikaela.soriano@example.com',
-    contact: '0941 789 3456',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Denise Soriano',
-    guardian_contact: '0941 321 0987',
-    relationship: 'Mother',
-    notes: 'Student council president.',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'
-  },
-  {
-    id: 25,
-    student_id_number: 'S2026-025',
-    first_name: 'Justin Carlo',
-    middle_name: 'D.',
-    last_name: 'Morales',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-A',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 88,
-    dob: 'June 05, 2007',
-    gender: 'Male',
-    email: 'justin.morales@example.com',
-    contact: '0942 890 4567',
-    address: 'Barangay 2, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Carlo Morales',
-    guardian_contact: '0942 210 9876',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200'
-  },
-  {
-    id: 26,
-    student_id_number: 'S2026-026',
-    first_name: 'Katrina Mae',
-    middle_name: 'B.',
-    last_name: 'Espino',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-B',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 92,
-    dob: 'November 11, 2007',
-    gender: 'Female',
-    email: 'katrina.espino@example.com',
-    contact: '0943 901 5678',
-    address: 'Barangay 4, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Mae Espino',
-    guardian_contact: '0943 109 8765',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200'
-  },
-  {
-    id: 27,
-    student_id_number: 'S2026-027',
-    first_name: 'Dominic Rafael',
-    middle_name: 'V.',
-    last_name: 'Cortez',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-B',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 86,
-    dob: 'February 03, 2007',
-    gender: 'Male',
-    email: 'dominic.cortez@example.com',
-    contact: '0944 012 6789',
-    address: 'San Andres, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Rafael Cortez',
-    guardian_contact: '0944 098 7654',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200'
-  },
-  {
-    id: 28,
-    student_id_number: 'S2026-028',
-    first_name: 'Celine Joanne',
-    middle_name: 'T.',
-    last_name: 'David',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-B',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 95,
-    dob: 'July 19, 2007',
-    gender: 'Female',
-    email: 'celine.david@example.com',
-    contact: '0945 123 7890',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Joanne David',
-    guardian_contact: '0945 987 6543',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200'
-  },
-  {
-    id: 29,
-    student_id_number: 'S2026-029',
-    first_name: 'Gabriel Luis',
-    middle_name: 'M.',
-    last_name: 'Romero',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-B',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 89,
-    dob: 'March 29, 2007',
-    gender: 'Male',
-    email: 'gabriel.romero@example.com',
-    contact: '0946 234 8901',
-    address: 'Barangay 3, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Luis Romero',
-    guardian_contact: '0946 876 5432',
-    relationship: 'Father',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200'
-  },
-  {
-    id: 30,
-    student_id_number: 'S2026-030',
-    first_name: 'Trisha Louise',
-    middle_name: 'C.',
-    last_name: 'Velasco',
-    class_name: 'Grade 12 - HUMSS',
-    section: 'HUMSS-B',
-    strand: 'HUMSS',
-    status: 'Active',
-    attendance_rate: 90,
-    dob: 'December 21, 2007',
-    gender: 'Female',
-    email: 'trisha.velasco@example.com',
-    contact: '0947 345 9012',
-    address: 'Poblacion, Kadingilan, Bukidnon, Philippines',
-    guardian_name: 'Louise Velasco',
-    guardian_contact: '0947 765 4321',
-    relationship: 'Mother',
-    notes: '',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200'
-  }
-];
+// In-Memory Database (starts empty — students are enrolled by the school staff)
+let STUDENTS_DATA = [];
 
 // Master Daily Attendance Database (Per-Date records keyed by YYYY-MM-DD)
-let DAILY_ATTENDANCE = {
-  '2026-05-20': {
-    1: 'Present', 2: 'Present', 3: 'Present', 4: 'Present', 5: 'Late',
-    6: 'Present', 7: 'Present', 8: 'Present', 9: 'Present', 10: 'Present',
-    11: 'Present', 12: 'Present', 13: 'Absent', 14: 'Present', 15: 'Present',
-    16: 'Present', 17: 'Late', 18: 'Present', 19: 'Present', 20: 'Present',
-    21: 'Present', 22: 'Present', 23: 'Absent', 24: 'Present', 25: 'Present',
-    26: 'Present', 27: 'Present', 28: 'Present', 29: 'Present', 30: 'Present'
-  },
-  '2026-05-19': {
-    1: 'Present', 2: 'Absent', 3: 'Present', 4: 'Present', 5: 'Present',
-    6: 'Present', 7: 'Present', 8: 'Late', 9: 'Present', 10: 'Present',
-    11: 'Present', 12: 'Present', 13: 'Present', 14: 'Absent', 15: 'Present',
-    16: 'Present', 17: 'Present', 18: 'Present', 19: 'Late', 20: 'Present',
-    21: 'Present', 22: 'Present', 23: 'Present', 24: 'Present', 25: 'Late',
-    26: 'Absent', 27: 'Present', 28: 'Present', 29: 'Present', 30: 'Present'
-  },
-  '2026-05-18': {
-    1: 'Absent', 2: 'Present', 3: 'Present', 4: 'Late', 5: 'Present',
-    6: 'Present', 7: 'Absent', 8: 'Present', 9: 'Present', 10: 'Present',
-    11: 'Late', 12: 'Present', 13: 'Present', 14: 'Present', 15: 'Present',
-    16: 'Present', 17: 'Present', 18: 'Present', 19: 'Present', 20: 'Present',
-    21: 'Absent', 22: 'Present', 23: 'Present', 24: 'Present', 25: 'Present',
-    26: 'Present', 27: 'Late', 28: 'Present', 29: 'Present', 30: 'Present'
-  },
-  '2026-05-17': {
-    1: 'Present', 2: 'Present', 3: 'Late', 4: 'Present', 5: 'Present',
-    6: 'Present', 7: 'Present', 8: 'Present', 9: 'Present', 10: 'Absent',
-    11: 'Present', 12: 'Present', 13: 'Present', 14: 'Present', 15: 'Present',
-    16: 'Absent', 17: 'Present', 18: 'Present', 19: 'Present', 20: 'Present',
-    21: 'Present', 22: 'Late', 23: 'Present', 24: 'Present', 25: 'Present',
-    26: 'Present', 27: 'Present', 28: 'Absent', 29: 'Present', 30: 'Present'
-  },
-  '2026-05-16': {
-    1: 'Present', 2: 'Present', 3: 'Present', 4: 'Present', 5: 'Present',
-    6: 'Late', 7: 'Present', 8: 'Present', 9: 'Absent', 10: 'Present',
-    11: 'Present', 12: 'Absent', 13: 'Present', 14: 'Present', 15: 'Present',
-    16: 'Present', 17: 'Present', 18: 'Present', 19: 'Present', 20: 'Late',
-    21: 'Present', 22: 'Present', 23: 'Present', 24: 'Absent', 25: 'Present',
-    26: 'Present', 27: 'Present', 28: 'Present', 29: 'Late', 30: 'Present'
-  },
-  '2026-05-15': {
-    1: 'Present', 2: 'Present', 3: 'Present', 4: 'Present', 5: 'Present',
-    6: 'Present', 7: 'Present', 8: 'Present', 9: 'Present', 10: 'Present',
-    11: 'Present', 12: 'Present', 13: 'Late', 14: 'Present', 15: 'Present',
-    16: 'Present', 17: 'Present', 18: 'Absent', 19: 'Present', 20: 'Present',
-    21: 'Present', 22: 'Present', 23: 'Present', 24: 'Present', 25: 'Present',
-    26: 'Late', 27: 'Present', 28: 'Present', 29: 'Present', 30: 'Absent'
-  }
-};
+let DAILY_ATTENDANCE = {};
 
-let ATTENDANCE_MAP = DAILY_ATTENDANCE['2026-05-20'];
+let ATTENDANCE_MAP = {};
 
 let studentToDeleteId = null;
 
@@ -781,13 +60,13 @@ let studentToDeleteId = null;
 let USERS_DATA = [
   {
     id: 1,
-    name: 'Neil Herbert U. Betacura',
-    email: 'neil.betacura@sams.edu.ph',
+    name: 'Neil Herbert Betacura',
+    email: 'neilherbert.betacura@sams.edu.ph',
     username: 'neil',
     aliases: ['admin', 'neil.betacura'],
     password: 'admin123',
-    role: 'Administrator',
-    department: 'Repository Lead & IT Architecture',
+    role: 'Repository Lead & IT Architecture',
+    department: 'BSIT - CODER',
     status: 'Active',
     last_active: 'Today, 8:15 AM',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'
@@ -796,11 +75,11 @@ let USERS_DATA = [
     id: 2,
     name: 'Demelyn Concepcion',
     email: 'demelyn.concepcion@sams.edu.ph',
-    username: 'demelyn',
-    aliases: ['board', 'demelyn.concepcion'],
-    password: 'board2026',
+    username: 'myatt1',
+    aliases: ['board', 'demelyn.concepcion', 'myatt1'],
+    password: 'Myatt09478',
     role: 'Administrator',
-    department: 'Board Lead & Academic Oversight',
+    department: 'BSIT - CODER',
     status: 'Active',
     last_active: 'Today, 9:20 AM',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200'
@@ -808,12 +87,12 @@ let USERS_DATA = [
   {
     id: 3,
     name: 'Jamaica Ganolon',
-    email: 'jamaica.ganolon@sams.edu.ph',
+    email: 'ganolonjamaica7@gmail.com',
     username: 'jamaica',
-    aliases: ['scribe', 'staff', 'jamaica.ganolon'],
-    password: 'scribe123',
-    role: 'Staff',
-    department: 'Scribe & Records Registry',
+    aliases: ['scribe', 'staff', 'jamaica.ganolon', 'jamaica'],
+    password: 'Jamaicaganolon10',
+    role: 'Github Scribe',
+    department: 'BSIT - CODER',
     status: 'Active',
     last_active: 'Today, 8:45 AM',
     avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200'
@@ -822,11 +101,11 @@ let USERS_DATA = [
     id: 4,
     name: 'Angelo Dairo',
     email: 'angelo.dairo@sams.edu.ph',
-    username: 'dairo',
-    aliases: ['angelo.dairo', 'stem'],
-    password: 'stem2026',
-    role: 'Instructor',
-    department: 'Builder & Grade 11 - STEM (Math)',
+    username: 'zelo',
+    aliases: ['angelo.dairo', 'stem', 'zelo'],
+    password: 'Alden010',
+    role: 'Github Builder',
+    department: 'BSIT - CODER',
     status: 'Active',
     last_active: 'Today, 7:55 AM',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200'
@@ -835,57 +114,83 @@ let USERS_DATA = [
     id: 5,
     name: 'Angelo Madolaria',
     email: 'angelo.madolaria@sams.edu.ph',
-    username: 'madolaria',
-    aliases: ['angelo.madolaria', 'abm'],
-    password: 'abm2026',
-    role: 'Instructor',
-    department: 'Builder & Grade 10 - ABM (ICT)',
+    username: 'angelo',
+    aliases: ['angelo.madolaria', 'abm', 'angelo'],
+    password: 'akon098',
+    role: 'Github Builder',
+    department: 'BSIT - CODER',
     status: 'Active',
     last_active: 'Today, 8:05 AM',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200'
   },
   {
     id: 6,
-    name: 'Prof. Alan Turing',
-    email: 'alan.turing@sams.edu.ph',
-    username: 'turing',
-    aliases: ['alan.turing'],
-    password: 'turing123',
+    name: 'April Jean Villas',
+    email: 'apriljeanvillas@gmail.com',
+    username: 'apriljeanvillas',
+    aliases: ['apriljeanvillas'],
+    password: 'Aj2026',
     role: 'Instructor',
-    department: 'Senior Science & Logic Studies',
+    department: 'BSIT PROGRAM HEAD',
     status: 'Active',
-    last_active: 'Yesterday, 4:20 PM',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200'
+    last_active: 'Today, 10:05 AM',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200'
   },
   {
     id: 7,
-    name: 'Dr. Ada Lovelace',
-    email: 'ada.lovelace@sams.edu.ph',
-    username: 'lovelace',
-    aliases: ['ada.lovelace'],
-    password: 'ada123',
+    name: 'Jessiemae C. Jusayan',
+    email: 'jessiemaecjusayan@gmail.com',
+    username: 'jessiemaecjusayan',
+    aliases: ['jessiemaecjusayan'],
+    password: 'jusayan2002',
     role: 'Instructor',
-    department: 'Business Analytics & Economics',
+    department: 'BSIT - INSTRUCTOR',
     status: 'Active',
-    last_active: 'Yesterday, 3:15 PM',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200'
+    last_active: 'Today, 10:12 AM',
+    avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=200'
   },
   {
     id: 8,
-    name: 'Prof. Grace Hopper',
-    email: 'grace.hopper@sams.edu.ph',
-    username: 'hopper',
-    aliases: ['grace', 'grace.hopper', 'humss'],
-    password: 'humss2026',
+    name: 'Wilfredo Villas',
+    email: 'wilfredovillas@gmail.com',
+    username: 'wilfredovillas',
+    aliases: ['wilfredovillas'],
+    password: 'Villas2026',
     role: 'Instructor',
-    department: 'Grade 12 - HUMSS (English)',
+    department: 'BSIT - INSTRUCTOR',
     status: 'Active',
-    last_active: 'May 18, 2026',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200'
+    last_active: 'Just now',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200'
   }
 ];
 
 let CURRENT_USER = null; // only set after a successful sign-in on this browser
+
+function findInstructorClassName(user) {
+  if (!user || !user.name) return null;
+  const name = String(user.name).toLowerCase().trim();
+  if (!name) return null;
+  const lastName = name.split(/\s+/).pop();
+  const classes = CLASSES_DATA || [];
+  // 1) Exact instructor-name equality wins
+  let m = classes.find(c => String(c.instructor || '').toLowerCase().trim() === name);
+  if (m) return m.name;
+  // 2) Instructor string contains the user's full name (or vice versa)
+  m = classes.find(c => {
+    const ci = String(c.instructor || '').toLowerCase().trim();
+    return ci.length > 0 && (ci.includes(name) || name.includes(ci));
+  });
+  if (m) return m.name;
+  // 3) Last-name-only fallback
+  if (lastName && lastName.length >= 2) {
+    m = classes.find(c => {
+      const parts = String(c.instructor || '').toLowerCase().trim().split(/[\s.,]+/);
+      return parts.includes(lastName);
+    });
+    if (m) return m.name;
+  }
+  return null;
+}
 
 function applyCurrentUser(user) {
   if (!user) return;
@@ -901,6 +206,10 @@ function applyCurrentUser(user) {
   if (topbarName) topbarName.textContent = user.name;
   const topbarRole = document.getElementById('topbar-user-role');
   if (topbarRole) topbarRole.textContent = user.department || user.role;
+
+  // Update Dashboard greeting
+  const dashGreet = document.getElementById('dash-welcome-name');
+  if (dashGreet) dashGreet.textContent = user.name;
 
   // Update Dropdown
   const dropAvatar = document.getElementById('dropdown-user-avatar');
@@ -934,16 +243,18 @@ function applyCurrentUser(user) {
   const settingsEmailSub = document.getElementById('settings-admin-email-sub');
   if (settingsEmailSub) settingsEmailSub.textContent = `${user.email} • ${user.department || user.role}`;
 
-  // If user is an instructor, auto-select their section in the Roll Call view
+  // If user is an instructor, auto-select their assigned class in the Roll Call view
+  const instructorClass = findInstructorClassName(user);
   const classSelect = document.getElementById('rollcall-class-select');
-  if (classSelect) {
-    if (user.name.includes('Dairo')) {
-      classSelect.value = 'Grade 11 - STEM';
-    } else if (user.name.includes('Madolaria')) {
-      classSelect.value = 'Grade 10 - ABM';
-    } else if (user.name.includes('Hopper')) {
-      classSelect.value = 'Grade 12 - HUMSS';
+  if (instructorClass && classSelect) {
+    if (!Array.from(classSelect.options).some(opt => opt.value === instructorClass)) {
+      const opt = document.createElement('option');
+      opt.value = instructorClass;
+      opt.textContent = instructorClass;
+      classSelect.appendChild(opt);
     }
+    classSelect.value = instructorClass;
+    populateRollcallSectionSelect();
   }
 
   // Keep the Settings > Security card in sync with the signed-in user
@@ -1336,6 +647,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadStoredCalendarEvents();
   await loadStoredAttendance();
   initNavigation();
+
+  // Show today's date on the dashboard
+  const dashDateBadge = document.getElementById('dash-date-badge');
+  if (dashDateBadge) {
+    const today = new Date();
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const month = today.toLocaleDateString('en-US', { month: 'long' });
+    dashDateBadge.innerHTML = `<i class="fa-regular fa-calendar" style="color:var(--primary-blue);"></i> ${month} ${today.getDate()}, ${today.getFullYear()} | ${dayNames[today.getDay()]}`;
+  }
   await loadSystemSettings();
 
   // Restore the session ONLY when this browser has a persisted sign-in AND the
@@ -1373,11 +693,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   updateAllKPIs();
   renderStudentsTable();
+  populateClassDataSelects();
+  populateRollcallSectionSelect();
+  // Default the roll call to today's date so a fresh install never shows a stale seeded date
+  const rollcallDateInput = document.getElementById('rollcall-date');
+  if (rollcallDateInput) rollcallDateInput.value = new Date().toISOString().split('T')[0];
   loadRosterForAttendance();
   renderClassesGrid();
   renderCalendar();
   renderUsersTable();
   renderCredentialsDirectory();
+  populateReportClassSelect();
 });
 
 // =========================================================================
@@ -1879,9 +1205,9 @@ function handleCreateStudentSubmit(event) {
       first_name: form.first_name.value,
       middle_name: form.middle_name.value || '',
       last_name: form.last_name.value,
-      class_name: `${form.grade_level.value} - ${form.strand.value}`,
-      section: form.section.value,
-      strand: form.strand.value,
+      class_name: form.class_name ? form.class_name.value : '',
+      section: form.section ? form.section.value : '',
+      strand: 'BSIT',
       status: 'Active',
       attendance_rate: 100,
       dob: form.dob.value,
@@ -1945,6 +1271,22 @@ function removeEditStudentPhoto() {
   showToast('Photo reset to default placeholder. Click "Update Student" to save.', 'info');
 }
 
+function populateEditSectionSelect(className, selectedSection) {
+  const secSel = document.getElementById('edit-section');
+  if (!secSel) return;
+  const cls = CLASSES_DATA.find(c => c.name === className);
+  const sections = (cls && Array.isArray(cls.sections) && cls.sections.length) ? cls.sections : ['A'];
+  const prev = selectedSection || secSel.value;
+  secSel.innerHTML = '';
+  sections.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    secSel.appendChild(opt);
+  });
+  if (sections.includes(prev)) secSel.value = prev;
+}
+
 function showEditStudentForm(id) {
   const student = STUDENTS_DATA.find(s => s.id === id) || STUDENTS_DATA[0];
   document.getElementById('edit-student-id').value = student.id;
@@ -1954,6 +1296,22 @@ function showEditStudentForm(id) {
   document.getElementById('edit-id-number').value = student.student_id_number || '';
   document.getElementById('edit-dob').value = student.dob || '';
   document.getElementById('edit-gender').value = student.gender || 'Male';
+  // Class + section selects (populated from CLASSES_DATA)
+  const editClassSel = document.getElementById('edit-class-name');
+  if (editClassSel) {
+    const prevClass = editClassSel.value;
+    editClassSel.innerHTML = '';
+    CLASSES_DATA.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      opt.textContent = c.name;
+      editClassSel.appendChild(opt);
+    });
+    editClassSel.value = (student.class_name && Array.from(editClassSel.options).some(o => o.value === student.class_name))
+      ? student.class_name
+      : prevClass;
+    populateEditSectionSelect(student.class_name || editClassSel.value, student.section);
+  }
   document.getElementById('edit-email').value = student.email || '';
   document.getElementById('edit-contact').value = student.contact || '';
   document.getElementById('edit-address').value = student.address || '';
@@ -1988,6 +1346,15 @@ function handleEditStudentSubmit(event) {
       student.student_id_number = document.getElementById('edit-id-number')?.value || student.student_id_number;
       student.dob = document.getElementById('edit-dob')?.value || student.dob;
       student.gender = document.getElementById('edit-gender')?.value || student.gender;
+      const editClassSel = document.getElementById('edit-class-name');
+      if (editClassSel && editClassSel.value) {
+        student.class_name = editClassSel.value;
+      }
+      const editSectionSel = document.getElementById('edit-section');
+      if (editSectionSel && editSectionSel.value) {
+        student.section = editSectionSel.value;
+      }
+      student.strand = 'BSIT';
       student.email = document.getElementById('edit-email')?.value || student.email;
       student.contact = document.getElementById('edit-contact')?.value || student.contact;
       student.address = document.getElementById('edit-address')?.value || student.address;
@@ -2069,11 +1436,53 @@ function executeDeleteStudent() {
 // =========================================================================
 // ATTENDANCE & ROLL CALL (IMAGE 4)
 // =========================================================================
+function getActiveRosterList() {
+  const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
+  const selectedSection = document.getElementById('rollcall-section-select')?.value || 'All';
+  let list = (selectedClass === 'All')
+    ? STUDENTS_DATA.slice()
+    : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
+  if (selectedSection && selectedSection !== 'All') {
+    list = list.filter(s => s.section === selectedSection);
+  }
+  return list;
+}
+
+function populateRollcallSectionSelect() {
+  const secSel = document.getElementById('rollcall-section-select');
+  if (!secSel) return;
+  const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
+  const cls = CLASSES_DATA.find(c => c.name === selectedClass);
+  const sections = (cls && Array.isArray(cls.sections) && cls.sections.length) ? cls.sections : [];
+  const prev = secSel.value;
+  secSel.innerHTML = '';
+  if (sections.length === 0) {
+    const opt = document.createElement('option');
+    opt.value = 'All';
+    opt.textContent = 'All Sections';
+    secSel.appendChild(opt);
+    secSel.disabled = true;
+    return;
+  }
+  secSel.disabled = false;
+  const allOpt = document.createElement('option');
+  allOpt.value = 'All';
+  allOpt.textContent = 'All Sections';
+  secSel.appendChild(allOpt);
+  sections.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = `Section ${s}`;
+    secSel.appendChild(opt);
+  });
+  if (sections.includes(prev)) secSel.value = prev;
+}
+
 function loadRosterForAttendance(isManual = false) {
   const btn = document.getElementById('btn-load-students');
   const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
   const selectedDate = document.getElementById('rollcall-date')?.value || '2026-05-20';
-  const selectedSubject = document.getElementById('rollcall-subject')?.value || 'General Mathematics';
+  const selectedSubject = document.getElementById('rollcall-subject')?.value || 'Introduction to Computing';
 
   // Synchronize ATTENDANCE_MAP with the active selected date
   ATTENDANCE_MAP = getAttendanceForDate(selectedDate);
@@ -2088,9 +1497,7 @@ function loadRosterForAttendance(isManual = false) {
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    const list = (selectedClass === 'All')
-      ? STUDENTS_DATA
-      : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
+    const list = getActiveRosterList();
 
     if (list.length === 0) {
       tbody.innerHTML = `
@@ -2166,14 +1573,11 @@ function setStudentAttendanceStatus(studentId, newStatus, clickedBtn) {
   parentGroup.querySelectorAll('.status-toggle-btn').forEach(btn => btn.classList.remove('active'));
   clickedBtn.classList.add('active');
 
-  const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
-  const list = (selectedClass === 'All') ? STUDENTS_DATA : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
-  updateAttendanceCounters(list);
+  updateAttendanceCounters(getActiveRosterList());
 }
 
 function updateAttendanceCounters(customList = null) {
-  const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
-  const list = customList || ((selectedClass === 'All') ? STUDENTS_DATA : STUDENTS_DATA.filter(s => s.class_name === selectedClass));
+  const list = customList || getActiveRosterList();
   const total = list.length;
   let present = 0, absent = 0, late = 0;
 
@@ -2207,7 +1611,9 @@ function updateAttendanceCounters(customList = null) {
   if (elPctLate) elPctLate.textContent = `${latePct}%`;
 
   const elShowing = document.getElementById('rollcall-showing-text');
-  if (elShowing) elShowing.textContent = `Showing 1 to ${total} of ${total} students`;
+  if (elShowing) elShowing.textContent = total
+    ? `Showing 1 to ${total} of ${total} students`
+    : 'Showing 0 to 0 of 0 students';
 }
 
 function markAllAttendance(status) {
@@ -2215,8 +1621,7 @@ function markAllAttendance(status) {
   if (!DAILY_ATTENDANCE[selectedDate]) {
     DAILY_ATTENDANCE[selectedDate] = {};
   }
-  const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
-  const list = (selectedClass === 'All') ? STUDENTS_DATA : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
+  const list = getActiveRosterList();
   list.forEach(s => {
     DAILY_ATTENDANCE[selectedDate][s.id] = status;
     ATTENDANCE_MAP[s.id] = status;
@@ -2231,8 +1636,7 @@ function clearAllAttendance() {
   if (!DAILY_ATTENDANCE[selectedDate]) {
     DAILY_ATTENDANCE[selectedDate] = {};
   }
-  const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
-  const list = (selectedClass === 'All') ? STUDENTS_DATA : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
+  const list = getActiveRosterList();
   list.forEach(s => {
     DAILY_ATTENDANCE[selectedDate][s.id] = 'Absent';
     ATTENDANCE_MAP[s.id] = 'Absent';
@@ -2254,14 +1658,14 @@ function saveAttendanceSession() {
       btn.disabled = false;
       btn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Attendance';
     }
-    const selectedClass = document.getElementById('rollcall-class-select')?.value || 'Grade 11 - STEM';
+    const selectedClass = document.getElementById('rollcall-class-select')?.value || 'All';
     const selectedDate = getSelectedRollcallDate();
 
     // Ensure DAILY_ATTENDANCE for this date is committed
     DAILY_ATTENDANCE[selectedDate] = Object.assign({}, ATTENDANCE_MAP);
 
     // Push into ATTENDANCE_HISTORY
-    const list = (selectedClass === 'All') ? STUDENTS_DATA : STUDENTS_DATA.filter(s => s.class_name === selectedClass);
+    const list = getActiveRosterList();
     let pres = 0, abs = 0, lte = 0;
     list.forEach(s => {
       const st = ATTENDANCE_MAP[s.id] || 'Present';
@@ -2289,20 +1693,18 @@ function saveAttendanceSession() {
 }
 
 function handleRollcallClassChange() {
+  populateRollcallSectionSelect();
+  loadRosterForAttendance();
+}
+
+function handleRollcallSectionChange() {
   loadRosterForAttendance();
 }
 
 // =========================================================================
 // ATTENDANCE HISTORY LOGS
 // =========================================================================
-let ATTENDANCE_HISTORY = [
-  { id: 1, date: '2026-05-19', dateFormatted: 'May 19, 2026', className: 'Grade 11 - STEM', present: 9, absent: 0, late: 1, rate: '90.0%' },
-  { id: 2, date: '2026-05-19', dateFormatted: 'May 19, 2026', className: 'Grade 10 - ABM', present: 8, absent: 1, late: 1, rate: '80.0%' },
-  { id: 3, date: '2026-05-18', dateFormatted: 'May 18, 2026', className: 'Grade 12 - HUMSS', present: 9, absent: 1, late: 0, rate: '90.0%' },
-  { id: 4, date: '2026-05-18', dateFormatted: 'May 18, 2026', className: 'Grade 11 - STEM', present: 10, absent: 0, late: 0, rate: '100.0%' },
-  { id: 5, date: '2026-05-17', dateFormatted: 'May 17, 2026', className: 'Grade 10 - ABM', present: 9, absent: 1, late: 0, rate: '90.0%' },
-  { id: 6, date: '2026-05-16', dateFormatted: 'May 16, 2026', className: 'Grade 12 - HUMSS', present: 8, absent: 2, late: 0, rate: '80.0%' }
-];
+let ATTENDANCE_HISTORY = [];
 
 function openAttendanceHistoryModal() {
   const modal = document.getElementById('modal-attendance-history');
@@ -2350,6 +1752,7 @@ function loadHistoryRecordIntoRollcall(date, className) {
     }
     classSelect.value = className;
   }
+  populateRollcallSectionSelect();
   loadRosterForAttendance();
   showToast(`Loaded historical attendance for ${className} (${date})`, 'info');
 }
@@ -2357,12 +1760,13 @@ function loadHistoryRecordIntoRollcall(date, className) {
 // =========================================================================
 // CLASSES MANAGEMENT ACTIONS & STATE
 // =========================================================================
-let currentViewingClass = 'Grade 11 - STEM';
+let currentViewingClass = 'BSIT 1st Year';
 
 let CLASSES_DATA = [
-  { id: 1, name: 'Grade 11 - STEM', room: 'Room 201', subject: 'General Mathematics', instructor: 'Angelo Dairo', enrolled: 10, avg_attendance: '91.4%', status: 'Active' },
-  { id: 2, name: 'Grade 10 - ABM', room: 'Room 204', subject: 'Entrepreneurship & ICT', instructor: 'Angelo Madolaria', enrolled: 10, avg_attendance: '89.3%', status: 'Active' },
-  { id: 3, name: 'Grade 12 - HUMSS', room: 'Room 305', subject: 'English for Academic Purposes', instructor: 'Prof. Grace Hopper', enrolled: 10, avg_attendance: '89.8%', status: 'Active' }
+  { id: 1, name: 'BSIT 1st Year', room: 'Room 201', subject: 'Introduction to Computing', instructor: 'Wilfredo Villas', enrolled: 0, avg_attendance: '0.0%', status: 'Active', sections: ['A', 'B', 'C', 'Sunday'] },
+  { id: 2, name: 'BSIT 2nd Year', room: 'Room 204', subject: 'Data Structures & Algorithms', instructor: 'Jessiemae C. Jusayan', enrolled: 0, avg_attendance: '0.0%', status: 'Active', sections: ['A', 'B', 'C', 'Sunday'] },
+  { id: 3, name: 'BSIT 3rd Year', room: 'Room 305', subject: 'Database Management Systems', instructor: 'April Jean Villas', enrolled: 0, avg_attendance: '0.0%', status: 'Active', sections: ['A', 'B', 'C', 'Sunday'] },
+  { id: 4, name: 'BSIT 4th Year', room: 'Lab 404', subject: 'Capstone Project & IT Practicum', instructor: 'April Jean Villas', enrolled: 0, avg_attendance: '0.0%', status: 'Active', sections: ['A', 'B', 'Sunday'] }
 ];
 
 function renderClassesGrid() {
@@ -2372,13 +1776,14 @@ function renderClassesGrid() {
 
   CLASSES_DATA.forEach(c => {
     const classStudents = STUDENTS_DATA.filter(s => s.class_name === c.name);
-    const count = classStudents.length || c.enrolled;
+    const count = classStudents.length;
     const avg = classStudents.length
       ? (classStudents.reduce((acc, s) => acc + s.attendance_rate, 0) / classStudents.length).toFixed(1) + '%'
-      : c.avg_attendance;
+      : '—';
 
     const card = document.createElement('div');
     card.className = 'class-card';
+    const classSections = (Array.isArray(c.sections) && c.sections.length) ? c.sections : ['A'];
     card.innerHTML = `
       <div class="class-card-header">
         <div class="class-card-title">
@@ -2388,6 +1793,9 @@ function renderClassesGrid() {
         <span class="status-pill status-${c.status === 'Active' ? 'active' : 'inactive'}">${escapeHTML(c.status)}</span>
       </div>
       <p style="font-size:0.82rem; color:var(--text-muted);"><i class="fa-solid fa-user-tie"></i> Instructor: ${escapeHTML(c.instructor)}</p>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 12px;">
+        ${classSections.map(s => `<span class="status-pill status-active" style="background:#eff6ff; color:var(--primary-blue); border:1px solid #bfdbfe;">Sec ${escapeHTML(s)}</span>`).join('')}
+      </div>
       <div class="class-card-stats">
         <div class="class-stat-item">
           <span class="val">${count}</span>
@@ -2405,6 +1813,9 @@ function renderClassesGrid() {
         <button class="btn btn-outline btn-sm" onclick="viewClassRoster('${escapeHTML(c.name)}')">
           <i class="fa-regular fa-folder-open"></i> View
         </button>
+        <button class="btn btn-outline btn-sm" onclick="openEditClassModal('${escapeHTML(c.name)}')" title="Edit class">
+          <i class="fa-solid fa-pen"></i> Edit
+        </button>
       </div>
     `;
     container.appendChild(card);
@@ -2413,7 +1824,53 @@ function renderClassesGrid() {
 
 function openAddClassModal() {
   const modal = document.getElementById('modal-add-class');
-  if (modal) modal.classList.add('active');
+  if (!modal) return;
+  // Reset form for a fresh create
+  const hiddenEdit = document.getElementById('new-class-edit-name');
+  if (hiddenEdit) hiddenEdit.value = '';
+  const modalTitle = document.getElementById('modal-add-class-title');
+  if (modalTitle) modalTitle.textContent = 'Create Academic Class';
+  const modalSub = document.getElementById('modal-add-class-sub');
+  if (modalSub) modalSub.textContent = 'Register a new subject, room, sections, and assigned instructor.';
+  const submitBtn = document.getElementById('btn-save-new-class');
+  if (submitBtn) {
+    submitBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Create Class';
+  }
+  ['new-class-name', 'new-class-subject', 'new-class-room', 'new-class-instructor'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const sectionsEl = document.getElementById('new-class-sections');
+  if (sectionsEl) sectionsEl.value = 'A, B, C, Sunday';
+  modal.classList.add('active');
+}
+
+function openEditClassModal(className) {
+  const cls = CLASSES_DATA.find(c => c.name === className);
+  if (!cls) return;
+  const modal = document.getElementById('modal-add-class');
+  if (!modal) return;
+  const hiddenEdit = document.getElementById('new-class-edit-name');
+  if (hiddenEdit) hiddenEdit.value = className;
+  const modalTitle = document.getElementById('modal-add-class-title');
+  if (modalTitle) modalTitle.textContent = 'Edit Class';
+  const modalSub = document.getElementById('modal-add-class-sub');
+  if (modalSub) modalSub.textContent = 'Update the class details. Renaming the class will also rename its enrolled students.';
+  const submitBtn = document.getElementById('btn-save-new-class');
+  if (submitBtn) {
+    submitBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Save Changes';
+  }
+  const nameEl = document.getElementById('new-class-name');
+  if (nameEl) nameEl.value = cls.name || '';
+  const subjectEl = document.getElementById('new-class-subject');
+  if (subjectEl) subjectEl.value = cls.subject || '';
+  const roomEl = document.getElementById('new-class-room');
+  if (roomEl) roomEl.value = cls.room || '';
+  const instructorEl = document.getElementById('new-class-instructor');
+  if (instructorEl) instructorEl.value = cls.instructor || '';
+  const sectionsEl = document.getElementById('new-class-sections');
+  if (sectionsEl) sectionsEl.value = (cls.sections || []).join(', ');
+  modal.classList.add('active');
 }
 
 function closeAddClassModal() {
@@ -2423,13 +1880,60 @@ function closeAddClassModal() {
 
 function handleAddClassSubmit(e) {
   e.preventDefault();
+  const editName = document.getElementById('new-class-edit-name')?.value?.trim();
   const name = document.getElementById('new-class-name')?.value.trim();
   const subject = document.getElementById('new-class-subject')?.value.trim();
   const room = document.getElementById('new-class-room')?.value.trim();
   const instructor = document.getElementById('new-class-instructor')?.value.trim();
+  const sectionsRaw = document.getElementById('new-class-sections')?.value.trim() || '';
+  const sections = sectionsRaw
+    ? sectionsRaw.split(',').map(s => s.trim()).filter(Boolean)
+    : [];
 
   if (!name || !subject || !room || !instructor) {
     showToast('All fields are required to register a class.', 'error');
+    return;
+  }
+  const finalSections = sections.length ? sections : ['A'];
+
+  if (editName) {
+    // EDIT MODE: update existing class; rename enrolled students if renamed
+    const cls = CLASSES_DATA.find(c => c.name === editName);
+    if (!cls) {
+      showToast('Class not found — it may have been removed.', 'error');
+      return;
+    }
+    const oldName = cls.name;
+    cls.name = name;
+    cls.subject = subject;
+    cls.room = room;
+    cls.instructor = instructor;
+    cls.sections = finalSections;
+    if (oldName !== name) {
+      // Auto-rename member students to the new class name
+      STUDENTS_DATA.forEach(s => {
+        if (s.class_name === oldName) {
+          s.class_name = name;
+          // keep section membership intact
+          if (Array.isArray(s.sections) && s.sections.length) {
+            s.sections = finalSections;
+          }
+        }
+      });
+      persistStudentsData();
+    }
+    persistClassesData();
+    closeAddClassModal();
+    renderClassesGrid();
+    populateClassDataSelects();
+    populateRollcallSectionSelect();
+    populateReportClassSelect();
+    showToast(`Class "${name}" updated successfully!`, 'success');
+    return;
+  }
+
+  if (CLASSES_DATA.some(c => c.name === name)) {
+    showToast(`A class named "${name}" already exists.`, 'error');
     return;
   }
 
@@ -2441,30 +1945,97 @@ function handleAddClassSubmit(e) {
     instructor,
     enrolled: 0,
     avg_attendance: '100.0%',
-    status: 'Active'
+    status: 'Active',
+    sections: finalSections
   };
 
   CLASSES_DATA.push(newClass);
   persistClassesData();
 
   // Add to Attendance class dropdown if not existing
-  const select = document.getElementById('rollcall-class-select');
-  if (select && !Array.from(select.options).some(opt => opt.value === name)) {
-    const opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name;
-    select.appendChild(opt);
-  }
+  populateClassDataSelects();
+  populateRollcallSectionSelect();
+  populateReportClassSelect();
 
   closeAddClassModal();
   renderClassesGrid();
   showToast(`Class "${name}" created successfully!`, 'success');
 
   // Reset form
-  document.getElementById('new-class-name').value = '';
-  document.getElementById('new-class-subject').value = '';
-  document.getElementById('new-class-room').value = '';
-  document.getElementById('new-class-instructor').value = '';
+  const hiddenEdit = document.getElementById('new-class-edit-name');
+  if (hiddenEdit) hiddenEdit.value = '';
+  ['new-class-name', 'new-class-subject', 'new-class-room', 'new-class-instructor', 'new-class-sections'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function populateClassDataSelects() {
+  // Roll Call class dropdown
+  const rollcallSel = document.getElementById('rollcall-class-select');
+  if (rollcallSel) {
+    const prev = rollcallSel.value;
+    rollcallSel.innerHTML = '<option value="All">All Classes (Full Roster)</option>';
+    CLASSES_DATA.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      opt.textContent = c.name;
+      rollcallSel.appendChild(opt);
+    });
+    if (Array.from(rollcallSel.options).some(o => o.value === prev)) rollcallSel.value = prev;
+  }
+  // Students directory class filter
+  const filterSel = document.getElementById('filter-class');
+  if (filterSel) {
+    const prevF = filterSel.value;
+    filterSel.innerHTML = '<option value="All">All Classes</option>';
+    CLASSES_DATA.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      opt.textContent = c.name;
+      filterSel.appendChild(opt);
+    });
+    if (Array.from(filterSel.options).some(o => o.value === prevF)) filterSel.value = prevF;
+  }
+  // Create-student form class select
+  const createClassSel = document.getElementById('create-student-class');
+  if (createClassSel && CLASSES_DATA.length) {
+    createClassSel.innerHTML = '<option value="">Select class</option>';
+    CLASSES_DATA.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      opt.textContent = c.name;
+      createClassSel.appendChild(opt);
+    });
+    triggerCreateSectionSync();
+  }
+  // Edit-student form class select stays dynamic inside showEditStudentForm
+}
+
+function triggerCreateSectionSync() {
+  const classSel = document.getElementById('create-student-class');
+  const secSel = document.getElementById('create-student-section');
+  if (!classSel || !secSel) return;
+  const cls = CLASSES_DATA.find(c => c.name === classSel.value);
+  const sections = (cls && Array.isArray(cls.sections) && cls.sections.length) ? cls.sections : [];
+  const prev = secSel.value;
+  secSel.innerHTML = '';
+  if (sections.length === 0) {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = 'Select class first';
+    secSel.appendChild(opt);
+    secSel.disabled = true;
+    return;
+  }
+  secSel.disabled = false;
+  sections.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    secSel.appendChild(opt);
+  });
+  if (sections.includes(prev)) secSel.value = prev;
 }
 
 function viewClassRoster(className) {
@@ -2521,6 +2092,7 @@ function takeAttendanceForClass(className) {
     }
     select.value = className;
   }
+  populateRollcallSectionSelect();
   loadRosterForAttendance(true);
 }
 
@@ -2538,12 +2110,12 @@ let currentCalendarMonth = 4; // 0-indexed: 4 is May
 let CALENDAR_EVENTS = [
   {
     id: 1,
-    title: 'Gen Math Session',
+    title: 'Intro to Computing Session',
     date: '2026-05-05',
     time: '08:00 AM - 10:00 AM',
     location: 'Room 201',
     type: 'class',
-    desc: 'Regular classroom roll call session for Grade 11 - STEM.'
+    desc: 'Regular classroom roll call session for BSIT 1st Year.'
   },
   {
     id: 2,
@@ -2552,7 +2124,7 @@ let CALENDAR_EVENTS = [
     time: '10:00 AM - 12:00 PM',
     location: 'Main Hall B',
     type: 'exam',
-    desc: 'Quarterly general mathematics and science examination.'
+    desc: 'Quarterly computing and programming proficiency examination.'
   },
   {
     id: 3,
@@ -3596,7 +3168,8 @@ function updateTestAlertPreview() {
   const student = document.getElementById('test-student-select')?.value || 'Student';
   const previewBox = document.getElementById('test-alert-preview-box');
   if (previewBox) {
-    previewBox.textContent = `[SAMS NOTICE]: Dear ${guardian}, your student ${student} was marked ABSENT for Morning Roll Call today (May 20, 2026). Please contact the academic registrar if excused.`;
+    const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    previewBox.textContent = `[SAMS NOTICE]: Dear ${guardian}, your student ${student} was marked ABSENT for Morning Roll Call today (${today}). Please contact the academic registrar if excused.`;
   }
 }
 
@@ -3674,6 +3247,351 @@ function exportAttendanceReportCSV() {
   const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
   downloadCSV(`sams_attendance_report_${selectedDate}.csv`, csvContent);
   showToast('Exported attendance log to CSV successfully!', 'success');
+}
+
+// =========================================================================
+// INSTRUCTOR → ADMIN REPORT GENERATOR
+// Builds a detailed, print-ready HTML report for one class so an instructor
+// can hand it to the Administrator during the defense/demo (Print → Save as
+// PDF from the opened report window).
+// =========================================================================
+function getInstructorClassName(user) {
+  return findInstructorClassName(user);
+}
+
+function populateReportClassSelect() {
+  const sel = document.getElementById('report-class-select');
+  if (!sel) return;
+  const names = [];
+  STUDENTS_DATA.forEach(s => { if (s.class_name && !names.includes(s.class_name)) names.push(s.class_name); });
+  CLASSES_DATA.forEach(c => { if (c.name && !names.includes(c.name)) names.push(c.name); });
+  const current = sel.value;
+  sel.innerHTML = '<option value="All Classes">All Classes</option>';
+  names.forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n;
+    opt.textContent = n;
+    sel.appendChild(opt);
+  });
+  if (current && current !== 'All Classes' && names.includes(current)) sel.value = current;
+}
+
+function resolveReportClass() {
+  const sel = document.getElementById('report-class-select');
+  const picked = sel ? sel.value : '';
+  if (picked && picked !== 'All Classes' && picked !== 'All') return picked;
+  const own = getInstructorClassName(CURRENT_USER);
+  if (own) return own;
+  return STUDENTS_DATA[0]?.class_name || (CLASSES_DATA[0] && CLASSES_DATA[0].name) || 'BSIT 1st Year';
+}
+
+// Per-student Present/Absent/Late tallies + class totals across the given dates.
+function computeClassAttendanceStats(classStudents, dates) {
+  const per = {};
+  classStudents.forEach(s => { per[s.id] = { present: 0, absent: 0, late: 0, excused: 0 }; });
+  const totals = { present: 0, absent: 0, late: 0, excused: 0 };
+  const dailyRows = [];
+
+  (dates || []).forEach(date => {
+    const day = getAttendanceForDate(date);
+    let p = 0, a = 0, l = 0;
+    classStudents.forEach(s => {
+      const st = (day && day[s.id]) || 'Present';
+      const key = String(st).toLowerCase();
+      if (per[s.id] && Object.prototype.hasOwnProperty.call(per[s.id], key)) per[s.id][key] += 1;
+      else per[s.id].present += 1;
+      if (key === 'present') p += 1;
+      else if (key === 'absent') a += 1;
+      else if (key === 'late') l += 1;
+    });
+    const total = p + a + l;
+    dailyRows.push({
+      date,
+      dateFormatted: formatDateForReport(date),
+      present: p, absent: a, late: l,
+      rate: total ? ((p / total) * 100).toFixed(1) : '0.0'
+    });
+    totals.present += p;
+    totals.absent += a;
+    totals.late += l;
+  });
+
+  return { per, totals, dailyRows };
+}
+
+function formatDateForReport(dateStr) {
+  try {
+    const [y, m, d] = String(dateStr).split('-').map(Number);
+    if (!y || !m || !d) return dateStr;
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  } catch (e) { return dateStr; }
+}
+
+function buildInstructorReportHTML() {
+  const cls = resolveReportClass();
+  const classInfo = CLASSES_DATA.find(c => c.name === cls) || {};
+  const instructor = (CURRENT_USER && CURRENT_USER.name) || classInfo.instructor || 'Signed-in Instructor';
+  const department = (CURRENT_USER && (CURRENT_USER.department || CURRENT_USER.role)) || 'Instructor';
+
+  const org = SYSTEM_SETTINGS || {};
+  const orgName = org.org_name || 'SAMS Learning & Tutoring Center';
+  const term = org.academic_term || '2025 - 2026 / Term 2';
+  const orgPhone = org.org_phone || '+63 917 123 4567';
+  const orgEmail = org.org_email || 'admin@sams.edu.ph';
+
+  const classStudents = STUDENTS_DATA.filter(s => s.class_name === cls);
+
+  // Collect the class's session dates (history first, then the full daily map).
+  let dates = [];
+  ATTENDANCE_HISTORY.forEach(h => {
+    if (h.className === cls && h.date && !dates.includes(h.date)) dates.push(h.date);
+  });
+  if (dates.length === 0 && DAILY_ATTENDANCE) dates = Object.keys(DAILY_ATTENDANCE);
+  dates.sort();
+  if (dates.length === 0) dates = ['2026-05-19'];
+
+  const stats = computeClassAttendanceStats(classStudents, dates);
+  const sessions = dates.length;
+  const totalSlots = sessions * classStudents.length;
+  const attendancePct = totalSlots ? ((stats.totals.present / totalSlots) * 100).toFixed(1) : '0.0';
+  const generated = new Date().toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' });
+  const reportNo = `SAMS-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${cls.replace(/[^A-Za-z0-9]/g, '')}-${String(Math.floor(1000 + Math.random() * 9000))}`;
+
+  // Roster rows
+  const sortedStudents = [...classStudents].sort((a, b) => {
+    const ra = stats.per[a.id] ? (stats.per[a.id].present / Math.max(1, stats.per[a.id].present + stats.per[a.id].absent + stats.per[a.id].late)) : 0;
+    const rb = stats.per[b.id] ? (stats.per[b.id].present / Math.max(1, stats.per[b.id].present + stats.per[b.id].absent + stats.per[b.id].late)) : 0;
+    return rb - ra;
+  });
+
+  const rosterRows = sortedStudents.map((s, i) => {
+    const p = stats.per[s.id] || { present: 0, absent: 0, late: 0, excused: 0 };
+    const total = p.present + p.absent + p.late;
+    const rate = total ? ((p.present / total) * 100).toFixed(1) : (s.attendance_rate || '100.0').toString().replace('%', '');
+    const barColor = Number(rate) >= 90 ? '#16a34a' : Number(rate) >= 75 ? '#f59e0b' : '#dc2626';
+    return `<tr>
+      <td>${i + 1}</td>
+      <td>${escapeHTML(s.student_id_number || '—')}</td>
+      <td><strong>${escapeHTML(s.first_name + (s.middle_name ? ' ' + s.middle_name.charAt(0) + '.' : '') + ' ' + s.last_name)}</strong><br><span style="color:#64748b; font-size:0.72rem;">${escapeHTML(s.section || '')}</span></td>
+      <td style="text-align:center;">${p.present}</td>
+      <td style="text-align:center; color:#dc2626;">${p.absent}</td>
+      <td style="text-align:center; color:#d97706;">${p.late}</td>
+      <td style="min-width:150px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="flex:1; height:8px; background:#e2e8f0; border-radius:99px; overflow:hidden;">
+            <div style="width:${Math.min(100, Number(rate))}%; height:100%; background:${barColor};"></div>
+          </div>
+          <strong style="font-size:0.8rem; color:${barColor};">${rate}%</strong>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Daily trend rows (prefer real logged counts from history when present)
+  const trendMap = {};
+  ATTENDANCE_HISTORY.forEach(h => {
+    if (h.className === cls && h.date) {
+      trendMap[h.date] = { present: h.present, absent: h.absent, late: h.late, rate: h.rate || '' };
+    }
+  });
+  const trendRows = stats.dailyRows.map(d => {
+    const logged = trendMap[d.date];
+    const present = logged ? logged.present : d.present;
+    const absent = logged ? logged.absent : d.absent;
+    const late = logged ? logged.late : d.late;
+    const rate = logged ? (logged.rate || (((present / Math.max(1, present + absent + late)) * 100).toFixed(1) + '%')) : (d.rate + '%');
+    return `<tr>
+      <td>${escapeHTML(d.dateFormatted)}</td>
+      <td style="color:#16a34a; font-weight:600;">${present}</td>
+      <td style="color:#dc2626; font-weight:600;">${absent}</td>
+      <td style="color:#d97706; font-weight:600;">${late}</td>
+      <td><strong>${escapeHTML(String(rate))}</strong></td>
+    </tr>`;
+  }).join('');
+
+  // Narrative + recommendations
+  const highAbsentees = sortedStudents.filter(s => {
+    const p = stats.per[s.id] || {};
+    return (p.absent || 0) >= 3;
+  });
+  const names = highAbsentees.map(s => escapeHTML(s.first_name + ' ' + s.last_name));
+  const recNotes = names.length
+    ? `The following student(s) recorded ${highAbsentees.length >= 2 ? 'repeated' : 'a notable'} absence(s) this period: <strong>${names.join(', ')}</strong>. It is recommended that the class adviser follow up with the guardian${highAbsentees.length > 1 ? 's' : ''} and schedule a brief guidance conversation.`
+    : `All ${classStudents.length} enrolled student(s) in this class are maintaining satisfactory attendance (no student with 3+ recorded absences).`;
+
+  const totalClass = classStudents.length;
+  const cutoff = org.cutoff_time || '08:00';
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SAMS Instructor Attendance Report — ${escapeHTML(cls)}</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; padding:32px 40px; font-family:'Segoe UI', Roboto, Arial, sans-serif; color:#1e293b; background:#f1f5f9; font-size:13px; line-height:1.5; }
+  .sheet { max-width:900px; margin:0 auto; background:#ffffff; border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(15,23,42,.12); }
+  .brand { background:linear-gradient(135deg,#1d4ed8,#3b82f6); color:#fff; padding:26px 34px; }
+  .brand .top { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+  .brand h1 { margin:0; font-size:22px; letter-spacing:.3px; }
+  .brand p { margin:4px 0 0; opacity:.85; font-size:12.5px; }
+  .brand .badge { background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.35); padding:6px 14px; border-radius:99px; font-size:11px; letter-spacing:.5px; }
+  .body { padding:28px 34px 10px; }
+  .meta { display:grid; grid-template-columns:repeat(2,1fr); gap:12px 26px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin:18px 0; }
+  .meta div b { font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:#64748b; }
+  .meta div span { display:block; font-size:13.5px; font-weight:600; color:#0f172a; margin-top:2px; }
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0; }
+  .kpi { border:1px solid #e2e8f0; border-radius:12px; padding:14px 16px; background:#fff; }
+  .kpi .num { font-size:26px; font-weight:800; color:#1d4ed8; }
+  .kpi .lbl { font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:#64748b; margin-top:2px; }
+  h2 { font-size:15px; margin:26px 0 10px; padding-bottom:8px; border-bottom:2px solid #1d4ed8; color:#0f172a; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:#475569; background:#f1f5f9; padding:10px 12px; border:1px solid #e2e8f0; }
+  td { padding:9px 12px; border:1px solid #e2e8f0; vertical-align:middle; }
+  tr:nth-child(even) td { background:#fafbfc; }
+  .note-box { background:#eff6ff; border:1px solid #bfdbfe; border-left:5px solid #1d4ed8; border-radius:10px; padding:14px 18px; margin:18px 0; }
+  .note-box p { margin:6px 0; }
+  .sign { display:grid; grid-template-columns:1fr 1fr; gap:30px; margin:36px 0 8px; }
+  .sign .box { border-top:1.5px solid #94a3b8; padding-top:8px; font-size:12.5px; }
+  .sign .box .who { font-weight:700; }
+  .sign .box .sub { color:#64748b; font-size:11.5px; }
+  footer { background:#0f172a; color:#94a3b8; font-size:11px; padding:14px 28px; display:flex; justify-content:space-between; gap:12px; }
+  @media print {
+    body { background:#fff; padding:0; }
+    .sheet { box-shadow:none; border-radius:0; max-width:100%; }
+    .brand { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    tr, .kpi, .note-box { page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="brand">
+      <div class="top">
+        <div>
+          <p style="margin:0 0 2px; font-size:11px; letter-spacing:1.5px; opacity:.8;">OFFICIAL REPORT</p>
+          <h1>${escapeHTML(orgName)}</h1>
+          <p>${escapeHTML(term)} &nbsp;•&nbsp; ${escapeHTML(cls)}</p>
+        </div>
+        <div class="badge">DB No. ${escapeHTML(reportNo)}</div>
+      </div>
+    </div>
+
+    <div class="body">
+      <h2 style="border:none; font-size:19px; margin:6px 0 0;">Instructor Attendance Summary Report</h2>
+      <p style="margin:4px 0 0; color:#64748b;">Prepared by <strong>${escapeHTML(instructor)}</strong> (${escapeHTML(department)}) for submission to the Center Administrator.</p>
+
+      <div class="meta">
+        <div><b>Report ID</b><span>${escapeHTML(reportNo)}</span></div>
+        <div><b>Class / Section</b><span>${escapeHTML(cls)}${classInfo.room ? ' • ' + escapeHTML(classInfo.room) : ''}</span></div>
+        <div><b>Subject</b><span>${escapeHTML(classInfo.subject || '—')}</span></div>
+        <div><b>Enrolled Students</b><span>${totalClass}</span></div>
+        <div><b>Covered Sessions</b><span>${sessions} session${sessions === 1 ? '' : 's'} recorded</span></div>
+        <div><b>Generated On</b><span>${escapeHTML(generated)}</span></div>
+        <div><b>Generated By</b><span>${escapeHTML(instructor)} (${escapeHTML(department)})</span></div>
+        <div><b>For / Attention</b><span>${escapeHTML(orgName)} — Administrator</span></div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="num">${totalClass}</div><div class="lbl">Enrolled Students</div></div>
+        <div class="kpi"><div class="num" style="color:#16a34a;">${attendancePct}%</div><div class="lbl">Average Attendance</div></div>
+        <div class="kpi"><div class="num" style="color:#dc2626;">${stats.totals.absent}</div><div class="lbl">Total Absences</div></div>
+        <div class="kpi"><div class="num" style="color:#d97706;">${stats.totals.late}</div><div class="lbl">Total Lates</div></div>
+      </div>
+
+      <h2>Executive Summary</h2>
+      <div class="note-box">
+        <p>During the <strong>${sessions}</strong> session(s) covered, ${escapeHTML(cls)} posted an average attendance rate of <strong>${attendancePct}%</strong> (${stats.totals.present} present / ${stats.totals.absent} absent / ${stats.totals.late} late out of ${totalSlots} student-slots).</p>
+        <p>${recNotes}</p>
+        <p>The center attendance policy (roll-call cutoff at <strong>${escapeHTML(cutoff)}</strong>) was applied across sessions; statuses were recorded per session in the Attendance Management System.</p>
+      </div>
+
+      <h2>Class Roster &amp; Individual Attendance</h2>
+      <table>
+        <thead>
+          <tr><th style="width:38px;">#</th><th>Student ID</th><th>Student Name</th><th>P</th><th>A</th><th>L</th><th>Attendance Rate</th></tr>
+        </thead>
+        <tbody>${rosterRows}</tbody>
+      </table>
+
+      <h2>Daily Session Trend</h2>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Present</th><th>Absent</th><th>Late</th><th>Rate</th></tr>
+        </thead>
+        <tbody>${trendRows.length ? trendRows : '<tr><td colspan="5" style="text-align:center; color:#64748b;">No recorded sessions for this class yet.</td></tr>'}</tbody>
+      </table>
+
+      <div class="sign">
+        <div class="box">
+          <div class="who">${escapeHTML(instructor)}</div>
+          <div class="sub">Prepared by — Instructor</div>
+          <div class="sub" style="margin-top:4px;">Signature / Date: ______________________</div>
+        </div>
+        <div class="box">
+          <div class="who">${escapeHTML(orgName)}</div>
+          <div class="sub">Reviewed &amp; Accepted by — Administrator</div>
+          <div class="sub" style="margin-top:4px;">Signature / Date: ______________________</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span>${escapeHTML(orgName)} • ${escapeHTML(orgPhone)} • ${escapeHTML(orgEmail)}</span>
+      <span>Generated ${escapeHTML(generated)} by SAMS</span>
+    </footer>
+  </div>
+</body>
+</html>`;
+
+  return html;
+}
+
+function openInstructorReportWindow(autoprint) {
+  if (!CURRENT_USER) {
+    showToast('Please sign in first.', 'error');
+    return null;
+  }
+  const html = buildInstructorReportHTML();
+  const win = window.open('', '_blank', 'width=1024,height=760');
+  if (!win) {
+    // Pop-up blocked — fall back to a direct file download.
+    downloadInstructorReport();
+    return null;
+  }
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+  if (autoprint) {
+    setTimeout(() => { win.focus(); try { win.print(); } catch (e) {} }, 450);
+  }
+  return win;
+}
+
+function printInstructorReport() {
+  openInstructorReportWindow(true);
+}
+
+function openInstructorReportPreview() {
+  openInstructorReportWindow(false);
+}
+
+function downloadInstructorReport() {
+  if (!CURRENT_USER) {
+    showToast('Please sign in first.', 'error');
+    return;
+  }
+  const html = buildInstructorReportHTML();
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `SAMS_Instructor_Report_${new Date().toISOString().slice(0, 10)}.html`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  showToast('Report downloaded (.html). Open it in any browser, then Print → Save as PDF.', 'success');
 }
 
 function exportUsersCSV() {
