@@ -14,7 +14,7 @@ This document captures the repository hygiene, branch protection policy, and the
 | Ticket ID | Title | Owner (Role) | Status | Description |
 |-----------|-------|--------------|--------|-------------|
 | **SAMS-01** | Establish Team Roster & Define Initial Roles | **Scribe** | `Done` | Finalize 5 team member names, student IDs, assign Week 1 roles (Repo Lead, Board Lead, Scribe, Builders), and document in README. |
-| **SAMS-02** | Brainstorm Candidate Problems & Select Local Business Case | **All Team** (Lead: Scribe) | `Done` | Run AI brainstorming prompt, evaluate 5 business cases against CRUD and 12-week constraints, choose Student Attendance Management System, and write Week 1 AI Note. |
+| **SAMS-02** | Brainstorm Candidate Problems & Select Local Business Case | **All Team** (Lead: Scribe) | `Done` | Run AI brainstorming prompt, evaluate 5 business cases against CRUD and 12-week constraints, choose Student Attendance Management System. |
 | **SAMS-03** | Initialize Git Repository, .gitignore, and Branch Protections | **Repo Lead** | `Done` | Scaffold folder structure, configure multi-stack `.gitignore`, initialize Git, and document branch protection rules for `main`. |
 | **SAMS-04** | Configure Task Board & Populate Scaffolding Tickets | **Board Lead** | `Done` | Stand up GitHub Project board with standard columns, create tickets for all Week 1 activities, assign owners, and link to repository. |
 | **SAMS-05** | Scaffold System Architecture & Baseline Application Demo | **Builders 1 & 2** | `Done` | Build working foundational backend/frontend demo verifying that all 4 record types can be viewed and tested immediately. |
