@@ -310,7 +310,8 @@ async function loadStoredUsers() {
 }
 
 
-function persistUsersData() {
+async function persistUsersData() {
+  await compactOversizedAvatars(USERS_DATA);
   try { localStorage.setItem('sams_users_data', JSON.stringify(USERS_DATA)); } catch (e) {}
   return saveToCloud('users', { data: USERS_DATA }, 'user accounts');
 }
@@ -336,7 +337,8 @@ async function loadStoredStudents() {
   }
 }
 
-function persistStudentsData() {
+async function persistStudentsData() {
+  await compactOversizedAvatars(STUDENTS_DATA);
   try { localStorage.setItem('sams_students_data', JSON.stringify(STUDENTS_DATA)); } catch (e) {}
   return saveToCloud('students', { data: STUDENTS_DATA }, 'students');
 }
@@ -1149,10 +1151,62 @@ function compressImageFile(file, maxDim = 512, quality = 0.72) {
   });
 }
 
+// The users/students arrays are written to Firestore as ONE document per
+// collection, and that document has the same ~1 MiB ceiling. A few large
+// avatars by themselves (the original accounts included ~315 KB and ~476 KB
+// base64 images) filled the users document, so ANY extra account pushed the
+// whole write past the limit and got rejected. These helpers re-encode any
+// oversized data-URL image down to a small JPEG before a document is
+// persisted, keeping the door open for "as many" users/students as the team
+// adds without ever crossing the 1 MiB line again.
+function downscaleImageDataUrl(dataUrl, maxDim = 192, quality = 0.68) {
+  return new Promise(resolve => {
+    if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/') || typeof Image === 'undefined') {
+      return resolve(dataUrl);
+    }
+    const img = new Image();
+    img.onerror = () => resolve(dataUrl);
+    img.onload = () => {
+      try {
+        const scale = Math.min(1, maxDim / Math.max(img.width || 1, img.height || 1));
+        const w = Math.max(1, Math.round((img.width || 1) * scale));
+        const h = Math.max(1, Math.round((img.height || 1) * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        const out = canvas.toDataURL('image/jpeg', quality);
+        resolve(out && out.length < dataUrl.length ? out : dataUrl);
+      } catch (err) {
+        resolve(dataUrl);
+      }
+    };
+    img.src = dataUrl;
+  });
+}
+
+// Keep each stored avatar under ~24 KB of base64 (≈18 KB decoded). Fresh
+// uploads already land below this; the ceiling is a safety net for imported
+// backups or previously-saved large images.
+const AVATAR_PAYLOAD_CAP = 24000;
+async function compactOversizedAvatars(list) {
+  if (!Array.isArray(list)) return;
+  for (const item of list) {
+    const avatar = item && typeof item.avatar === 'string' ? item.avatar : '';
+    if (avatar.length > AVATAR_PAYLOAD_CAP && avatar.startsWith('data:image/')) {
+      const compact = await downscaleImageDataUrl(avatar, 192, 0.68);
+      if (compact && compact !== avatar) item.avatar = compact;
+    }
+  }
+}
+
 async function handleCreateStudentPhotoUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
-  const dataUrl = await compressImageFile(file);
+  const dataUrl = await compressImageFile(file, 320, 0.72);
   if (!dataUrl) {
     showToast('Could not read that photo. Please try a different image.', 'error');
     return;
@@ -1246,7 +1300,7 @@ function handleCreateStudentSubmit(event) {
 async function handleEditStudentPhotoUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
-  const dataUrl = await compressImageFile(file);
+  const dataUrl = await compressImageFile(file, 320, 0.72);
   if (!dataUrl) {
     showToast('Could not read that photo. Please try a different image.', 'error');
     return;
@@ -2457,18 +2511,19 @@ function filterUsersTable() {
   renderUsersTable();
 }
 
-function handleUserModalPhotoUpload(event) {
+async function handleUserModalPhotoUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const preview = document.getElementById('user-avatar-preview');
-    const urlInput = document.getElementById('user-avatar-url');
-    if (preview) preview.src = e.target.result;
-    if (urlInput) urlInput.value = e.target.result;
-    showToast('User photo updated!', 'info');
-  };
-  reader.readAsDataURL(file);
+  const dataUrl = await compressImageFile(file, 256, 0.72);
+  if (!dataUrl) {
+    showToast('Could not read that photo. Please try a different image.', 'error');
+    return;
+  }
+  const preview = document.getElementById('user-avatar-preview');
+  const urlInput = document.getElementById('user-avatar-url');
+  if (preview) preview.src = dataUrl;
+  if (urlInput) urlInput.value = dataUrl;
+  showToast('User photo added (optimized for saving)!', 'info');
 }
 
 function openUserModal(userId = null) {
@@ -2926,7 +2981,7 @@ async function handleAvatarFileUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
 
-  const dataUrl = await compressImageFile(file, 320, 0.75);
+  const dataUrl = await compressImageFile(file, 256, 0.72);
   if (!dataUrl) {
     showToast('Could not read that photo. Please try a different image.', 'error');
     return;
